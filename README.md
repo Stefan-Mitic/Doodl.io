@@ -1,7 +1,7 @@
 # Doodl.io
 ![Doodl.io Logo](/assets/Doodlio.png)
 ### Created By <img src="/assets/JAS%20Systems.png" width="120" height="50" title="JAS Logo"> 
-1. **Yun Jie (Jeffery) Li** -- [@privatejfx141](https://github.com/privatejfx141)
+1. **Yun Jie (Jeffrey) Li** -- [@privatejfx141](https://github.com/privatejfx141)
 2. **Alexei Coreiba** -- [@alexeicoreiba](https://github.com/alexeicoreiba)
 3. **Stefan Mitic** -- [@stefan-mitic](https://github.com/Stefan-Mitic)
 
