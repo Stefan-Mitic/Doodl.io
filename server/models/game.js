@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-// create schema and model
-
-const GameSchema = new Schema({
-    players: Number
+let GameSchema = new mongoose.Schema({
+    players: Number,
+    date: { type: Date, default: Date.now }
 });
 
-const Game = mongoose.model('game', GameSchema);
+let Game = mongoose.model('game', GameSchema);
 
-module.exports = Game;
+module.exports = {
+    Game: Game
+};
