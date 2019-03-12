@@ -2,7 +2,7 @@
   "name": "doodl.io",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.16.4",
@@ -13,14 +13,17 @@
     "nodemon": "^1.18.10"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "backend": "nodemon app.js",
+    "frontend": "npm run start --prefix frontend",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Stefan-Mitic/doodl.io.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "JAS",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Stefan-Mitic/doodl.io/issues"
