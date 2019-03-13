@@ -17,7 +17,7 @@ let upload = multer({
     dest: path.join(__dirname, 'assets')
 });
 
-// setup middlewares
+// setup global middlewares
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(auth.sessionSettings);
@@ -41,6 +41,7 @@ const gameImages = require('./controllers/images');
 app.post('/login', validator.checkUsername, users.login);
 app.post('/signup', validator.checkUsername, validator.checkPassword, users.signup);
 app.get('/logout', auth.isAuthenticated, users.logout);
+app.get('/api/users', users.getUsers);
 
 // game image routes
 app.get('/api/game/images/:id/compare/', validator.checkId, gameImages.compare);

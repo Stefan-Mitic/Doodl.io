@@ -14,6 +14,19 @@ const crypto = require('../middlewares/cryptography');
  * Exported functions.
  */
 
+const USER_PAGE_SIZE = 10;
+
+exports.getUsers = function (req, res) {
+    let page = parseInt(req.params.page) || 0;
+    UserModel.find({})
+        .skip(page * USER_PAGE_SIZE)
+        .limit(USER_PAGE_SIZE)
+        .exec(function (err, users) {
+            if (err) return res.status(500).end(err);
+            return res.json(users.map(user => user.username));
+        });
+};
+
 exports.signup = function (req, res) {
     let username = req.body.username;
     let password = req.body.password;
