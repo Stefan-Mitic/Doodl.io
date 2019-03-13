@@ -1,84 +1,59 @@
-const fs = require('fs');
-const path = require('path');
-const express = require('express');
+/* jshint node: true */
+"use strict";
+
+const path = require("path");
+const fs = require("fs");
+const bodyParser = require('body-parser');
+const express = require("express");
 const app = express();
 
-// mongodb middleware
-const mongodb = require('mongodb');
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/doodlio', { useNewUrlParser: true });
-const Schema = mongoose.Schema;
-const ObjectId = Schema.ObjectId;
-
-// entry for game image
-const ImageModel = mongoose.model('image', new Schema({
-    name: String,
-    date: { type: Date, default: Date.now }
-}));
+// middleware dependencies
+const validator = require('./middlewares/validation');
+const auth = require('./middlewares/authentication');
 
 // middleware module to handle multipart/form-data 
-const multer = require('multer');
+const multer  = require('multer');
 let upload = multer({
-    dest: path.join(__dirname, 'uploads')
+    dest: path.join(__dirname, 'assets')
 });
 
-// middleware module to handle HTTP POST data
-const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: false }));
+// setup middlewares
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(auth.sessionSettings);
+app.use(auth.setUsername);
 
-// display requests
-app.use(function (req, res, next) {
-    console.log("HTTP request", req.method, req.url, req.body);
-    next();
-});
+// connect to db
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/doodlio', { useNewUrlParser: true });
 
-/* CREATE */
+// initialize all models
+const models = path.join(__dirname, './models');
+fs.readdirSync(models)
+    .filter(file => ~file.search(/^[^.].*\.js$/))
+    .forEach(file => require(path.join(models, file)));
 
-// add an image
-app.post('/api/game/images/', upload.single('picture'), function (req, res, next) {
-    console.log(req.file);
-    ImageModel.create({
-        name: req.body.name,
-        file: req.file
-    });
-});
+// module dependencies
+const users = require('./controllers/users');
+const gameImages = require('./controllers/images');
 
-// post image to compare
-app.post('/api/game/images/:id/compare/', upload.single('picture'), function (req, res, next) {
-    let imageId = req.params.id;
-    let file = req.file;
-    // insert image comparison API here!
-});
+// user authentication routes
+app.post('/login', validator.checkUsername, users.login);
+app.post('/signup', validator.checkUsername, validator.checkPassword, users.signup);
+app.get('/logout', auth.isAuthenticated, users.logout);
 
-/* READ */
-
-// get specific main image
-app.get('/api/game/images/:id/', function (req, res, next) {
-    let imageId = req.params.id;
-    if (!mongodb.ObjectID.isValid(imageId)) return res.status(404).end("invalid id");
-    ImageModel.findById(imageId, function (err, image) {
-        if (err) return res.status(500).end(err);
-        if (!image) return res.status(404).end("Image does not exist");
-        res.setHeader('Content-Type', file.mimetype);
-        return res.sendFile(file.path);
-    });
-});
-
-// get set of random image ids of given size of num
-app.get('/api/game/images/', function (req, res, next) {
-    let num = parseInt(req.query.num) || 5;
-    ImageModel.aggregate([{ $sample: { size: num } }], function (err, images) {
-        if (err) return res.status(500).end(err);
-        return res.json(images.map(image => image._id));
-    });
-});
+// game image routes
+app.get('/api/game/images/:id/compare/', validator.checkId, gameImages.compare);
+app.get('/api/game/images/:id/', validator.checkId, gameImages.getImageById);
+app.get('/api/game/images/', gameImages.getRandomImages);
+app.post('/api/game/images/', upload.single('picture'), gameImages.addImage);
+app.delete('/api/game/images/:id/', validator.checkId, gameImages.deleteImage);
 
 // setup server
 const http = require('http');
 const PORT = 3000;
-
-http.createServer(app).listen(PORT, function (err) {
+const server = http.createServer(app);
+server.listen(PORT, function (err) {
     if (err) console.log(err);
-    else console.log("HTTP server on http://localhost:%s", PORT);
+    else console.log("HTTP server on https://localhost:%s", PORT);
 });
