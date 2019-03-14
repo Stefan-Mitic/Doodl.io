@@ -34,14 +34,23 @@ fs.readdirSync(models)
 
 // module dependencies
 const users = require('./controllers/users');
+const friends = require('./controllers/friends');
 const gameImages = require('./controllers/images');
 
 // user authentication routes
-app.post('/login', validator.checkUsername, users.login);
-app.post(
-    '/signup', validator.checkUsername, validator.checkPassword, users.signup);
-app.get('/logout', auth.isAuthenticated, users.logout);
+app.post('/signin', validator.checkUsername, users.signin);
+app.post('/signup', validator.checkUsername, validator.checkPassword, users.signup);
+app.get('/signout', auth.isAuthenticated, users.signout);
 app.get('/api/users', users.getUsers);
+
+// friend system routes
+app.post('/api/users/friend', auth.isAuthenticated, friends.sendRequest);
+app.post('/api/users/acceptrequest', auth.isAuthenticated, friends.acceptRequest);
+app.post('/api/users/rejectrequest', auth.isAuthenticated, friends.rejectRequest);
+app.post('/api/users/unfriend', auth.isAuthenticated, friends.unfriend);
+app.get('/api/users/:username/sentrequests', auth.isAuthenticated, auth.isOwnUser, friends.getSentRequests);
+app.get('/api/users/:username/recievedrequests', auth.isAuthenticated, auth.isOwnUser, friends.getRecievedRequests);
+app.get('/api/users/:username/friends', auth.isAuthenticated, friends.getFriends);
 
 // game image routes
 app.get('/api/game/images/:id/compare/', validator.checkId, gameImages.compare);

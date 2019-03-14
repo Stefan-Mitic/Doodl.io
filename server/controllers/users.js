@@ -42,7 +42,7 @@ exports.signup = function (req, res) {
     });
 };
 
-exports.login = function (req, res) {
+exports.signin = function (req, res) {
     let username = req.body.username;
     let password = req.body.password;
     // retrieve user from the database
@@ -58,7 +58,7 @@ exports.login = function (req, res) {
     });
 };
 
-exports.logout = function (req, res) {
+exports.signout = function (req, res) {
     req.session.destroy();
     res.setHeader('Set-Cookie', auth.setCookie(''));
     res.redirect('/');

@@ -32,3 +32,15 @@ exports.isAuthenticated = function (req, res, next) {
     if (!req.username) return res.status(401).end("Access denied");
     next();
 };
+
+exports.isUnauthenticated = function (req, res, next) {
+    if (req.username) return res.status(401).end("User must be logged out");
+    next();
+};
+
+exports.isOwnUser = function (req, res, next) {
+    let current = req.username;
+    let target = req.params.username;
+    if (current !== target) return res.status(401).end("Access denied");
+    next();
+};

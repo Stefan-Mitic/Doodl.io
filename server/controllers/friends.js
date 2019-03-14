@@ -10,7 +10,7 @@ const UserModel = mongoose.model('User');
 const FriendRequestModel = mongoose.model('FriendRequest');
 
 
-const checkUserExists = function (username) {
+const getUser = function (username) {
     return new Promise(function (resolve, reject) {
         UserModel.findOne({ username: username }, function (err, user) {
             if (err) return reject(err);
@@ -20,7 +20,25 @@ const checkUserExists = function (username) {
     });
 };
 
-const checkRequestExists = function (requester, recipient) {
+const addFriend = function (username, friend) {
+    return new Promise(function (resolve, reject) {
+        UserModel.updateOne({ username: username }, { $push: { friends: friend } }, function (err, result) {
+            if (err) return reject(err);
+            return resolve(result);
+        });
+    });
+};
+
+const removeFriend = function (username, friend) {
+    return new Promise(function (resolve, reject) {
+        UserModel.updateOne({ username: username }, { $pull: { friends: friend } }, function (err, result) {
+            if (err) return reject(err);
+            return resolve(result);
+        });
+    });
+};
+
+const getFriendRequest = function (requester, recipient) {
     return new Promise(function (resolve, reject) {
         FriendRequestModel.findOne({ requester, recipient }, function (err, result) {
             if (err) return reject(err);
@@ -31,9 +49,9 @@ const checkRequestExists = function (requester, recipient) {
 };
 
 // sends a new friend request (TODO: fix callback hell)
-exports.send = function (req, res) {
+exports.sendRequest = function (req, res) {
     let requester = req.username;
-    let recipient = req.params.recipient;
+    let recipient = req.query.target;
 
     // check if recipient exists
     UserModel.findOne({ username: recipient }, function (err, user) {
@@ -59,28 +77,40 @@ exports.send = function (req, res) {
 
 };
 
+const FR_PAGE_SIZE = 10;
+
 // get sent friend requests (TODO: pagination)
 exports.getSentRequests = function (req, res) {
+    let page = parseInt(req.query.page) || 0;
     let username = req.username;
-    FriendRequestModel.findOne({ requester: username }, function (err, results) {
-        if (err) return res.status(500).end(err);
-        res.json(results);
-    });
+    FriendRequestModel
+        .findOne({ requester: username }, { _id: 0, __v: 0 })
+        .skip(page * FR_PAGE_SIZE)
+        .limit(FR_PAGE_SIZE)
+        .exec(function (err, results) {
+            if (err) return res.status(500).end(err);
+            res.json(results);
+        });
 };
 
 // get recieved friend requests (TODO: pagination)
 exports.getRecievedRequests = function (req, res) {
+    let page = parseInt(req.query.page) || 0;
     let username = req.username;
-    FriendRequestModel.findOne({ recipient: username }, function (err, results) {
-        if (err) return res.status(500).end(err);
-        res.json(results);
-    });
+    FriendRequestModel
+        .findOne({ recipient: username }, { _id: 0, __v: 0 })
+        .skip(page * FR_PAGE_SIZE)
+        .limit(FR_PAGE_SIZE)
+        .exec(function (err, results) {
+            if (err) return res.status(500).end(err);
+            res.json(results);
+        });
 };
 
 // removes a sent friend request
 exports.removeRequest = function (req, res) {
     let requester = req.username;
-    let recipient = req.params.recipient;
+    let recipient = req.query.target;
 
     FriendRequestModel.findOne({ requester, recipient }, function (err, freq) {
         if (err) return res.status(500).end(err);
@@ -97,18 +127,30 @@ exports.removeRequest = function (req, res) {
 
 // accept a friend request
 exports.acceptRequest = function (req, res) {
-    let requester = req.username;
-    let recipient = req.params.recipient;
+    let recipient = req.username;
+    let requester = req.query.target;
 
+    // check if friend request exists
     FriendRequestModel.findOne({ requester, recipient }, function (err, freq) {
         if (err) return res.status(500).end(err);
-        if (!freq) return res.status(401).end(`Friend request for ${recipient} does not exist`);
+        if (!freq) return res.status(404).end(`Friend request for ${recipient} does not exist`);
 
-        // TODO: find both users and add friends to each other
-
+        // remove friend request from database
         FriendRequestModel.findOneAndRemove({ requester, recipient }, function (err, freq) {
             if (err) return res.status(500).end(err);
-            return res.json(freq);
+            
+            // add to user's friend list
+            UserModel.updateOne({ username: requester }, { $push: { friends: recipient } }, function (err, raw) {
+                if (err) return res.status(500).end(err);
+
+                // add to from target's friend list
+                UserModel.updateOne({ username: recipient }, { $push: { friends: requester }}, function (err, raw) {
+                    if (err) return res.status(500).end(err);
+                    return res.json(`User ${recipient} is now friends with ${requester}.`);
+                });
+
+            });
+            
         });
 
     });
@@ -116,13 +158,15 @@ exports.acceptRequest = function (req, res) {
 
 // reject a friend request
 exports.rejectRequest = function (req, res) {
-    let requester = req.params.requester;
+    let requester = req.query.target;
     let recipient = req.username;
 
+    // check if friend request exists
     FriendRequestModel.findOne({ requester, recipient }, function (err, freq) {
         if (err) return res.status(500).end(err);
         if (!freq) return res.status(401).end(`Friend request for ${recipient} does not exist`);
 
+        // remove friend request from database
         FriendRequestModel.findOneAndRemove({ requester, recipient }, function (err, freq) {
             if (err) return res.status(500).end(err);
             return res.json(freq);
@@ -131,20 +175,47 @@ exports.rejectRequest = function (req, res) {
     });
 };
 
+const FRIENDS_PAGE_SIZE = 10;
+
 // get list of friends
 exports.getFriends = function (req, res) {
+    let page = parseInt(req.query.page) || 0;
     let username = req.username;
-    UserModel.findOne({ username: username }, function (err, user) {
+    let si0 = page * FRIENDS_PAGE_SIZE;
+    let si1 = si0 + FRIENDS_PAGE_SIZE;
+    UserModel.findOne({ username: username },{ _id: 0, friends: { $slice: [si0, si1] } }, function (err, user) {
         if (err) return res.status(500).end(err);
-        res.json(user.friends);
+        return res.json(user.friends);
     });
 };
 
 // remove a friend
-exports.removeFriend = function (req, res) {
+exports.unfriend = function (req, res) {
     let username = req.username;
-    let friend = req.params.friend;
+    let friend = req.query.target;
 
-    
+    // check if friend exists in first place
+    UserModel.findOne({ username: friend }, function (err, user) {
+        if (err) return res.status(500).end(err);
 
+        // check if user is friends with target in first place
+        UserModel.findOne({ username: username, friends: friend }, function (err, user) {
+            if (err) return res.status(500).end(err);
+            if (!user) return res.status(404).end(`User ${username} is not friends with ${friend}.`);
+
+            // remove from user's friend list
+            UserModel.updateOne({ username: username }, { $pull: { friends: friend }}, function (err, raw) {
+                if (err) return res.status(500).end(err);
+
+                // remove user from target's friend list
+                UserModel.updateOne({ username: friend }, { $pull: { friends: username }}, function (err, raw) {
+                    if (err) return res.status(500).end(err);
+                    return res.json(`User ${username} ended friendship with ${friend}.`);
+                });
+
+            });
+
+        });
+
+    });
 };
