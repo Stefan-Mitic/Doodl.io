@@ -34,16 +34,16 @@ class Lobby extends Component {
             <div className="background">
                 <Header></Header>
                 <div className="title">Lobby</div>
-                <div id="playerTable" className="row">
-                    <table className="offset-sm-1 col-sm-3 table table-bordered table-dark">
+                <div className="row">
+                    <table id="playerTable" className="offset-sm-2 col-sm-3 table table-bordered table-dark">
                         <thead>
                             <tr>
-                                <th>Player</th>
+                                <th>Players</th>
                             </tr>
                         </thead>
                         {this.getPlayers()}
                     </table>
-                    <div className="offset-sm-1 col-sm-4" style={{padding: '30px'}}>
+                    <div className="offset-sm-1 col-sm-4">
                         <div>Share this link:</div>
                         <input ref={this.urlRef} type="text" readOnly value="url.com"></input>
                         <button onClick={this.copyText}>Copy text</button>
@@ -54,9 +54,11 @@ class Lobby extends Component {
                         }
                     </div>
                 </div>
-                <Link to="/game">
-                <button type="button" className="btn btn-success">Start Game</button>
-                </Link>
+                <div className="row offset-sm-8">
+                    <Link to="/game">
+                    <button type="button" className="btn btn-success">Start Game</button>
+                    </Link>
+                </div>
             </div>
         );
     }

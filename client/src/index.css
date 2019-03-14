@@ -18,6 +18,10 @@ code {
   padding-bottom: 10%;
 }
 
+.row {
+  padding-top: 3%;
+}
+
 .header {
   text-align: left;
   padding-top: 7%;
