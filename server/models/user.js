@@ -6,7 +6,9 @@ const UserSchema = new mongoose.Schema({
     username: { type: String, required: true },
     hash: { type: String, required: true },
     salt: { type: String, required: true },
-    friends: [String]
+    friends: [String], // list of friends (usernames)
+    games: { type: Number, default: 0 }, // number of games played
+    wins: { type: Number, default: 0 },  // number of games won
 });
 
 const User = mongoose.model('User', UserSchema);
