@@ -3,11 +3,13 @@ const mongoose = require('mongoose');
 const FriendRequestSchema = new mongoose.Schema({
     requester: {
         type: String,
-        required: true
+        required: true,
+        index: true,
     },
     recipient: {
         type: String,
-        required: true
+        required: true,
+        index: true,
     }
 });
 

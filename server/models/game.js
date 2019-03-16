@@ -6,7 +6,10 @@ const GameSchema = new mongoose.Schema({
     images: [String],       // list of images (id) used in the game
     rounds: Number,         // number of rounds played
     status: Number,         // status of the game
-    date: Date              // date of when game was played
+    date: {
+        type: Date,
+        default: Date.now
+    }                       // date of when game was played
 });
 
 const Game = mongoose.model('Game', GameSchema);

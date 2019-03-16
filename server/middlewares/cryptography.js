@@ -7,12 +7,15 @@
 
 const crypto = require('crypto');
 
+// generates a random salt of 16 bytes
 exports.generateSalt = function () {
-    return crypto.randomBytes(16).toString('base64');
+    return crypto.randomBytes(16)
+        .toString('base64');
 };
 
+// generates a SHA-512 hash encoded in base64
 exports.generateHash = function (plaintext, salt) {
-    let hash = crypto.createHmac('sha512', salt);
-    hash.update(plaintext);
-    return hash.digest('base64');
+    return crypto.createHmac('sha512', salt)
+        .update(plaintext)
+        .digest('base64');
 };

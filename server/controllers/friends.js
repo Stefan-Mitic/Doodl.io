@@ -9,10 +9,11 @@ const mongoose = require('mongoose');
 const UserModel = mongoose.model('User');
 const FriendRequestModel = mongoose.model('FriendRequest');
 
+// TODO: fix callback hells with promises
 
 const getUser = function (username) {
     return new Promise(function (resolve, reject) {
-        UserModel.findOne({ username: username }, function (err, user) {
+        UserModel.findById(username, function (err, user) {
             if (err) return reject(err);
             if (!user) return reject(`User ${username} does not exist`);
             return resolve(user);
@@ -22,7 +23,7 @@ const getUser = function (username) {
 
 const addFriend = function (username, friend) {
     return new Promise(function (resolve, reject) {
-        UserModel.updateOne({ username: username }, { $push: { friends: friend } }, function (err, result) {
+        UserModel.updateOne({ _id: username }, { $push: { friends: friend } }, function (err, result) {
             if (err) return reject(err);
             return resolve(result);
         });
@@ -31,7 +32,7 @@ const addFriend = function (username, friend) {
 
 const removeFriend = function (username, friend) {
     return new Promise(function (resolve, reject) {
-        UserModel.updateOne({ username: username }, { $pull: { friends: friend } }, function (err, result) {
+        UserModel.updateOne({ _id: username }, { $pull: { friends: friend } }, function (err, result) {
             if (err) return reject(err);
             return resolve(result);
         });
@@ -54,7 +55,7 @@ exports.sendRequest = function (req, res) {
     let recipient = req.query.target;
 
     // check if recipient exists
-    UserModel.findOne({ username: recipient }, function (err, user) {
+    UserModel.findById(recipient, function (err, user) {
         if (err) return res.status(500).end(err);
         if (!user) return res.status(401).end(`User ${recipient} does not exist`);
 
@@ -140,11 +141,11 @@ exports.acceptRequest = function (req, res) {
             if (err) return res.status(500).end(err);
             
             // add to user's friend list
-            UserModel.updateOne({ username: requester }, { $push: { friends: recipient } }, function (err, raw) {
+            UserModel.updateOne({ _id: requester }, { $push: { friends: recipient } }, function (err, raw) {
                 if (err) return res.status(500).end(err);
 
                 // add to from target's friend list
-                UserModel.updateOne({ username: recipient }, { $push: { friends: requester }}, function (err, raw) {
+                UserModel.updateOne({ _id: recipient }, { $push: { friends: requester }}, function (err, raw) {
                     if (err) return res.status(500).end(err);
                     return res.json(`User ${recipient} is now friends with ${requester}.`);
                 });
@@ -183,7 +184,7 @@ exports.getFriends = function (req, res) {
     let username = req.username;
     let si0 = page * FRIENDS_PAGE_SIZE;
     let si1 = si0 + FRIENDS_PAGE_SIZE;
-    UserModel.findOne({ username: username },{ _id: 0, friends: { $slice: [si0, si1] } }, function (err, user) {
+    UserModel.findById({ _id: username },{ _id: 0, friends: { $slice: [si0, si1] } }, function (err, user) {
         if (err) return res.status(500).end(err);
         return res.json(user.friends);
     });
@@ -195,20 +196,20 @@ exports.unfriend = function (req, res) {
     let friend = req.query.target;
 
     // check if friend exists in first place
-    UserModel.findOne({ username: friend }, function (err, user) {
+    UserModel.findById(username, function (err, user) {
         if (err) return res.status(500).end(err);
 
         // check if user is friends with target in first place
-        UserModel.findOne({ username: username, friends: friend }, function (err, user) {
+        UserModel.findOne({ _id: username, friends: friend }, function (err, user) {
             if (err) return res.status(500).end(err);
             if (!user) return res.status(404).end(`User ${username} is not friends with ${friend}.`);
 
             // remove from user's friend list
-            UserModel.updateOne({ username: username }, { $pull: { friends: friend }}, function (err, raw) {
+            UserModel.updateOne({ _id: username }, { $pull: { friends: friend }}, function (err, raw) {
                 if (err) return res.status(500).end(err);
 
                 // remove user from target's friend list
-                UserModel.updateOne({ username: friend }, { $pull: { friends: username }}, function (err, raw) {
+                UserModel.updateOne({ _id: friend }, { $pull: { friends: username }}, function (err, raw) {
                     if (err) return res.status(500).end(err);
                     return res.json(`User ${username} ended friendship with ${friend}.`);
                 });
