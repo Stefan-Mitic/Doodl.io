@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import './index.css';
 import Home from './pages/Home.jsx';
+import Login from './pages/Login';
 import Lobby from './pages/Lobby.jsx';
 import Game from './pages/Game.jsx';
 import PostGame from './pages/PostGame.jsx';
@@ -12,6 +13,7 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 ReactDOM.render(<Router>
     <div>
         <Route exact path="/" component={Home} />
+        <Route path="/login" component={Login} />
         <Route path="/lobby" component={Lobby} />
         <Route path="/game" component={Game} />
         <Route path="/postgame" component={PostGame} />
