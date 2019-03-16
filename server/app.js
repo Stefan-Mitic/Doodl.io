@@ -39,19 +39,27 @@ const gameImages = require('./controllers/images');
 
 // user authentication routes
 app.post('/signin/', validator.checkUsername, users.signin);
-app.post('/signup/', validator.checkUsername, validator.checkPassword, users.signup);
+app.post(
+    '/signup/', validator.checkUsername, validator.checkPassword, users.signup);
 app.get('/signout/', auth.isAuthenticated, users.signout);
 app.get('/api/users/:username/', users.getUser);
 app.get('/api/users/', users.getUsers);
 
 // friend system routes
 app.post('/api/users/friend/', auth.isAuthenticated, friends.sendRequest);
-app.post('/api/users/acceptrequest/', auth.isAuthenticated, friends.acceptRequest);
-app.post('/api/users/rejectrequest/', auth.isAuthenticated, friends.rejectRequest);
+app.post(
+    '/api/users/acceptrequest/', auth.isAuthenticated, friends.acceptRequest);
+app.post(
+    '/api/users/rejectrequest/', auth.isAuthenticated, friends.rejectRequest);
 app.post('/api/users/unfriend/', auth.isAuthenticated, friends.unfriend);
-app.get('/api/users/:username/sentrequests/', auth.isAuthenticated, auth.isOwnUser, friends.getSentRequests);
-app.get('/api/users/:username/recievedrequests/', auth.isAuthenticated, auth.isOwnUser, friends.getRecievedRequests);
-app.get('/api/users/:username/friends/', auth.isAuthenticated, friends.getFriends);
+app.get(
+    '/api/users/:username/sentrequests/', auth.isAuthenticated, auth.isOwnUser,
+    friends.getSentRequests);
+app.get(
+    '/api/users/:username/recievedrequests/', auth.isAuthenticated,
+    auth.isOwnUser, friends.getRecievedRequests);
+app.get(
+    '/api/users/:username/friends/', auth.isAuthenticated, friends.getFriends);
 
 // game image routes
 app.get('/api/game/images/:id/compare/', validator.checkId, gameImages.compare);
@@ -62,39 +70,37 @@ app.delete('/api/game/images/:id/', validator.checkId, gameImages.deleteImage);
 
 // setup server
 const http = require('http');
-const PORT = 3000;
+const PORT = process.event.PORT || 3000;
 const server = http.createServer(app);
 const io = socketIO(server);
 
 // SOCKETIO ===================================================================
 
+// Dependencies
+const { generateMessage } = require('./utils/message');
+const { isRealString } = require('./utils/realstring');
+
 let lobbies = {};
 
-io.on('connection', socket => {
+io.on('connection', function(socket) {
     console.log('User connected');
     let sessionid = socket.id;
 
-    socket.on('join', (params, callback) => {
-        // username and room id
-        if (!isRealString(params.user) || !isRealString(params.gameId)) {
+    socket.on('join', function(params, callback) {
+        // room id
+        if (!isRealString(params.gameId)) {
             callback('Username and game id are required.');
         }
-
-        socket.emit(
-            'newMessage', generateMessage('Admin', 'Successfully joined game.'));
-        socket.broadcast.to(params.room)
-            .emit(
-                'newMessage',
-                generateMessage('Admin', `${params.user} has joined.`));
+        socket.join(params.room);
         callback();
     });
 
-    socket.on('createMessage', (message, callback) => {
+    socket.on('createMessage', function(message, callback) {
         console.log('createMessage', message);
         io.emit('newMessage', generateMessage(message.from, message.text));
     });
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', function() {
         console.log('User disconnected');
     });
 });
