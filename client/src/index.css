@@ -40,6 +40,15 @@ code {
   padding-bottom: 2%;
 }
 
+.login {
+  padding: 100px;
+}
+
+.login form {
+  margin: 0 auto;
+  max-width: 320px;
+}
+
 #infoPanel {
   background-color: greenyellow;
   border-radius: 3rem;
