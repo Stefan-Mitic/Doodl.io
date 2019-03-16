@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Header from '../components/Header'
+import Header from '../components/Header';
 
 class Lobby extends Component {
     constructor(props) {
@@ -31,7 +31,7 @@ class Lobby extends Component {
 
     render() {
         return (
-            <div className="background">
+            <div>
                 <Header></Header>
                 <div className="title">Lobby</div>
                 <div className="row">
