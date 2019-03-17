@@ -3,6 +3,7 @@ import CanvasDraw from "react-canvas-draw";
 import ReactCountdownClock from 'react-countdown-clock';
 import { Redirect } from 'react-router-dom';
 import html2canvas from 'html2canvas';
+import api from '../api';
 
 class Game extends Component {
     constructor(props) {
@@ -12,15 +13,23 @@ class Game extends Component {
         this.clockRef = React.createRef();
         this.canvas = React.createRef();
         this.image = React.createRef();
+        this.images = this.props.location.state.host;
     }
 
     componentDidMount() {
         this.state.round = 1; // Get round
-        this.image.src = require("./../pic_2.png"); // Get Img Src
+
+        api.get(`/api/game/image/` + this.images[0] + '/')
+            .then(res => {
+                console.log(res);
+                this.image.src = require(res);
+            }).catch(err => {
+                console.log(err);
+            });
     }
 
     roundEnd() {
-        var img = new Image();
+        let img = new Image();
         html2canvas(document.getElementById("canvas")).then(canvas => {
             img.src = canvas.toDataURL('image/png');
             // var win = window.open();
