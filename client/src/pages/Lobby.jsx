@@ -12,6 +12,7 @@ class Lobby extends Component {
         this.state = { show: false, data: [] };
         this.urlRef = React.createRef();
         this.getPlayers = this.getPlayers.bind(this);
+        this.listenSockets = this.listenSockets.bind(this);
         this.copyText = this.copyText.bind(this);
         this.host = this.props.location.state.host;
         this.gameId = this.props.match.params.id;
@@ -20,6 +21,7 @@ class Lobby extends Component {
 
     componentDidMount() {
         this.getPlayers();
+        this.listenSockets();
     }
 
     async getPlayers() {
@@ -31,14 +33,10 @@ class Lobby extends Component {
             players.push(newRecord);
         }
         this.setState({ data: players });
-        console.log(this.state);
     }
 
     listenSockets() {
-        socket.on('updateUserList', function(){
-            console.log("player joined");
-            this.getPlayers();
-        });
+        socket.on('updateUserList', this.getPlayers);
         socket.on('gameStart', this.startGame);
         socket.on('newMessage', function(message) {
             console.log(`${message.from}: ${message.text}`);
