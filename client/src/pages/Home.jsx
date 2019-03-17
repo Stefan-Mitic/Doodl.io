@@ -44,7 +44,7 @@ class Home extends Component {
                         console.log("joined successfully");
                     }
                 });
-                this.props.history.push("/lobby/" + id);
+                history.push("/lobby/" + id);
             }).catch(err => {
                 console.log(err);
             });
@@ -54,8 +54,9 @@ class Home extends Component {
     joinGame = event => {
         event.preventDefault();
 
-        var gameId = this.inputRef.current;
-
+        var gameId = this.inputRef.current.value;
+        console.log(gameId);
+        
         // socket emit
     }
 
