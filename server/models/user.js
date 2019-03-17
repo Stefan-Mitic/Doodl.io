@@ -4,7 +4,6 @@ const UserSchema = new mongoose.Schema({
     _id: { // _id is the username
         type: String,
         required: true,
-        index: true
     },
     name: { // user's player display name
         type: String,

@@ -70,7 +70,7 @@ app.delete('/api/game/images/:id/', validator.checkId, gameImages.deleteImage);
 
 // setup server
 const http = require('http');
-const PORT = process.event.PORT || 3000;
+const PORT = 3000;
 const server = http.createServer(app);
 const io = socketIO(server);
 
