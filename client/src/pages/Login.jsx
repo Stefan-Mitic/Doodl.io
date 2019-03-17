@@ -33,7 +33,7 @@ class Login extends Component {
         api.post(`/` + action + `/`, user)
         .then(res => {
             console.log(res);
-            localStorage.setItem('data', res.data);
+            localStorage.setItem('username', res.data);
             this.props.history.push("/");
         }).catch(err => {
             console.log(err);

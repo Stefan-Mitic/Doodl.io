@@ -69,7 +69,7 @@ exports.signin = function (req, res) {
         // start a session
         req.session.username = user._id;
         res.setHeader('Set-Cookie', auth.setCookie(user._id));
-        return res.json(`user ${username} signed in`);
+        return res.json(username);
     });
 };
 
