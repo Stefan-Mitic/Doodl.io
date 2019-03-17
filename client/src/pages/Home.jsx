@@ -37,7 +37,12 @@ class Home extends Component {
             .then(res => {
                 let id = res.data;
                 console.log(id);
-                socket.emit('join', id, function(err) {
+                let username = localStorage.getItem('username');
+                const params = {
+                    username: username,
+                    gameId: id
+                };
+                socket.emit('join', params, function(err) {
                     if (err) {
                         console.log(err);
                     } else {
