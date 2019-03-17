@@ -30,14 +30,15 @@ class Home extends Component {
 
     createGame = event => {
         event.preventDefault();
+        let username = localStorage.getItem('username');
         const gameSettings = {
-            rounds: 1
+            rounds: 1,
+            username: username
         };
         api.post(`/api/game/`, gameSettings)
             .then(res => {
                 let id = res.data;
                 console.log(id);
-                let username = localStorage.getItem('username');
                 const params = {
                     username: username,
                     gameId: id
@@ -58,13 +59,26 @@ class Home extends Component {
 
     joinGame = event => {
         event.preventDefault();
-
         var gameId = this.inputRef.current.value;
         console.log(gameId);
-
-        // socket emit
-        history.push({ pathname: "/lobby/" + gameId, state: { host: false }});
-    }
+        let username = localStorage.getItem('username');
+        const params = {
+            username: username,
+            gameId: gameId
+        };
+        api.patch(`/api/game/join/`, params).then(res => {
+            socket.emit('join', params, function(err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("joined successfully");
+                }
+            });
+            history.push({ pathname: "/lobby/" + gameId, state: { host: false }});
+        }).catch(err => {
+            console.log(err);
+        });
+    };
 
     render() {
         return (
