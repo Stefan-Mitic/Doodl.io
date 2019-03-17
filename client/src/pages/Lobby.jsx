@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import api from '../api';
 import history from '../history';
 import Header from '../components/Header';
+import openSocket from 'socket.io-client';
+const socket = openSocket('http://localhost:5000');
 
 class Lobby extends Component {
     constructor(props) {
@@ -31,6 +33,10 @@ class Lobby extends Component {
         return (
             <tbody>{rows}</tbody>
         );
+    }
+
+    listenSockets() {
+        socket.on('updateUserList', this.getPlayers);
     }
 
     copyText() {
