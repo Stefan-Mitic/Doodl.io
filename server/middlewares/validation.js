@@ -16,26 +16,31 @@ const validator = require('validator');
 exports.checkUsername = function (req, res, next) {
     let username = req.body.username;
     if (!username) return res.status(400).end("bad input");
-    let validUsername = validator.isAlphanumeric(username);
-    validUsername = validUsername && username.length >= 3;
-    if (!validUsername) return res.status(400).end("username too short");
+    let valid = validator.isAlphanumeric(username) &&
+        username.length >= 3;
+    if (!valid) return res.status(400).end("username is not valid");
     next();
 };
 
 // checks if password is valid
-exports.checkPassword = function (req, res, next) {
-    let password = req.body.password;
-    if (!password) return res.status(400).end("bad input");
-    next();
+exports.checkPassword = function (field) {
+    if (!field) field = "password";
+    return function (req, res, next) {
+        let password = req.body[field];
+        if (!password) return res.status(400).end("bad input");
+        let valid = password.length <= 6;
+        if (!valid) return res.status(400).end("password is not valid");
+        next();
+    }
 };
 
 // checks if display name is valid
 exports.checkDisplayName = function (req, res, next) {
     let displayname = req.body.name;
     if (!displayname) return res.status(400).end("bad input");
-    let validName = validator.isAlphanumeric(displayname);
-    validName = validName && displayname.length >= 3;
-    if (!validName) return res.status(400).end("display name too short"); 
+    let valid = validator.isAlphanumeric(displayname) &&
+        displayname.length >= 3;
+    if (!valid) return res.status(400).end("display name is not valid");
     next();
 };
 
