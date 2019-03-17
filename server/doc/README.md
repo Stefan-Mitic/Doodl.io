@@ -62,3 +62,20 @@ curl -X GET http://localhost:3000/signout/
 - description: get a paginated list of friends from user
 
 - description: unfriend from user
+
+## Game Image API
+
+## Canvas Drawing Image API
+
+## Image Comparision API
+
+- description: compare an image and drawing and get the difference in pixels
+- request: `POST /api/game/images/:id/compare/`
+  - content-type: `application/json`
+  - body: object
+    - drawingId: ID of drawing image
+- response: 200
+  - body: object
+    - image1: game image
+    - image2: drawing image
+    - difference: difference in pixels

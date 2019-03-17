@@ -47,7 +47,7 @@ exports.compareImages = function (req, res) {
 
 // TODO: get ready for some EXTREME CALLBACK HELL!
 exports.gameCompare = function (req, res) {
-    let imageId = req.body.imageId;
+    let imageId = req.params.id;
     let drawingId = req.body.drawingId;
 
     ImageModel.findById(imageId, function (err, image) {
