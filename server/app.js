@@ -90,12 +90,13 @@ let lobbies = {};
 io.on('connection', function(socket) {
     console.log('User connected');
     let sessionid = socket.id;
-    socket.on('join', function(gameId, callback) {
+    socket.on('join', function(params, callback) {
         // room id
-        if (!isRealString(gameId)) {
+        if (!isRealString(params.gameId)) {
             callback('Game id is required');
         }
-        socket.join(gameId);
+        socket.join(params.gameId);
+        socket.broadcast.to(params.gameId).emit('newMessage', generateMessage(`${params.username} has joined.`));
         callback();
     });
 
