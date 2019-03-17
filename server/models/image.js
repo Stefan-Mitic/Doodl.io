@@ -4,6 +4,9 @@ const ImageSchema = new mongoose.Schema({
     name: {
         type: String
     },
+    file: {
+        type: Object
+    }
     // file: contains the actual image file
 }, {
     timestamps: true
