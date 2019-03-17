@@ -38,6 +38,7 @@ fs.readdirSync(models)
 const users = require('./controllers/users');
 const friends = require('./controllers/friends');
 const gameImages = require('./controllers/images');
+const games = require('./controllers/game');
 
 // user authentication routes
 app.post('/signin/', validator.checkUsername, users.signin);
@@ -62,6 +63,10 @@ app.get('/api/game/images/', gameImages.getRandomImages);
 app.post('/api/game/images/', upload.single('picture'), gameImages.addImage);
 app.delete('/api/game/images/:id/', validator.checkId, gameImages.deleteImage);
 
+// game routes
+app.post('/api/game/', validator.checkId, games.createGame);
+app.post('/api/game/start', validator.checkId, games.startGame);
+
 // setup server
 const http = require('http');
 const PORT = 5000;
@@ -79,14 +84,25 @@ let lobbies = {};
 io.on('connection', function(socket) {
     console.log('User connected');
     let sessionid = socket.id;
-
     socket.on('join', function(params, callback) {
         // room id
         if (!isRealString(params.gameId)) {
-            callback('Username and game id are required.');
+            callback('Game id is required');
         }
         socket.join(params.room);
         callback();
+    });
+
+    socket.on('roundStart', function(counter) {
+        let room = io.sockets.manager.roomClients[socket.id];
+        let countdown = setInterval(function() {
+            io.to(room).emit('counter', counter);
+            counter--;
+            if (counter === 0) {
+                io.to(room).emit('counter', "Time's up!");
+                clearInterval(countdown);
+            }
+        }, 1000);
     });
 
     socket.on('createMessage', function(message, callback) {
