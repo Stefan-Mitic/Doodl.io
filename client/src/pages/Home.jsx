@@ -49,7 +49,7 @@ class Home extends Component {
                         console.log("joined successfully");
                     }
                 });
-                history.push("/lobby/" + id);
+                history.push({ pathname: "/lobby/" + id, state: { host: true }});
             }).catch(err => {
                 console.log(err);
             });
@@ -61,8 +61,9 @@ class Home extends Component {
 
         var gameId = this.inputRef.current.value;
         console.log(gameId);
-        
+
         // socket emit
+        history.push({ pathname: "/lobby/" + gameId, state: { host: false }});
     }
 
     render() {
@@ -72,11 +73,11 @@ class Home extends Component {
                 <div className="row offset-sm-10">
                     <button className="btn btn-success header_btn" onClick={this.signout}>Signout</button>
                 </div>
-                <div id="homeButton">
+                <div className="row offset-sm-4 col-sm-5">
                     <button className="btn btn-success btn-lg btn-block" onClick={this.createGame}>Create Game</button>
                 </div>
                 <div className="row">
-                    <input className="offset-sm-3" ref={this.inputRef} type="text" maxLength="15"></input>
+                    <input className="offset-sm-4" ref={this.inputRef} type="text" maxLength="15" placeholder="Enter Game ID"></input>
                     <button className="offset-sm-1 col-sm-6" className="btn btn-success btn-lg" onClick={this.joinGame}>Join Game</button>
                 </div>
             </div>
