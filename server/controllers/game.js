@@ -72,3 +72,10 @@ exports.getPlayers = function(req, res) {
         res.json(game.players);
     });
 };
+
+exports.getGame = function(req, res) {
+    GameModel.findOne({ _id: req.params.id }, function(err, game) {
+        if (err) return res.status(500).end(err);
+        res.json(game);
+    });
+};
