@@ -96,3 +96,19 @@ exports.updateName = function (req, res) {
         });
     });
 };
+
+// updates the user's password
+exports.updatePassword = function (req, res) {
+    let username = req.username;
+    let oldPassword = req.params.oldPassword;
+    let newPassword = req.params.newPassword;
+    // retrieve user from the database
+    UserModel.findById(username, { hash: 1, salt: 1 }, function (err, user) {
+        if (err) return res.status(500).end(err);
+        if (!user) return res.status(401).end("access denied");
+        let hash = crypto.generateHash(oldPassword, user.salt);
+        if (user.hash !== hash) return res.status(401).end("access denied"); // invalid password
+        // create new salt and hash password
+        return res.json(username);
+    });
+};

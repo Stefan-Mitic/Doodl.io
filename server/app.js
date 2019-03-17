@@ -47,7 +47,7 @@ app.post('/signup/', validator.checkUsername, validator.checkPassword, users.sig
 app.get('/signout/', auth.isAuthenticated, users.signout);
 app.get('/api/users/:username/', users.getUser);
 app.get('/api/users/', users.getUsers);
-app.update('/api/users/', auth.isAuthenticated, users.updateName);
+app.patch('/api/users/', auth.isAuthenticated, users.updateName);
 
 // friend system routes
 app.post('/api/users/friend/', auth.isAuthenticated, friends.sendRequest);
