@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import API from '../api';
+import api from '../api';
 import { Button, FormGroup, FormControl, FormLabel, Form } from "react-bootstrap";
 import Header from '../components/Header';
 
@@ -12,32 +12,28 @@ class Login extends Component {
         }
         this.signin = this.signin.bind(this);
         this.signup = this.signup.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    signin() {
+    signin = event => {
+        event.preventDefault();
+        this.handleSubmit("signin")
+    }
+
+    signup = event => {
+        event.preventDefault();
+        this.handleSubmit("signup");
+    }
+
+    handleSubmit(action) {
         const user = {
             username: this.state.username,
             password: this.state.password
         }
-
-        API.post(`users/signin/`, { user })
+        api.post(`/` + action + `/`, user)
         .then(res => {
             console.log(res);
-            this.props.history.push("/");
-        }).catch(err => {
-            console.log(err);
-        })
-    }
-
-    signup() {
-        const user = {
-            username: this.state.username,
-            password: this.state.password
-        }
-
-        API.post(`users/signup/`, { user })
-        .then(res => {
-            console.log(res);
+            localStorage.setItem('data', res.data);
             this.props.history.push("/");
         }).catch(err => {
             console.log(err);
@@ -52,10 +48,6 @@ class Login extends Component {
         this.setState({
             [event.target.id]: event.target.value
         });
-    }
-
-    handleSubmit = event => {
-        event.preventDefault();
     }
 
     render() {
