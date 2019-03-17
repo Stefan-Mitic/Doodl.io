@@ -23,15 +23,12 @@ exports.checkUsername = function (req, res, next) {
 };
 
 // checks if password is valid
-exports.checkPassword = function (field) {
-    if (!field) field = "password";
-    return function (req, res, next) {
-        let password = req.body[field];
-        if (!password) return res.status(400).end("bad input");
-        let valid = password.length <= 6;
-        if (!valid) return res.status(400).end("password is not valid");
-        next();
-    };
+exports.checkPassword = function (req, res, next) {
+    let password = req.body.password;
+    if (!password) return res.status(400).end("bad input");
+    let valid = password.length >= 6;
+    if (!valid) return res.status(400).end("password is not valid");
+    next();
 };
 
 // checks if display name is valid

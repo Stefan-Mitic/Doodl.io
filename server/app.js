@@ -48,7 +48,7 @@ app.get('/signout/', auth.isAuthenticated, users.signout);
 app.get('/api/users/:username/', users.getUser);
 app.get('/api/users/', users.getUsers);
 app.patch('/api/users/name/', auth.isAuthenticated, validator.checkDisplayName, users.updateName);
-app.patch('/api/users/password/', auth.isAuthenticated, validator.checkPassword('newPassword'), users.updatePassword);
+app.patch('/api/users/password/', auth.isAuthenticated, users.updatePassword);
 
 // friend system routes
 app.post('/api/users/friend/', auth.isAuthenticated, friends.sendRequest);
@@ -65,11 +65,19 @@ app.get('/api/leaderboard/me/', auth.isAuthenticated, scores.getPlayerLeaderboar
 app.get('/api/leaderboard/history/', auth.isAuthenticated, scores.getPlayerHistory);
 
 // game image routes
-app.get('/api/game/images/:id/compare/', validator.checkId, gameImages.compare);
 app.get('/api/game/images/:id/', validator.checkId, gameImages.getImageById);
 app.get('/api/game/images/', gameImages.getRandomImages);
-app.post('/api/game/images/', upload.single('picture'), gameImages.addImage);
-app.delete('/api/game/images/:id/', validator.checkId, gameImages.deleteImage);
+// app.post('/api/game/images/', upload.single('picture'), gameImages.addImage);
+// app.delete('/api/game/images/:id/', validator.checkId, gameImages.deleteImage);
+
+// canvas drawing image routes
+//app.get('/api/users/:username/drawings/')
+//app.get('/api/drawings/:id/')
+//app.delete('/api/drawings/:id/')
+
+// image comparison routes
+//app.post('/api/game/images/:id/compare/')
+
 
 // game routes
 app.post('/api/game/', games.createGame);
@@ -77,7 +85,6 @@ app.post('/api/game/start/', games.startGame);
 app.patch('/api/game/join/', games.addPlayer);
 app.get('/api/game/:id/players/', games.getPlayers);
 app.get('/api/game/:id/', games.getGame);
-
 
 // setup server
 const http = require('http');
