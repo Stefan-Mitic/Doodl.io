@@ -75,7 +75,7 @@ app.delete('/api/game/images/:id/', validator.checkId, gameImages.deleteImage);
 app.post('/api/game/', games.createGame);
 app.post('/api/game/start/', games.startGame);
 app.patch('/api/game/join/', games.addPlayer);
-app.get('/api/game/players/', games.getPlayers);
+app.get('/api/game/:id/players/', games.getPlayers);
 
 
 // setup server
@@ -94,7 +94,6 @@ let lobbies = {};
 
 io.on('connection', function(socket) {
     console.log('User connected');
-    let sessionid = socket.id;
     socket.on('join', function(params, callback) {
         // room id
         if (!isRealString(params.gameId)) {
