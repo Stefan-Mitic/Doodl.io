@@ -7,9 +7,12 @@ class Home extends Component {
         return (
             <div className="background">
                 <Header></Header>
+                <div className="row offset-sm-10">
+                    <a href="/signout/" id="signout_button" class="btn btn-success header_btn">Signout</a>
+                </div>
                 <div id="homeButton">
                     <Link to="/lobby"><button type="button" className="btn btn-success btn-lg btn-block">Create Game</button></Link>
-                </div> 
+                </div>
             </div>
         );
     }
