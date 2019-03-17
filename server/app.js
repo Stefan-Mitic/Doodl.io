@@ -100,6 +100,7 @@ io.on('connection', function(socket) {
             callback('Game id is required');
         }
         socket.join(params.gameId);
+        io.to(params.room).emit('updateUserList');
         socket.broadcast.to(params.gameId).emit('newMessage', generateMessage(`${params.username} has joined.`));
         callback();
     });
