@@ -2,8 +2,15 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header'
 import api from '../api';
+import history from '../history';
 
 class Home extends Component {
+    constructor(props) {
+        super(props);
+        this.signout = this.signout.bind(this);
+        this.createGame = this.createGame.bind(this);
+        this.joinGame = this.joinGame.bind(this);
+    }
 
     signout = event => {
         event.preventDefault();
@@ -11,7 +18,7 @@ class Home extends Component {
         api.post(`/signout/`)
             .then(res => {
                 console.log(res);
-                this.props.history.push("/login");
+                history.push("/login");
             }).catch(err => {
                 console.log(err);
             })
@@ -25,10 +32,17 @@ class Home extends Component {
         api.post(`/api/game/`, gameSettings)
             .then(res => {
                 console.log(res);
-                this.props.history.push("/lobby");
+                console.log(res.data);
+                history.push("/lobby/" + res.data);
             }).catch(err => {
                 console.log(err);
             })
+    }
+
+    joinGame = event => {
+        event.preventDefault();
+
+        // socket emit
     }
 
     render() {
@@ -40,6 +54,10 @@ class Home extends Component {
                 </div>
                 <div id="homeButton">
                     <button className="btn btn-success btn-lg btn-block" onClick={this.createGame}>Create Game</button>
+                </div>
+                <div className="row">
+                    <input className="offset-sm-3" ref={this.urlRef} type="text" maxLength="15"></input>
+                    <button className="offset-sm-1 col-sm-6" className="btn btn-success btn-lg" onClick={this.joinGame}>Join Game</button>
                 </div>
             </div>
         );
