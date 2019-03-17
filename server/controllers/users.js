@@ -23,6 +23,7 @@ exports.getUser = function (req, res) {
         return res.json(user);
     });
 };
+
 const USER_PAGE_SIZE = 10;
 
 // gets a paginated list of usernames
