@@ -4,7 +4,6 @@ const LeaderboardSchema = new mongoose.Schema({
     _id: { // _id is the username
         type: String,
         required: true,
-        index: true
     },
     score: { // player's total score
         type: Number,
