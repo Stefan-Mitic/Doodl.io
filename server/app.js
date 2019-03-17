@@ -76,6 +76,7 @@ app.post('/api/game/', games.createGame);
 app.post('/api/game/start/', games.startGame);
 app.patch('/api/game/join/', games.addPlayer);
 app.get('/api/game/:id/players/', games.getPlayers);
+app.get('/api/game/:id/', games.getGame);
 
 
 // setup server
