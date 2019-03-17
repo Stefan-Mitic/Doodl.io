@@ -9,6 +9,12 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const ImageModel = mongoose.model('Image');
 
+const path = require('path');
+const multer  = require('multer');
+let gameImages = multer({
+    dest: path.join(__dirname, 'assets/images')
+});
+
 exports.addImage = function (req, res) {
     ImageModel.create({
         name: req.body.name,
