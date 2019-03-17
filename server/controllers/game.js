@@ -18,6 +18,7 @@ exports.createGame = function(req, res) {
     GameModel.create({
         _id: id,
         rounds: parseInt(req.body.rounds),
+        players: [req.body.username],
         started: false
     }).then(function(game) {
         return res.json(game._id);
@@ -38,13 +39,13 @@ exports.startGame = function(req, res) {
 };
 
 exports.addPlayer = function(req, res) {
-    GameModel.findOne({ _id: req.body.id }, function(err, game) {
+    GameModel.findOne({ _id: req.body.gameId }, function(err, game) {
         if (err) return res.status(500).end(err);
         let players = game.players;
         players.push(req.body.username);
         // Won't allow more than 4 players
         if (game.players.length > 4) return res.status(409).end("Lobby full");
-        GameModel.updateOne({ _id: req.body.id }, { $set: { players: players } },
+        GameModel.updateOne({ _id: req.body.gameId }, { $set: { players: players } },
             function(err, result) {
                 if (err) return res.status(500).end(err);
                 res.json(result);

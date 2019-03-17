@@ -18,11 +18,12 @@ class Lobby extends Component {
     }
 
     getPlayers() {
+        console.log("Get players called");
         var rows = [];
         var players = [];
         api.get(`/api/game/` + this.gameId + `/players/`)
             .then(res => {
-                console.log(res);
+                console.log(res.data);
                 players = res;
             }).catch(err => {
                 console.log(err);
