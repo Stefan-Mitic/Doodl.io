@@ -2,12 +2,13 @@ const mongoose = require('mongoose');
 
 const ImageSchema = new mongoose.Schema({
     name: {
-        type: String
+        type: String,
+        required: true
     },
-    file: {
-        type: Object
+    file: { // contains the image file metadata
+        type: Object,
+        required: true
     }
-    // file: contains the actual image file
 }, {
     timestamps: true
 });

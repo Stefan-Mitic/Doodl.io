@@ -1,19 +1,22 @@
 import React, { Component } from 'react';
 import CanvasDraw from "react-canvas-draw";
 import ReactCountdownClock from 'react-countdown-clock';
-import { Redirect } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 import api from '../api';
+import history from '../history';
 
 class Game extends Component {
     constructor(props) {
         super(props);
         this.state = { round: 1 };
         this.roundEnd = this.roundEnd.bind(this);
+        this.gameEnd = this.gameEnd.bind(this);
+        this.updatePlayerScore = this.updatePlayerScore.bind(this);
         this.clockRef = React.createRef();
         this.canvas = React.createRef();
         this.image = React.createRef();
         this.images = this.props.location.state.host;
+        this.gameId = this.props.match.params.id;
     }
 
     componentDidMount() {
@@ -35,6 +38,36 @@ class Game extends Component {
             // var win = window.open();
             // win.document.write('<iframe src="' + img.src + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
         });
+
+        let imgId = -1;
+        api.post('/api/game/images/')
+            .then(res => {
+                console.log(res);
+                imgId = res;
+            }).catch(err => {
+                console.log(err);
+            });
+
+        if (imgId != -1) {
+            api.get(`/api/game/images/` + this.images[0] + `/compare/` + imgId)
+                .then(res => {
+                    console.log(res);
+                    this.updatePlayerScore(res);
+                }).catch(err => {
+                    console.log(err);
+                });
+        }
+
+        if (this.state.round == 1)
+            this.gameEnd();
+    }
+
+    updatePlayerScore(score) {
+        
+    }
+
+    gameEnd() {
+        history.push({ pathname: "/postgame/" + this.gameId});
     }
 
     render() {
