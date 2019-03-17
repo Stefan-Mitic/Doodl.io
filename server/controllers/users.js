@@ -109,6 +109,11 @@ exports.updatePassword = function (req, res) {
         let hash = crypto.generateHash(oldPassword, user.salt);
         if (user.hash !== hash) return res.status(401).end("access denied"); // invalid password
         // create new salt and hash password
-        return res.json(username);
+        let salt = crypto.generateSalt();
+        let newHash = crypto.generateHash(newPassword, salt);
+        UserModel.findByIdAndUpdate(username, { $set: { hash: newHash, salt } }, function (err, result) {
+            if (err) return res.status(500).end(err);
+            return res.json(result);
+        });
     });
 };

@@ -47,7 +47,8 @@ app.post('/signup/', validator.checkUsername, validator.checkPassword, users.sig
 app.get('/signout/', auth.isAuthenticated, users.signout);
 app.get('/api/users/:username/', users.getUser);
 app.get('/api/users/', users.getUsers);
-app.patch('/api/users/', auth.isAuthenticated, users.updateName);
+app.patch('/api/users/name/', auth.isAuthenticated, validator.checkDisplayName, users.updateName);
+app.patch('/api/users/password/', auth.isAuthenticated, users.updatePassword);
 
 // friend system routes
 app.post('/api/users/friend/', auth.isAuthenticated, friends.sendRequest);
@@ -59,8 +60,9 @@ app.get('/api/users/:username/recievedrequests/', auth.isAuthenticated, auth.isO
 app.get('/api/users/:username/friends/', auth.isAuthenticated, friends.getFriends);
 
 // leaderboard score routes
-app.get('/api/leaderboard/', auth.isAuthenticated, scores.getTopPlayers);
+app.get('/api/leaderboard/', scores.getTopPlayers);
 app.get('/api/leaderboard/me/', auth.isAuthenticated, scores.getPlayerLeaderboard);
+app.get('/api/leaderboard/history/', auth.isAuthenticated, scores.getPlayerHistory);
 
 // game image routes
 app.get('/api/game/images/:id/compare/', validator.checkId, gameImages.compare);

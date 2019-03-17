@@ -18,7 +18,7 @@ exports.checkUsername = function (req, res, next) {
     if (!username) return res.status(400).end("bad input");
     let validUsername = validator.isAlphanumeric(username);
     validUsername = validUsername && username.length >= 3;
-    if (!validUsername) return res.status(400).end("bad input");
+    if (!validUsername) return res.status(400).end("username too short");
     next();
 };
 
@@ -26,6 +26,16 @@ exports.checkUsername = function (req, res, next) {
 exports.checkPassword = function (req, res, next) {
     let password = req.body.password;
     if (!password) return res.status(400).end("bad input");
+    next();
+};
+
+// checks if display name is valid
+exports.checkDisplayName = function (req, res, next) {
+    let displayname = req.body.name;
+    if (!displayname) return res.status(400).end("bad input");
+    let validName = validator.isAlphanumeric(displayname);
+    validName = validName && displayname.length >= 3;
+    if (!validName) return res.status(400).end("display name too short"); 
     next();
 };
 
