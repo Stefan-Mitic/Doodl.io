@@ -67,9 +67,6 @@ class Lobby extends Component {
     }
 
     render() {
-        const data = [{
-            name: 'Roy Agasthyan'
-          }]
         const columns = [{
             Header: 'Players',
             accessor: 'name'
