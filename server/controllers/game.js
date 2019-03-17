@@ -17,7 +17,7 @@ exports.createGame = function(req, res) {
     let id = crypto.randomBytes(15).toString('hex');
     GameModel.create({
         _id: id,
-        rounds: req.body.rounds,
+        rounds: parseInt(req.body.rounds),
         started: false
     }).then(function(game) {
         return res.json(game._id);
