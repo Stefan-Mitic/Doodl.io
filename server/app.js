@@ -64,8 +64,8 @@ app.post('/api/game/images/', upload.single('picture'), gameImages.addImage);
 app.delete('/api/game/images/:id/', validator.checkId, gameImages.deleteImage);
 
 // game routes
-app.post('/api/game/', validator.checkId, games.createGame);
-app.post('/api/game/start', validator.checkId, games.startGame);
+app.post('/api/game/', games.createGame);
+app.post('/api/game/start', games.startGame);
 
 // setup server
 const http = require('http');

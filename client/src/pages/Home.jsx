@@ -19,8 +19,10 @@ class Home extends Component {
 
     createGame = event => {
         event.preventDefault();
-
-        api.post(`/game/`)
+        const gameSettings = {
+            rounds: 1
+        };
+        api.post(`/api/game/`, gameSettings)
             .then(res => {
                 console.log(res);
                 this.props.history.push("/lobby");

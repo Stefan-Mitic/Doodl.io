@@ -8,16 +8,19 @@
 const mongoose = require('mongoose');
 const GameModel = mongoose.model('Game');
 const UserModel = mongoose.model('User');
-
+const crypto = require("crypto");
 //TODO: Delete game, update score
 
+
+
 exports.createGame = function(req, res) {
+    let id = crypto.randomBytes(15).toString('hex');
     GameModel.create({
-        _id: req.body.id,
+        _id: id,
         rounds: req.body.rounds,
         started: false
-    }).then(function(image) {
-        return res.json(image);
+    }).then(function(game) {
+        return res.json(game._id);
     }).catch(function(err) {
         return res.status(500).end(err);
     });
