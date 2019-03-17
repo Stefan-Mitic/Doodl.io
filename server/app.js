@@ -103,18 +103,23 @@ let lobbies = {};
 io.on('connection', function(socket) {
     console.log('User connected');
     socket.on('join', function(params, callback) {
+        console.log("GameID: " + params.gameId);
         // room id
         if (!isRealString(params.gameId)) {
             callback('Game id is required');
         }
         socket.join(params.gameId);
-        io.to(params.room).emit('updateUserList');
+        io.to(params.gameId).emit('updateUserList');
         socket.broadcast.to(params.gameId).emit('newMessage', generateMessage(`${params.username} has joined.`));
         callback();
     });
 
-    socket.on('roundStart', function(counter) {
-        let room = io.sockets.manager.roomClients[socket.id];
+    socket.on('startGame', function(callback) {
+
+    })
+
+    socket.on('roundStart', function(params, counter) {
+        let room = params.gameId;
         let countdown = setInterval(function() {
             io.to(room).emit('counter', counter);
             counter--;
@@ -127,7 +132,7 @@ io.on('connection', function(socket) {
 
     socket.on('createMessage', function(message, callback) {
         console.log('createMessage', message);
-        io.emit('newMessage', generateMessage(message.from, message.text));
+        io.to(params.gameId).emit('newMessage', generateMessage(message.from, message.text));
     });
 
     socket.on('disconnect', function() {
