@@ -37,7 +37,14 @@ class Lobby extends Component {
     }
 
     listenSockets() {
-        socket.on('updateUserList', this.getPlayers);
+        socket.on('updateUserList', function(){
+            console.log("player joined");
+            this.getPlayers();
+        });
+        socket.on('gameStart', this.startGame);
+        socket.on('newMessage', function(message) {
+            console.log(`${message.from}: ${message.text}`);
+        });
     }
 
     copyText() {
@@ -62,6 +69,7 @@ class Lobby extends Component {
             .then(res => {
                 console.log(res);
                 // socket emit code here
+                // socket.emit('startGame');
                 history.push({ pathname: "/game/" + this.gameId, state : { images : images }});
             }).catch(err => {
                 console.log(err);
