@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header'
 import api from '../api';
 
+import openSocket from 'socket.io-client';
+const socket = openSocket('http://localhost:5000');
+
 class Home extends Component {
 
     signout = event => {
@@ -14,8 +17,8 @@ class Home extends Component {
                 this.props.history.push("/login");
             }).catch(err => {
                 console.log(err);
-            })
-    }
+            });
+    };
 
     createGame = event => {
         event.preventDefault();
@@ -24,12 +27,21 @@ class Home extends Component {
         };
         api.post(`/api/game/`, gameSettings)
             .then(res => {
-                console.log(res);
+                let id = res.data;
+                console.log(id);
+                socket.emit('join', id, function(err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log("joined successfully");
+                    }
+                });
                 this.props.history.push("/lobby");
             }).catch(err => {
                 console.log(err);
-            })
-    }
+            });
+        
+    };
 
     render() {
         return (
