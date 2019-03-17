@@ -7,6 +7,10 @@
 
 const crypto = require('crypto');
 
+/**
+ * Exported helper functions
+ */
+
 // generates a random salt of 16 bytes
 exports.generateSalt = function () {
     return crypto.randomBytes(16)

@@ -1,9 +1,18 @@
 /* jshint node: true */
 "use strict";
 
+/**
+ * Module dependencies.
+ */
+
 const isValidId = require('mongodb').ObjectID.isValid;
 const validator = require('validator');
 
+/**
+ * Exported middleware functions
+ */
+
+// checks if username is valid
 exports.checkUsername = function (req, res, next) {
     let username = req.body.username;
     if (!username) return res.status(400).end("bad input");
@@ -13,6 +22,7 @@ exports.checkUsername = function (req, res, next) {
     next();
 };
 
+// checks if password is valid
 exports.checkPassword = function (req, res, next) {
     let password = req.body.password;
     if (!password) return res.status(400).end("bad input");
@@ -25,7 +35,7 @@ exports.sanitizeContent = function (req, res, next) {
     next();
 };
 
-// check if id is valid
+// checks if id is valid
 exports.checkId = function (req, res, next) {
     let validId = isValidId(req.params.id);
     if (!validId) return res.status(400).end("bad input");

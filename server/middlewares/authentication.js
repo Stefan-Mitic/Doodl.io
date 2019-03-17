@@ -1,9 +1,18 @@
 /* jshint node: true */
 "use strict";
 
+/**
+ * Module dependencies.
+ */
+
 const session = require('express-session');
 const cookie = require('cookie');
 
+/**
+ * Exported helper functions
+ */
+
+ // session authentication settings
 exports.sessionSettings = session({
     secret: 'It really do be like that.',
     resave: false,
@@ -13,6 +22,7 @@ exports.sessionSettings = session({
     }
 });
 
+// returns cookie settings for cookie header
 exports.setCookie = function (username) {
     if (!username) username = '';
     return cookie.serialize('username', username, {
@@ -21,6 +31,10 @@ exports.setCookie = function (username) {
         maxAge: 60 * 60 * 24 * 7 // 1 week in number of seconds
     });
 };
+
+/**
+ * Exported middleware functions
+ */
 
 exports.setUsername = function (req, res, next) {
     req.username = (req.session.username) ? req.session.username : null;
