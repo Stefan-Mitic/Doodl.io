@@ -6,14 +6,39 @@
  */
 
 const fs = require('fs');
+const path = require('path');
 const mongoose = require('mongoose');
 const ImageModel = mongoose.model('Image');
 
-const path = require('path');
-const multer  = require('multer');
-let gameImages = multer({
-    dest: path.join(__dirname, 'assets/images')
+// initialize database if empty
+ImageModel.count(function (err, count) {
+    if (err) return console.log(err);
+    if (count === 0) {
+        populateImageDB();
+        console.log("Image database initialized");
+    }
 });
+
+// populates the clipart image database
+function populateImageDB() {
+    let clipartsPath = path.join(__dirname, '../assets/cliparts');
+    // read through each clipart
+    fs.readdir(clipartsPath, function (err, filenames) {
+        if (err) return console.log(err);
+        filenames.forEach(function (filename, index) {
+            let name = filename.split('.').slice(0, -1).join('.');
+            let filepath = path.join(clipartsPath, filename);
+            let imagedata = {
+                name: name,
+                file: { mimetype: 'image/png', destination: clipartsPath, filename: filename, path: filepath }
+            };
+            ImageModel.create(imagedata, function (err, raw) {
+                if (err) return console.log(err);
+                return console.log(raw);
+            });
+        });
+    });
+}
 
 exports.addImage = function (req, res) {
     ImageModel.create({
