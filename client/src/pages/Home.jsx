@@ -34,7 +34,6 @@ class Home extends Component {
         };
         api.post(`/api/game/`, gameSettings)
             .then(res => {
-<<<<<<< HEAD
                 let id = res.data;
                 console.log(id);
                 socket.emit('join', id, function(err) {
@@ -44,12 +43,7 @@ class Home extends Component {
                         console.log("joined successfully");
                     }
                 });
-                this.props.history.push("/lobby");
-=======
-                console.log(res);
-                console.log(res.data);
-                history.push("/lobby/" + res.data);
->>>>>>> 82b26f08cfa011ca7c5548a04fb7faf5c70532bf
+                this.props.history.push("/lobby/" + id);
             }).catch(err => {
                 console.log(err);
             });
