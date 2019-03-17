@@ -38,8 +38,10 @@ fs.readdirSync(models)
 const users = require('./controllers/users');
 const friends = require('./controllers/friends');
 const gameImages = require('./controllers/images');
+const drawings = require('./controllers/drawings');
 const games = require('./controllers/game');
 const scores = require('./controllers/scores');
+const comparison = require('./controllers/comparison');
 
 // user authentication routes
 app.post('/signin/', validator.checkUsername, users.signin);
@@ -67,17 +69,14 @@ app.get('/api/leaderboard/history/', auth.isAuthenticated, scores.getPlayerHisto
 // game image routes
 app.get('/api/game/images/:id/', validator.checkId, gameImages.getImageById);
 app.get('/api/game/images/', gameImages.getRandomImages);
-// app.post('/api/game/images/', upload.single('picture'), gameImages.addImage);
-// app.delete('/api/game/images/:id/', validator.checkId, gameImages.deleteImage);
 
 // canvas drawing image routes
-//app.get('/api/users/:username/drawings/')
-//app.get('/api/drawings/:id/')
-//app.delete('/api/drawings/:id/')
+app.post('/api/drawings/', auth.isAuthenticated, drawings.addDrawing);
+app.get('/api/drawings/:id/', auth.isAuthenticated, validator.checkId, drawings.getDrawing);
+app.delete('/api/drawings/:id/', auth.isAuthenticated, validator.checkId, drawings.removeDrawing);
 
 // image comparison routes
-//app.post('/api/game/images/:id/compare/')
-
+app.post('/api/game/images/:id/compare/', validator.checkId, comparison.gameCompare);
 
 // game routes
 app.post('/api/game/', games.createGame);
