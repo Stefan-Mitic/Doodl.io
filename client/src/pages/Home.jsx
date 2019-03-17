@@ -4,6 +4,9 @@ import Header from '../components/Header'
 import api from '../api';
 import history from '../history';
 
+import openSocket from 'socket.io-client';
+const socket = openSocket('http://localhost:5000');
+
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -22,8 +25,8 @@ class Home extends Component {
                 history.push("/login");
             }).catch(err => {
                 console.log(err);
-            })
-    }
+            });
+    };
 
     createGame = event => {
         event.preventDefault();
@@ -32,13 +35,21 @@ class Home extends Component {
         };
         api.post(`/api/game/`, gameSettings)
             .then(res => {
-                console.log(res);
-                console.log(res.data);
-                history.push("/lobby/" + res.data);
+                let id = res.data;
+                console.log(id);
+                socket.emit('join', id, function(err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log("joined successfully");
+                    }
+                });
+                this.props.history.push("/lobby/" + id);
             }).catch(err => {
                 console.log(err);
-            })
-    }
+            });
+        
+    };
 
     joinGame = event => {
         event.preventDefault();

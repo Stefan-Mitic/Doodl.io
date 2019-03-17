@@ -84,12 +84,12 @@ let lobbies = {};
 io.on('connection', function(socket) {
     console.log('User connected');
     let sessionid = socket.id;
-    socket.on('join', function(params, callback) {
+    socket.on('join', function(gameId, callback) {
         // room id
-        if (!isRealString(params.gameId)) {
+        if (!isRealString(gameId)) {
             callback('Game id is required');
         }
-        socket.join(params.room);
+        socket.join(gameId);
         callback();
     });
 
