@@ -73,7 +73,10 @@ app.delete('/api/game/images/:id/', validator.checkId, gameImages.deleteImage);
 
 // game routes
 app.post('/api/game/', games.createGame);
-app.post('/api/game/start', games.startGame);
+app.post('/api/game/start/', games.startGame);
+app.patch('/api/game/join/', games.addPlayer);
+app.get('/api/game/players/', games.getPlayers);
+
 
 // setup server
 const http = require('http');
