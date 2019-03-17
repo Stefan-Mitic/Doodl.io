@@ -39,6 +39,7 @@ const users = require('./controllers/users');
 const friends = require('./controllers/friends');
 const gameImages = require('./controllers/images');
 const games = require('./controllers/game');
+const scores = require('./controllers/scores');
 
 // user authentication routes
 app.post('/signin/', validator.checkUsername, users.signin);
@@ -46,6 +47,7 @@ app.post('/signup/', validator.checkUsername, validator.checkPassword, users.sig
 app.get('/signout/', auth.isAuthenticated, users.signout);
 app.get('/api/users/:username/', users.getUser);
 app.get('/api/users/', users.getUsers);
+app.update('/api/users/', auth.isAuthenticated, users.updateName);
 
 // friend system routes
 app.post('/api/users/friend/', auth.isAuthenticated, friends.sendRequest);
@@ -55,6 +57,10 @@ app.post('/api/users/unfriend/', auth.isAuthenticated, friends.unfriend);
 app.get('/api/users/:username/sentrequests/', auth.isAuthenticated, auth.isOwnUser, friends.getSentRequests);
 app.get('/api/users/:username/recievedrequests/', auth.isAuthenticated, auth.isOwnUser, friends.getRecievedRequests);
 app.get('/api/users/:username/friends/', auth.isAuthenticated, friends.getFriends);
+
+// leaderboard score routes
+app.get('/api/leaderboard/', auth.isAuthenticated, scores.getTopPlayers);
+app.get('/api/leaderboard/me/', auth.isAuthenticated, scores.getPlayerLeaderboard);
 
 // game image routes
 app.get('/api/game/images/:id/compare/', validator.checkId, gameImages.compare);

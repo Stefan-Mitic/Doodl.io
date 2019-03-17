@@ -41,6 +41,7 @@ exports.compare = function (req, res) {
     // TODO: insert image comparison API here!
 };
 
+// gets a specific image file by id
 exports.getImageById = function (req, res) {
     let imageId = req.params.id;
     ImageModel.findById(imageId, function (err, image) {
@@ -52,6 +53,7 @@ exports.getImageById = function (req, res) {
     });
 };
 
+// gets a list of random image ids from the server (default 5)
 exports.getRandomImages = function (req, res) {
     let num = parseInt(req.query.num) || 5;
     ImageModel.aggregate([{ $sample: { size: num } }], function (err, images) {
