@@ -10,6 +10,7 @@ class Home extends Component {
         this.signout = this.signout.bind(this);
         this.createGame = this.createGame.bind(this);
         this.joinGame = this.joinGame.bind(this);
+        this.inputRef = React.createRef();
     }
 
     signout = event => {
@@ -42,6 +43,8 @@ class Home extends Component {
     joinGame = event => {
         event.preventDefault();
 
+        var gameId = this.inputRef.current;
+
         // socket emit
     }
 
@@ -56,7 +59,7 @@ class Home extends Component {
                     <button className="btn btn-success btn-lg btn-block" onClick={this.createGame}>Create Game</button>
                 </div>
                 <div className="row">
-                    <input className="offset-sm-3" ref={this.urlRef} type="text" maxLength="15"></input>
+                    <input className="offset-sm-3" ref={this.inputRef} type="text" maxLength="15"></input>
                     <button className="offset-sm-1 col-sm-6" className="btn btn-success btn-lg" onClick={this.joinGame}>Join Game</button>
                 </div>
             </div>
