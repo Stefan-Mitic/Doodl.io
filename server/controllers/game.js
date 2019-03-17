@@ -65,3 +65,10 @@ exports.removePlayer = function(req, res) {
             });
     });
 };
+
+exports.getPlayers = function(req, res) {
+    GameModel.findOne({ _id: req.body.id }, function(err, game) {
+        if (err) return res.status(500).end(err);
+        res.json(game.players);
+    });
+};
