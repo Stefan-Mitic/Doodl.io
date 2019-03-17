@@ -6,6 +6,7 @@
  */
 
 const mongoose = require('mongoose');
+const ScoreModel = mongoose.model('Score');
 const LeaderboardModel = mongoose.model('Leaderboard');
 
 /**
@@ -41,7 +42,18 @@ exports.getPlayerLeaderboard = function (req, res) {
     });
 };
 
+const GAME_HISTORY_PAGE_SIZE = 10;
+
 // gets given player's game history
 exports.getPlayerHistory = function (req, res) {
+    let page = parseInt(req.query.page) || 0;
     let username = req.params.username;
+    ScoreModel.find({ player: username })
+        .sort({ createdAt: -1 })
+        .skip(page * GAME_HISTORY_PAGE_SIZE)
+        .limit(GAME_HISTORY_PAGE_SIZE)
+        .exec(function (err, history) {
+            if (err) res.status(500).end(err);
+            return res.json(history);
+        });  
 };
