@@ -77,7 +77,7 @@ class Home extends Component {
                     <button className="btn btn-success btn-lg btn-block" onClick={this.createGame}>Create Game</button>
                 </div>
                 <div className="row">
-                    <input className="offset-sm-4" ref={this.inputRef} type="text" maxLength="15" placeholder="Enter Game ID"></input>
+                    <input className="offset-sm-4" ref={this.inputRef} type="text" maxLength="30" placeholder="Enter Game ID"></input>
                     <button className="offset-sm-1 col-sm-6" className="btn btn-success btn-lg" onClick={this.joinGame}>Join Game</button>
                 </div>
             </div>

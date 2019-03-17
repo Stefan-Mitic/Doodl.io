@@ -18,7 +18,7 @@ class Lobby extends Component {
     getPlayers() {
         var rows = [];
         var players = [];
-        api.get(`/api/game/players/`, { id: this.gameId })
+        api.get(`/api/game/` + this.gameId + `/players/`)
             .then(res => {
                 console.log(res);
                 players = res;
