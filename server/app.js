@@ -41,27 +41,19 @@ const gameImages = require('./controllers/images');
 
 // user authentication routes
 app.post('/signin/', validator.checkUsername, users.signin);
-app.post(
-    '/signup/', validator.checkUsername, validator.checkPassword, users.signup);
+app.post('/signup/', validator.checkUsername, validator.checkPassword, users.signup);
 app.get('/signout/', auth.isAuthenticated, users.signout);
 app.get('/api/users/:username/', users.getUser);
 app.get('/api/users/', users.getUsers);
 
 // friend system routes
 app.post('/api/users/friend/', auth.isAuthenticated, friends.sendRequest);
-app.post(
-    '/api/users/acceptrequest/', auth.isAuthenticated, friends.acceptRequest);
-app.post(
-    '/api/users/rejectrequest/', auth.isAuthenticated, friends.rejectRequest);
+app.post('/api/users/acceptrequest/', auth.isAuthenticated, friends.acceptRequest);
+app.post('/api/users/rejectrequest/', auth.isAuthenticated, friends.rejectRequest);
 app.post('/api/users/unfriend/', auth.isAuthenticated, friends.unfriend);
-app.get(
-    '/api/users/:username/sentrequests/', auth.isAuthenticated, auth.isOwnUser,
-    friends.getSentRequests);
-app.get(
-    '/api/users/:username/recievedrequests/', auth.isAuthenticated,
-    auth.isOwnUser, friends.getRecievedRequests);
-app.get(
-    '/api/users/:username/friends/', auth.isAuthenticated, friends.getFriends);
+app.get('/api/users/:username/sentrequests/', auth.isAuthenticated, auth.isOwnUser, friends.getSentRequests);
+app.get('/api/users/:username/recievedrequests/', auth.isAuthenticated, auth.isOwnUser, friends.getRecievedRequests);
+app.get('/api/users/:username/friends/', auth.isAuthenticated, friends.getFriends);
 
 // game image routes
 app.get('/api/game/images/:id/compare/', validator.checkId, gameImages.compare);

@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 
 const ImageSchema = new mongoose.Schema({
-    name: String,
-    date: { type: Date, default: Date.now }
+    name: {
+        type: String
+    },
+}, {
+    timestamps: true
 });
 
 const Image = mongoose.model('Image', ImageSchema);

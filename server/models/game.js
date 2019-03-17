@@ -1,12 +1,34 @@
 const mongoose = require('mongoose');
 
 const GameSchema = new mongoose.Schema({
-    _id: String, // game/socket id
-    players: [String], // list of participating players (username)
-    winner: String, // username of winning player
-    images: [String], // list of images (id) used in the game
-    rounds: Number, // number of rounds played
-    started: Boolean // False when created, True when game starts 
+    _id: { // game/socket id
+        type: String,
+        required: true,
+        index: true,
+    },
+    players: { // list of participating players (username)
+        type: [String],
+        default: [],
+    },
+    winner: { // username of winning player
+        type: String,
+        required: false,
+        default: '',
+    },
+    images: { // list of images (id) used in the game
+        type: [String],
+        default: [],
+    },
+    rounds: { // number of rounds played
+        type: Number,
+        required: false,
+        default: 0,
+    },
+    started: { // false when created, true when game starts 
+        type: Boolean,
+        required: false,
+        default: false,
+    }
 });
 
 const Game = mongoose.model('Game', GameSchema);
