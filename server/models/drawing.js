@@ -5,11 +5,17 @@ const DrawingSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true
     },
-    player: { // username of player that drew this
+    gameId: { // game that this drawing is from
+        type: String
+    },
+    player: { // username of player that drew the image
         type: String,
         required: true
     },
-    // file: contains the actual canvas drawing image file
+    file: { // contains the canvas drawing file metadata
+        type: Object,
+        required: true
+    }
 }, {
     timestamps: true
 });
