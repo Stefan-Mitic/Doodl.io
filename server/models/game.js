@@ -3,8 +3,6 @@ const mongoose = require('mongoose');
 const GameSchema = new mongoose.Schema({
     _id: { // game/socket id
         type: String,
-        required: true,
-        index: true,
     },
     players: { // list of participating players (username)
         type: [String],
