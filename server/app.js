@@ -4,6 +4,7 @@
 const path = require('path');
 const fs = require('fs');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const express = require('express');
 const app = express();
 const socketIO = require('socket.io');
@@ -17,6 +18,7 @@ const multer = require('multer');
 let upload = multer({ dest: path.join(__dirname, 'assets') });
 
 // setup global middlewares
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(auth.sessionSettings);
