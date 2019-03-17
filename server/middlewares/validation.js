@@ -31,7 +31,7 @@ exports.checkPassword = function (field) {
         let valid = password.length <= 6;
         if (!valid) return res.status(400).end("password is not valid");
         next();
-    }
+    };
 };
 
 // checks if display name is valid
@@ -41,6 +41,14 @@ exports.checkDisplayName = function (req, res, next) {
     let valid = validator.isAlphanumeric(displayname) &&
         displayname.length >= 3;
     if (!valid) return res.status(400).end("display name is not valid");
+    next();
+};
+
+// checks if email is valid
+exports.checkEmail = function(req, res, next) {
+    let email = req.body.email;
+    let re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!re.test(email)) return res.status(400).end("email is not valid");
     next();
 };
 

@@ -26,7 +26,7 @@ exports.getTopPlayers = function (req, res) {
 
 // gets given player's score and position on the leaderboard
 exports.getPlayerLeaderboard = function (req, res) {
-    let username = req.params.username;
+    let username = req.params.username.toLowerCase();
     LeaderboardModel.findById(username, function (err, player) {
         if (err) res.status(500).end(err);
         if (!player) res.status(404).end(`player ${player} does not exist on leaderboard`);
@@ -47,7 +47,7 @@ const GAME_HISTORY_PAGE_SIZE = 10;
 // gets given player's game history
 exports.getPlayerHistory = function (req, res) {
     let page = parseInt(req.query.page) || 0;
-    let username = req.params.username;
+    let username = req.params.username.toLowerCase();
     ScoreModel.find({ player: username })
         .sort({ createdAt: -1 })
         .skip(page * GAME_HISTORY_PAGE_SIZE)

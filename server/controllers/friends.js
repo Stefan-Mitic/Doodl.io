@@ -195,9 +195,10 @@ exports.unfriend = function (req, res) {
     let username = req.username;
     let friend = req.query.target;
 
-    // check if friend exists in first place
+    // check if the friend exists as a user in first place
     UserModel.findById(username, function (err, user) {
         if (err) return res.status(500).end(err);
+        if (!user) return res.status(404).end(`User ${username} does not exist.`);
 
         // check if user is friends with target in first place
         UserModel.findOne({ _id: username, friends: friend }, function (err, user) {

@@ -16,7 +16,7 @@ const crypto = require('../middlewares/cryptography');
 
 // gets a specific user by username
 exports.getUser = function (req, res) {
-    let username = req.params.username;
+    let username = req.params.username.toLowerCase();
     UserModel.findById(username, { hash: 0, salt: 0, friends: 0 }, function (err, user) {
         if (err) return res.status(500).end(err);
         if (!user) return res.status(404).end(`username ${username} does not exist`);
@@ -40,7 +40,7 @@ exports.getUsers = function (req, res) {
 
 // creates a new user
 exports.signup = function (req, res) {
-    let username = req.body.username;
+    let username = req.body.username.toLowerCase();
     let password = req.body.password;
     // check if username already exists
     UserModel.findById(username, function (err, user) {
@@ -58,7 +58,7 @@ exports.signup = function (req, res) {
 
 // authenticates a user into the application
 exports.signin = function (req, res) {
-    let username = req.body.username;
+    let username = req.body.username.toLowerCase();
     let password = req.body.password;
     // retrieve user from the database
     UserModel.findById(username, { hash: 1, salt: 1 }, function (err, user) {
