@@ -20,6 +20,7 @@ class Lobby extends Component {
 
     componentDidMount() {
         this.getPlayers();
+        this.listenSockets();
     }
 
     async getPlayers() {
@@ -35,10 +36,8 @@ class Lobby extends Component {
     }
 
     listenSockets() {
-        socket.on('updateUserList', function(){
-            console.log("player joined");
-            this.getPlayers();
-        });
+        console.log("listen sockets read");
+        socket.on('updateUserList', this.getPlayers);
         socket.on('gameStart', this.startGame);
         socket.on('newMessage', function(message) {
             console.log(`${message.from}: ${message.text}`);
