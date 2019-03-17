@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import CanvasDraw from "react-canvas-draw";
 import ReactCountdownClock from 'react-countdown-clock';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 import html2canvas from 'html2canvas';
 
 class Game extends Component {
@@ -15,14 +15,14 @@ class Game extends Component {
     }
 
     componentDidMount() {
-        
+        this.state.round = 1; // Get round
+        this.image.src = require("./../pic_2.png"); // Get Img Src
     }
 
     roundEnd() {
         var img = new Image();
         html2canvas(document.getElementById("canvas")).then(canvas => {
             img.src = canvas.toDataURL('image/png');
-            console.log(img);
             // var win = window.open();
             // win.document.write('<iframe src="' + img.src + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
         });
@@ -45,7 +45,7 @@ class Game extends Component {
                             />
                         </div>
                         <div className="col-sm-4">
-                            <img src={require("./../pic_2.png")} width={475}></img>
+                            <img ref={image => this.image = image} width={475}></img>
                         </div>
                         <div id="canvas" className="col-sm-4">
                             <CanvasDraw ref={canvas => this.canvas = canvas} canvasWidth={475} canvasHeight={475} brushRadius={2} hideGrid={true} brushColor={"black"} />
