@@ -9,7 +9,7 @@ import Home from '../pages/Home';
 export const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={props => (
         localStorage.getItem('data')
-            ? <Home />
-            : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+            ? <Home from={props.location} />
+            : <Redirect to="/login" />
     )} />
 )
