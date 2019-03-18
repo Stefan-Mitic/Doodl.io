@@ -25,6 +25,17 @@ exports.getDrawing = function (req, res) {
     });
 };
 
+// get drawing file by id (TODO: authorization, right now any user can get a drawing)
+exports.getDrawingFile = function (req, res) {
+    let drawingId = req.params.id;
+    DrawingModel.findById(drawingId, function (err, drawing) {
+        if (err) return res.status(500).end(err);
+        if (!drawing) return res.status(404).end(`drawing id ${drawingId} does not exist`);
+        res.setHeader('Content-Type', drawing.file.mimetype);
+        return res.sendFile(drawing.file.path);
+    });
+};
+
 // add a new drawing
 exports.addDrawing = function (req, res) {
     // extract request values
@@ -46,8 +57,10 @@ exports.addDrawing = function (req, res) {
         if (err) return res.status(500).end(err);
         // save the drawing file to backend
         let pngdata = dataURL.replace(/^data:image\/\w+;base64,/, "");
-        fs.writeFile(filepath, new Buffer(pngdata, 'base64'), function (err) {
-        if (err) return res.status(500).end(err);
+        console.log(filepath);
+        console.log(pngdata);
+        fs.writeFile(filepath, pngdata, function (err) {
+            if (err) return res.status(500).end(err);
             return res.json(result);
         }); 
     });

@@ -72,15 +72,25 @@ exports.compare = function (req, res) {
     // TODO: insert image comparison API here!
 };
 
+// gets a specific image by id
+exports.getImage = function (req, res) {
+    let imageId = req.params.id;
+    ImageModel.findById(imageId, function (err, image) {
+        if (err) return res.status(500).end(err);
+        if (!image) return res.status(404).end("Image does not exist");
+        return res.json(image);
+    });
+};
+
 // gets a specific image file by id
-exports.getImageById = function (req, res) {
+exports.getImageFile = function (req, res) {
     let imageId = req.params.id;
     ImageModel.findById(imageId, function (err, image) {
         if (err) return res.status(500).end(err);
         if (!image) return res.status(404).end("Image does not exist");
         let file = image.file;
-        res.setHeader('Content-Type', file.mimetype);
-        return res.sendFile(file.path);
+        res.setHeader('Content-Type', image.file.mimetype);
+        return res.sendFile(image.file.path);
     });
 };
 
