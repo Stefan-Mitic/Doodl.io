@@ -69,6 +69,7 @@ exports.signin = function (req, res) {
         if (user.hash !== hash) return res.status(401).end("access denied"); // invalid password
         // start a session
         req.session.username = user._id;
+        console.log(req.session);
         res.setHeader('Set-Cookie', auth.setCookie(user._id));
         return res.json(username);
     });

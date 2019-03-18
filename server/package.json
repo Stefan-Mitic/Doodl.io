@@ -21,9 +21,9 @@
   },
   "scripts": {
     "start": "node app.js",
-    "backend": "nodemon app.js",
-    "frontend": "npm run start --prefix frontend",
-    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
+    "server": "nodemon app.js",
+    "client": "npm run start --prefix client",
+    "dev": "concurrently \"npm run client\" \"npm run server\""
   },
   "repository": {
     "type": "git",
