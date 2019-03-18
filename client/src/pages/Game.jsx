@@ -15,8 +15,8 @@ class Game extends Component {
         this.clockRef = React.createRef();
         this.canvas = React.createRef();
         this.image = React.createRef();
-        // this.images = this.props.location.state.images;
-        this.images = ["5c8ec548455150259e6f3922", "5c8ec548455150259e6f391e", "5c8ec548455150259e6f391f", "5c8ec548455150259e6f391d", "5c8ec548455150259e6f3920"];
+        this.images = this.props.location.state.images;
+        // this.images = ["5c8ec548455150259e6f3922", "5c8ec548455150259e6f391e", "5c8ec548455150259e6f391f", "5c8ec548455150259e6f391d", "5c8ec548455150259e6f3920"];
         this.players = this.props.location.state.players;
         this.gameId = this.props.match.params.id;
     }
@@ -24,7 +24,7 @@ class Game extends Component {
     componentDidMount() {
         // this.state.round = 1; // Get round
 
-        api.get(`/api/game/images/` + this.images[0] + '/')
+        api.get(`/api/game/images/` + this.images[0] + '/file/')
             .then(res => {
                 console.log(res);
                 this.image.src = res.config.url;
@@ -81,7 +81,7 @@ class Game extends Component {
     }
 
     gameEnd() {
-        history.push({ pathname: "/postgame/" + this.gameId, state: { players: this.players }});
+        history. push({ pathname: "/postgame/" + this.gameId, state: { players: this.players }});
     }
 
     render() {
@@ -93,7 +93,7 @@ class Game extends Component {
                         <div id="infoPanel" className="col-sm-2">
                             <h1>Round {this.state.round}</h1>
                             <ReactCountdownClock ref={this.clockRef}
-                                seconds={2}
+                                seconds={30}
                                 color={"blue"}
                                 alpha={0.9}
                                 size={100}
