@@ -37,12 +37,11 @@ class Game extends Component {
         let img = new Image();
         await html2canvas(document.getElementById("canvas")).then(canvas => {
             img.src = canvas.toDataURL('image/png');
-            var win = window.open();
-            win.document.write('<iframe src="' + img.src + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
+            // var win = window.open();
+            // win.document.write('<iframe src="' + img.src + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
         });
 
         const drawing = {
-            username: localStorage.getItem('username'),
             imageId: this.images[0],
             gameId: this.gameId,
             dataURL: img.src
