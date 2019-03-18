@@ -48,7 +48,6 @@ class Lobby extends Component {
 
     startGame = event => {
         event.preventDefault();
-
         let images = [];
         api.get(`/api/game/images/`)
             .then(res => {
@@ -62,7 +61,7 @@ class Lobby extends Component {
             .then(res => {
                 console.log(res);
                 // socket emit code here
-                // socket.emit('startGame');
+                if (this.host) socket.emit('startGame', this.gameId);
                 history.push({ pathname: "/game/" + this.gameId, state: { images: images, players: this.state.data } });
             }).catch(err => {
                 console.log(err);

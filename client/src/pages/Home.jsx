@@ -84,12 +84,12 @@ class Home extends Component {
                 <div className="row offset-sm-10">
                     <button className="btn btn-success header_btn" onClick={this.signout}>Signout</button>
                 </div>
-                <div className="row offset-sm-4 col-sm-5">
-                    <button className="btn btn-success btn-lg btn-block" onClick={this.createGame}>Create Game</button>
+                <div className="row">
+                    <button className="offset-sm-3 col-sm-5 btn btn-success btn-lg btn-block" onClick={this.createGame}>Create Game</button>
                 </div>
                 <div className="row">
-                    <input className="offset-sm-4" ref={this.inputRef} type="text" maxLength="30" placeholder="Enter Game ID"></input>
-                    <button className="btn btn-success btn-lg" onClick={this.joinGame}>Join Game</button>
+                    <input className="offset-sm-3 col-sm-3" ref={this.inputRef} type="text" maxLength="30" placeholder="Enter Game ID"></input>
+                    <button className="col-sm-2 btn btn-success btn-lg" onClick={this.joinGame}>Join Game</button>
                 </div>
             </div>
         );

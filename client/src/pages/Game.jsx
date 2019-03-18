@@ -16,7 +16,6 @@ class Game extends Component {
         this.canvas = React.createRef();
         this.image = React.createRef();
         this.images = this.props.location.state.images;
-        // this.images = ["5c8ec548455150259e6f3922", "5c8ec548455150259e6f391e", "5c8ec548455150259e6f391f", "5c8ec548455150259e6f391d", "5c8ec548455150259e6f3920"];
         this.players = this.props.location.state.players;
         this.gameId = this.props.match.params.id;
     }
@@ -35,7 +34,11 @@ class Game extends Component {
 
     async roundEnd() {
         let img = new Image();
-        await html2canvas(document.getElementById("canvas")).then(canvas => {
+        //get drawing from frontend
+        await html2canvas(document.getElementById("canvas"), {
+            width: 475,
+            height: 475
+        }).then(canvas => {
             img.src = canvas.toDataURL('image/png');
             // var win = window.open();
             // win.document.write('<iframe src="' + img.src + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>');
@@ -48,25 +51,25 @@ class Game extends Component {
         };
 
         let imgId = -1;
-        console.log(drawing);
+        //save drawing to DB
         await api.post('/api/drawings/', drawing)
             .then(res => {
                 console.log(res);
-                imgId = res.data;
+                imgId = res.data._id;
             }).catch(err => {
                 console.log(err);
             });
-        console.log(imgId);
 
         if (imgId !== -1) {
             const data = {
                 drawingId: imgId
             };
 
+            //compare drawing with image
             await api.post(`/api/game/images/` + this.images[0] + `/compare/`, data)
                 .then(res => {
                     console.log(res);
-                    this.updatePlayerScore(res);
+                    this.updatePlayerScore(res.data.difference);
                 }).catch(err => {
                     console.log(err);
                 });
@@ -81,7 +84,7 @@ class Game extends Component {
     }
 
     gameEnd() {
-        history. push({ pathname: "/postgame/" + this.gameId, state: { players: this.players }});
+        history.push({ pathname: "/postgame/" + this.gameId, state: { players: this.players } });
     }
 
     render() {
@@ -93,7 +96,7 @@ class Game extends Component {
                         <div id="infoPanel" className="col-sm-2">
                             <h1>Round {this.state.round}</h1>
                             <ReactCountdownClock ref={this.clockRef}
-                                seconds={30}
+                                seconds={10}
                                 color={"blue"}
                                 alpha={0.9}
                                 size={100}
@@ -104,7 +107,7 @@ class Game extends Component {
                             <img ref={image => this.image = image} width={475} alt={''}></img>
                         </div>
                         <div id="canvas" className="col-sm-4">
-                            <CanvasDraw ref={canvas => this.canvas = canvas} canvasWidth={475} canvasHeight={475} brushRadius={2} hideGrid={true} brushColor={"black"} />
+                            <CanvasDraw ref={canvas => this.canvas = canvas} canvasWidth={475} canvasHeight={475} brushRadius={8} hideGrid={true} brushColor={"black"} />
                         </div>
                     </div>
                 </div>
