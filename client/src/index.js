@@ -17,8 +17,8 @@ ReactDOM.render(<Router history={history}>
         <PrivateRoute exact path="/" component={Home} />
         <Route path="/login" component={Login} />
         <Route path="/lobby/:id" component={Lobby} />
-        <Route path="/game" component={Game} />
-        <Route path="/postgame" component={PostGame} />
+        <Route path="/game/:id" component={Game} />
+        <Route path="/postgame/:id" component={PostGame} />
     </div>
 </Router>, document.getElementById('root'));
 
