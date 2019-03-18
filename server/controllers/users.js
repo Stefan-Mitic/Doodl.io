@@ -52,7 +52,7 @@ exports.signup = function (req, res) {
         // insert new user into database
         UserModel.updateOne({ _id: username }, { _id: username, salt, hash }, { upsert: true }, function (err) {
             if (err) return res.status(500).end(err);
-            return res.json(`user ${username} signed up`);
+            return res.json(username);
         });
     });
 };
