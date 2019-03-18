@@ -102,12 +102,14 @@ const { isRealString } = require('./utils/realstring');
 io.on('connection', function(socket) {
     console.log('User connected ' + socket.id);
     socket.on('join', function(params, callback) {
-        if (!isRealString(params.gameId)) {
+        let gameId = params.gameId;
+        let username = params.username;
+        if (!isRealString(gameId)) {
             callback('Game id is required');
         }
-        socket.join(params.gameId);
-        socket.in(params.gameId).emit('updateUserList');
-        socket.to(params.gameId).emit('newMessage', generateMessage(`${params.username} has joined.`));
+        socket.join(gameId);
+        socket.in(gameId).emit('updateUserList');
+        socket.to(gameId).emit('newMessage', generateMessage(username, `Joined room ${gameId}`));
         callback();
     });
 
