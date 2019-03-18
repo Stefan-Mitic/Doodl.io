@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import api from '../api';
 import history from '../history';
-import Header from '../components/Header';
+import Header, {socket} from '../components/Header';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-import openSocket from 'socket.io-client';
-const socket = openSocket('http://localhost:5000');
 
 class Lobby extends Component {
     constructor(props) {
@@ -13,11 +11,12 @@ class Lobby extends Component {
         this.state = { show: false, data: [] };
         this.urlRef = React.createRef();
         this.getPlayers = this.getPlayers.bind(this);
-        this.listenSockets = this.listenSockets.bind(this);
+        // this.listenSockets = this.listenSockets.bind(this);
         this.copyText = this.copyText.bind(this);
         this.host = this.props.location.state.host;
         this.gameId = this.props.match.params.id;
         this.startGame = this.startGame.bind(this);
+        socket.on('updateUserList', this.getPlayers);
     }
 
     componentDidMount() {

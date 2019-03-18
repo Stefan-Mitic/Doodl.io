@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import Header from '../components/Header'
+import Header, {socket} from '../components/Header';
 import api from '../api';
 import history from '../history';
-
-import openSocket from 'socket.io-client';
-const socket = openSocket('http://localhost:5000');
 
 class Home extends Component {
     constructor(props) {
@@ -38,7 +34,6 @@ class Home extends Component {
         api.post(`/api/game/`, gameSettings)
             .then(res => {
                 let id = res.data;
-                console.log(id);
                 const params = {
                     username: username,
                     gameId: id
@@ -92,7 +87,7 @@ class Home extends Component {
                 </div>
                 <div className="row">
                     <input className="offset-sm-4" ref={this.inputRef} type="text" maxLength="30" placeholder="Enter Game ID"></input>
-                    <button className="offset-sm-1 col-sm-6" className="btn btn-success btn-lg" onClick={this.joinGame}>Join Game</button>
+                    <button className="btn btn-success btn-lg" onClick={this.joinGame}>Join Game</button>
                 </div>
             </div>
         );
