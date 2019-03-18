@@ -10,7 +10,7 @@ const cookie = require('cookie');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 
-mongoose.connect('mongodb://localhost/doodlio');
+mongoose.connect('mongodb://localhost/doodlio', { useNewUrlParser: true });
 
 /**
  * Exported helper functions

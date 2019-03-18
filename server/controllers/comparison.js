@@ -50,29 +50,34 @@ exports.gameCompare = function (req, res) {
     let imageId = req.params.id;
     let drawingId = req.body.drawingId;
 
+    // find clipart image
     ImageModel.findById(imageId, function (err, image) {
         if (err) return res.status(500).end(err);
+        if (!image) return res.status(404).end(`image id ${imageId} cannot be found`);
 
-        fs.readFile(image.file.path, function (err, data1) {
+        // find drawing image
+        DrawingModel.findById(drawingId, function (err, drawing) {
             if (err) return res.status(500).end(err);
-            let png1 = new PNG(data1);
+            if (!drawing) return res.status(404).end(`drawing id ${drawingId} cannot be found`);
 
-            DrawingModel.findById(drawingId, function (err, drawing) {
-                if (err) return res.status(500).end(err);
+            // read clipart and drawing images into pngjs
+            let img1 = fs.createReadStream(image.file.path).pipe(new PNG()).on('parsed', doneReading);
+            let img2 = fs.createReadStream(drawing.file.path).pipe(new PNG()).on('parsed', doneReading);
+            let filesRead = 0;
 
-                fs.readFile(drawing.file.path, function (err, data2) {
-                    if (err) return res.status(500).end(err);
-                    let png2 = new PNG(data2);
-
-                    let diff = new PNG({width: png1.width, height: png1.height});
-                    let pixels = pixelmatch(png1.data, png2.data, diff.data, png1.width, png1.height, {threshold: 0.1});
-                    return res.json({ image1: png1, image2: png2, difference: pixels, });
-
+            // if both are done reading, compare for number of different pixels
+            function doneReading() {
+                if (++filesRead < 2) return;
+                let diff = new PNG({width: img1.width, height: img1.height});
+                let pixels = pixelmatch(img1.data, img2.data, diff.data, img1.width, img1.height, {threshold: 0.1});
+                return res.json({
+                    imageId: image._id,
+                    drawingId: drawing._id,
+                    difference: pixels
                 });
-
-            });
-
+            }
         });
 
     });
+
 };

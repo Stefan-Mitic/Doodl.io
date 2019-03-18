@@ -11,7 +11,7 @@ const mongoose = require('mongoose');
 const ImageModel = mongoose.model('Image');
 
 // initialize database if empty
-ImageModel.count(function (err, count) {
+ImageModel.countDocuments(function (err, count) {
     if (err) return console.log(err);
     if (count === 0) {
         populateImageDB();
@@ -75,7 +75,7 @@ exports.compare = function (req, res) {
 // gets a specific image by id
 exports.getImage = function (req, res) {
     let imageId = req.params.id;
-    ImageModel.findById(imageId, function (err, image) {
+    ImageModel.findById(imageId, { __v: 0, file: 0 }, function (err, image) {
         if (err) return res.status(500).end(err);
         if (!image) return res.status(404).end("Image does not exist");
         return res.json(image);

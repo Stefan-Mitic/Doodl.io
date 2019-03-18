@@ -18,7 +18,7 @@ function generateRandomBytes() {
 // get drawing by id (TODO: authorization, right now any user can get a drawing)
 exports.getDrawing = function (req, res) {
     let drawingId = req.params.id;
-    DrawingModel.findById(drawingId, function (err, drawing) {
+    DrawingModel.findById(drawingId, { __v: 0, file: 0 }, function (err, drawing) {
         if (err) return res.status(500).end(err);
         if (!drawing) return res.status(404).end(`drawing id ${drawingId} does not exist`);
         return res.json(drawing);
@@ -53,6 +53,7 @@ exports.addDrawing = function (req, res) {
         player, imageId, gameId,
         file: { mimetype: 'image/png', destination: drawingspath, filename, path: filepath }
     };
+    console.log(drawingdata);
     // store canvas drawing object to DB
     DrawingModel.create(drawingdata, function (err, result) {
         if (err) return res.status(500).end(err);

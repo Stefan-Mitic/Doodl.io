@@ -26,7 +26,7 @@ app.use(auth.setUsername);
 
 // connect to db
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/doodlio', { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/doodlio', { useNewUrlParser: true, useCreateIndex: true });
 
 // initialize all models
 const models = path.join(__dirname, './models');
