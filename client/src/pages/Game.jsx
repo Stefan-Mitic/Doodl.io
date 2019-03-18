@@ -22,7 +22,7 @@ class Game extends Component {
     }
 
     componentDidMount() {
-        this.state.round = 1; // Get round
+        // this.state.round = 1; // Get round
 
         api.get(`/api/game/images/` + this.images[0] + '/')
             .then(res => {
@@ -58,7 +58,7 @@ class Game extends Component {
             });
         console.log(imgId);
 
-        if (imgId != -1) {
+        if (imgId !== -1) {
             const data = {
                 drawingId: imgId
             };
@@ -72,7 +72,7 @@ class Game extends Component {
                 });
         }
 
-        if (this.state.round == 1)
+        if (this.state.round === 1)
             this.gameEnd();
     }
 
