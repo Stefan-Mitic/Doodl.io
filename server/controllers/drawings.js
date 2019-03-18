@@ -39,7 +39,8 @@ exports.getDrawingFile = function (req, res) {
 // add a new drawing
 exports.addDrawing = function (req, res) {
     // extract request values
-    let player = req.username;
+    // let player = req.username;
+    let player = 'alice';
     let imageId = req.body.imageId;
     let gameId = req.body.gameId;
     let dataURL = req.body.dataURL;
@@ -57,9 +58,7 @@ exports.addDrawing = function (req, res) {
         if (err) return res.status(500).end(err);
         // save the drawing file to backend
         let pngdata = dataURL.replace(/^data:image\/\w+;base64,/, "");
-        console.log(filepath);
-        console.log(pngdata);
-        fs.writeFile(filepath, pngdata, function (err) {
+        fs.writeFile(filepath, new Buffer(pngdata, 'base64'), function (err) {
             if (err) return res.status(500).end(err);
             return res.json(result);
         }); 

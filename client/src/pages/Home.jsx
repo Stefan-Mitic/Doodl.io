@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import Header from '../components/Header'
+import Header, {socket} from '../components/Header';
 import api from '../api';
 import history from '../history';
-
-import openSocket from 'socket.io-client';
-const socket = openSocket('http://localhost:5000');
 
 class Home extends Component {
     constructor(props) {
@@ -37,7 +34,6 @@ class Home extends Component {
         api.post(`/api/game/`, gameSettings)
             .then(res => {
                 let id = res.data;
-                console.log(id);
                 const params = {
                     username: username,
                     gameId: id

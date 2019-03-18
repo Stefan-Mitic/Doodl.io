@@ -88,7 +88,6 @@ exports.getImageFile = function (req, res) {
     ImageModel.findById(imageId, function (err, image) {
         if (err) return res.status(500).end(err);
         if (!image) return res.status(404).end("Image does not exist");
-        let file = image.file;
         res.setHeader('Content-Type', image.file.mimetype);
         return res.sendFile(image.file.path);
     });
