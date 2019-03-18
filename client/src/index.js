@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, Redirect } from 'react-router-dom';
+import { Router, Route } from 'react-router-dom';
 import './index.css';
 import Home from './pages/Home.jsx';
 import Login from './pages/Login';
@@ -17,8 +17,8 @@ ReactDOM.render(<Router history={history}>
         <PrivateRoute exact path="/" component={Home} />
         <Route path="/login" component={Login} />
         <Route path="/lobby/:id" component={Lobby} />
-        <Route path="/game" component={Game} />
-        <Route path="/postgame" component={PostGame} />
+        <Route path="/game/:id" component={Game} />
+        <Route path="/postgame/:id" component={PostGame} />
     </div>
 </Router>, document.getElementById('root'));
 

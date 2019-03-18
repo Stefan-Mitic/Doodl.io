@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const DrawingSchema = new mongoose.Schema({
     imageId: { // image that this drawing is based off of
         type: mongoose.Schema.Types.ObjectId,
-        required: true
+        // required: true
     },
     gameId: { // game that this drawing is from
         type: String

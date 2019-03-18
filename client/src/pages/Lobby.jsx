@@ -3,6 +3,8 @@ import api from '../api';
 import history from '../history';
 import Header, {socket} from '../components/Header';
 import ReactTable from "react-table";
+import "react-table/react-table.css";
+
 class Lobby extends Component {
     constructor(props) {
         super(props);
@@ -36,7 +38,7 @@ class Lobby extends Component {
     listenSockets() {
         socket.on('updateUserList', this.getPlayers);
         socket.on('gameStart', this.startGame);
-        socket.on('newMessage', function(message) {
+        socket.on('newMessage', function (message) {
             console.log(`${message.from}: ${message.text}`);
         });
     }
@@ -54,7 +56,8 @@ class Lobby extends Component {
         let images = [];
         api.get(`/api/game/images/`)
             .then(res => {
-                console.log(res);
+                console.log(res.data);
+                images = res.data;
             }).catch(err => {
                 console.log(err);
             });
@@ -64,7 +67,7 @@ class Lobby extends Component {
                 console.log(res);
                 // socket emit code here
                 // socket.emit('startGame');
-                history.push({ pathname: "/game/" + this.gameId, state : { images : images }});
+                history.push({ pathname: "/game/" + this.gameId, state: { images: images, players: this.state.data } });
             }).catch(err => {
                 console.log(err);
             });
@@ -87,7 +90,6 @@ class Lobby extends Component {
                         loadingText={''}
                         showPagination={false}
                         defaultPageSize={4}
-                        // NoDataComponent={() => null}
                     />
 
                     <div className="offset-sm-1 col-sm-5">
