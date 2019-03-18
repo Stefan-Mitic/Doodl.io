@@ -97,10 +97,8 @@ const io = socketIO(server);
 const { generateMessage } = require('./utils/message');
 const { isRealString } = require('./utils/realstring');
 
-let lobbies = {};
-
 io.on('connection', function(socket) {
-    console.log('User connected');
+    console.log('User connected ' + socket.id);
     socket.on('join', function(params, callback) {
         console.log("GameID: " + params.gameId);
         // room id
@@ -115,7 +113,7 @@ io.on('connection', function(socket) {
 
     socket.on('startGame', function(callback) {
 
-    })
+    });
 
     socket.on('roundStart', function(params, counter) {
         let room = params.gameId;
