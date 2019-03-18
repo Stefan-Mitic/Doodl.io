@@ -19,8 +19,10 @@ class Home extends Component {
             .then(res => {
                 console.log(res);
                 history.push("/login");
+                localStorage.clear();
             }).catch(err => {
                 console.log(err);
+                localStorage.clear();
             });
     };
 

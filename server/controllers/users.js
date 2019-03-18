@@ -52,7 +52,10 @@ exports.signup = function (req, res) {
         // insert new user into database
         UserModel.updateOne({ _id: username }, { _id: username, salt, hash }, { upsert: true }, function (err) {
             if (err) return res.status(500).end(err);
-            return res.json(`user ${username} signed up`);
+            // start a session
+            req.session.username = username;
+            res.setHeader('Set-Cookie', auth.setCookie(username));
+            return res.json(username);
         });
     });
 };
@@ -69,7 +72,6 @@ exports.signin = function (req, res) {
         if (user.hash !== hash) return res.status(401).end("access denied"); // invalid password
         // start a session
         req.session.username = user._id;
-        console.log(req.session);
         res.setHeader('Set-Cookie', auth.setCookie(user._id));
         return res.json(username);
     });
