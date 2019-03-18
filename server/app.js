@@ -129,7 +129,8 @@ io.on('connection', function(socket) {
         }, 1000);
     });
 
-    socket.on('createMessage', function(message, callback) {
+    socket.on('createMessage', function(params, callback) {
+        let message = params.message;
         console.log('createMessage', message);
         io.to(params.gameId).emit('newMessage', generateMessage(message.from, message.text));
     });
