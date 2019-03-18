@@ -7,6 +7,10 @@
 
 const session = require('express-session');
 const cookie = require('cookie');
+const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo')(session);
+
+mongoose.connect('mongodb://localhost/doodlio');
 
 /**
  * Exported helper functions
@@ -18,8 +22,11 @@ exports.sessionSettings = session({
     resave: false,
     saveUninitialized: true,
     cookie: {
-        httpOnly: true
-    }
+        httpOnly: true,
+    },
+    store: new MongoStore({
+        mongooseConnection: mongoose.connection
+    })
 });
 
 // returns cookie settings for cookie header
