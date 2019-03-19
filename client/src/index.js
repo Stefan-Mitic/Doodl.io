@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Lobby from './pages/Lobby.jsx';
 import Game from './pages/Game.jsx';
 import PostGame from './pages/PostGame.jsx';
+import Profile from './pages/Profile.jsx';
 import * as serviceWorker from './serviceWorker';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import { PrivateRoute } from './components/PrivateRoute';
@@ -19,6 +20,7 @@ ReactDOM.render(<Router history={history}>
         <Route path="/lobby/:id" component={Lobby} />
         <Route path="/game/:id" component={Game} />
         <Route path="/postgame/:id" component={PostGame} />
+        <PrivateRoute path="/profile" component={Profile} />
     </div>
 </Router>, document.getElementById('root'));
 
