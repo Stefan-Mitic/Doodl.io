@@ -19,6 +19,7 @@ class Profile extends Component {
             .then(res => {
                 console.log(res);
                 localStorage.setItem('username', username);
+                this.newName.current.value = '';
             }).catch(err => {
                 console.log(err);
             });
@@ -27,10 +28,11 @@ class Profile extends Component {
     updatePwd = event => {
         event.preventDefault();
 
-        let password = this.newName.current.value;
+        let password = this.newPwd.current.value;
         api.patch(`/api/users/` + password + `/`)
             .then(res => {
                 console.log(res);
+                this.newPwd.current.value = '';
             }).catch(err => {
                 console.log(err);
             });
