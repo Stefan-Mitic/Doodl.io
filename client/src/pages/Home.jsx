@@ -66,11 +66,12 @@ class Home extends Component {
         return (
             <div>
                 <Header></Header>
+                <div className="title">Main Menu</div>
                 <div className="row">
-                    <button className="offset-sm-3 col-sm-5 btn btn-success btn-lg btn-block" onClick={this.createGame}>Create Game</button>
+                    <button className="offset-sm-4 col-sm-4 btn btn-success btn-lg btn-block" onClick={this.createGame}>Create Game</button>
                 </div>
                 <div className="row">
-                    <input className="offset-sm-3 col-sm-3" ref={this.inputRef} type="text" maxLength="30" placeholder="Enter Game ID"></input>
+                    <input className="offset-sm-4 col-sm-2" ref={this.inputRef} type="text" maxLength="30" placeholder="Enter Game ID"></input>
                     <button className="col-sm-2 btn btn-success btn-lg" onClick={this.joinGame}>Join Game</button>
                 </div>
             </div>

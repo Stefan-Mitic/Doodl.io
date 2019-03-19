@@ -28,11 +28,11 @@ code {
   font-size: 50px;
   font-weight: bolder;
   text-align: center;
-  margin-left: 12%;
+  /* margin-left: 12%;
   margin-right: 12%;
   margin-top: 5%;
   padding-top:2%;
-  padding-bottom: 2%;
+  padding-bottom: 2%; */
 }
 
 .login {
