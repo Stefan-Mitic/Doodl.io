@@ -17,13 +17,8 @@ code {
   padding-top: 3%;
 }
 
-.header {
-  text-align: left;
-  padding-top: 7%;
-  background-size: 20%;
-  background-image: url("./Doodlio.png");
-  background-color: rgb(227, 255, 183);
-  background-repeat: no-repeat;
+.navbar {
+  background-color: rgb(255, 255, 255);
 }
 
 .title {
