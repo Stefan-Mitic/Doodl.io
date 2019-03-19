@@ -39,8 +39,7 @@ exports.getDrawingFile = function (req, res) {
 // add a new drawing
 exports.addDrawing = function (req, res) {
     // extract request values
-    // let player = req.username;
-    let player = 'alice';
+    let player = req.username || "";
     let imageId = req.body.imageId;
     let gameId = req.body.gameId;
     let dataURL = req.body.dataURL;
@@ -53,7 +52,6 @@ exports.addDrawing = function (req, res) {
         player, imageId, gameId,
         file: { mimetype: 'image/png', destination: drawingspath, filename, path: filepath }
     };
-    console.log(drawingdata);
     // store canvas drawing object to DB
     DrawingModel.create(drawingdata, function (err, result) {
         if (err) return res.status(500).end(err);

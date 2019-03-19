@@ -61,19 +61,22 @@ exports.gameCompare = function (req, res) {
             if (!drawing) return res.status(404).end(`drawing id ${drawingId} cannot be found`);
 
             // read clipart and drawing images into pngjs
+            let filesRead = 0;
             let img1 = fs.createReadStream(image.file.path).pipe(new PNG()).on('parsed', doneReading);
             let img2 = fs.createReadStream(drawing.file.path).pipe(new PNG()).on('parsed', doneReading);
-            let filesRead = 0;
 
             // if both are done reading, compare for number of different pixels
             function doneReading() {
                 if (++filesRead < 2) return;
                 let diff = new PNG({width: img1.width, height: img1.height});
-                let pixels = pixelmatch(img1.data, img2.data, diff.data, img1.width, img1.height, {threshold: 0.1});
+                let pixels = img1.width * img1.height;
+                let diffpixels = pixelmatch(img1.data, img2.data, diff.data, img1.width, img1.height, {threshold: 0.1});
+                let score = Math.ceil(100 * ((pixels - diffpixels) / pixels));
                 return res.json({
                     imageId: image._id,
                     drawingId: drawing._id,
-                    difference: pixels
+                    difference: diffpixels,
+                    score: score
                 });
             }
         });
