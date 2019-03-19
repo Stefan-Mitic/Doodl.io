@@ -65,6 +65,7 @@ app.get('/api/users/:username/friends/', auth.isAuthenticated, friends.getFriend
 app.get('/api/leaderboard/', scores.getTopPlayers);
 app.get('/api/leaderboard/me/', auth.isAuthenticated, scores.getPlayerLeaderboard);
 app.get('/api/leaderboard/history/', auth.isAuthenticated, scores.getPlayerHistory);
+app.post('/api/leaderboard/:username/', scores.addPlayerScore);
 
 // game image routes
 app.get('/api/game/images/:id/', validator.checkId, gameImages.getImage);
