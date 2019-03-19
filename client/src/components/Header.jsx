@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import socketIOClient from "socket.io-client";
-import { Navbar, Nav, NavItem } from 'react-bootstrap';
+import { Navbar, Nav, NavItem, NavDropdown } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import history from '../history';
 import api from '../api';
@@ -43,9 +43,17 @@ class Header extends Component {
                         <NavItem>
                             <NavLink exact to="/" className="nav-link" activeClassName="active">Home</NavLink>
                         </NavItem>
-                        <NavItem>
-                            <NavLink exact to="/profile" className="nav-link">Profile</NavLink>
-                        </NavItem>
+                        <NavDropdown title="Profile" id="basic-nav-dropdown">
+                            <NavItem>
+                                <NavLink exact to="/profile/friends" className="nav-link" activeClassName="active">Friends</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink exact to="/profile/gamehistory" className="nav-link">Game History</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink exact to="/profile/updateinfo" className="nav-link">Update Info</NavLink>
+                            </NavItem>
+                        </NavDropdown>
                     </Nav>
                     <Nav className="ml-auto">
                         {

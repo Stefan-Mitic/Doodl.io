@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import Header from '../components/Header';
-import api from '../api';
+import Header from '../../components/Header';
+import api from '../../api';
+import Profile from '../../components/Profile';
 
-class Profile extends Component {
+class UpdateInfo extends Component {
     constructor(props) {
         super(props);
         this.newName = React.createRef();
@@ -41,8 +42,7 @@ class Profile extends Component {
     render() {
         return (
             <div>
-                <Header></Header>
-                <div className="title">Profile</div>
+                <Profile></Profile>
                 <div className="row">
                     <input className="offset-sm-4 col-sm-3" ref={this.newName} type="text" maxLength="30" placeholder="enter new username"></input>
                     <button className="col-sm-2 btn btn-success" onClick={this.updateName}>Update</button>
@@ -56,4 +56,4 @@ class Profile extends Component {
     }
 }
 
-export default Profile;
+export default UpdateInfo;
