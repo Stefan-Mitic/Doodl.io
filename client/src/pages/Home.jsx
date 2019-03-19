@@ -6,25 +6,10 @@ import history from '../history';
 class Home extends Component {
     constructor(props) {
         super(props);
-        this.signout = this.signout.bind(this);
         this.createGame = this.createGame.bind(this);
         this.joinGame = this.joinGame.bind(this);
         this.inputRef = React.createRef();
     }
-
-    signout = event => {
-        event.preventDefault();
-
-        api.post(`/signout/`)
-            .then(res => {
-                console.log(res);
-                history.push("/login");
-                localStorage.clear();
-            }).catch(err => {
-                console.log(err);
-                localStorage.clear();
-            });
-    };
 
     createGame = event => {
         event.preventDefault();
@@ -79,11 +64,8 @@ class Home extends Component {
 
     render() {
         return (
-            <div className="background">
+            <div>
                 <Header></Header>
-                <div className="row offset-sm-10">
-                    <button className="btn btn-success header_btn" onClick={this.signout}>Signout</button>
-                </div>
                 <div className="row">
                     <button className="offset-sm-3 col-sm-5 btn btn-success btn-lg btn-block" onClick={this.createGame}>Create Game</button>
                 </div>
