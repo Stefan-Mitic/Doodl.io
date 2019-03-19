@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import Header from '../../components/Header';
 import api from '../../api';
 import Profile from '../../components/Profile';
 
