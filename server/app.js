@@ -117,7 +117,7 @@ io.on('connection', function(socket) {
 
     socket.on('startGame', function(gameId, callback) {
         //let gameId = params.gameId;
-        // socket.to(gameId).emit('gameStart');
+        socket.to(gameId).emit('gameStart');
     });
 
     socket.on('roundStart', function(params, counter) {

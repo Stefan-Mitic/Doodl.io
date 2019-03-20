@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import socketIOClient from "socket.io-client";
 import { Navbar, Nav, NavItem, NavDropdown } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import history from '../history';
@@ -10,11 +9,6 @@ class Header extends Component {
     constructor() {
         super();
         this.signout = this.signout.bind(this);
-        this.state = {
-            endpoint: "http://localhost:5000/"
-        };
-
-        socket = socketIOClient(this.state.endpoint);
     }
 
     signout = event => {
@@ -73,4 +67,3 @@ class Header extends Component {
     }
 }
 export default Header;
-export { socket };

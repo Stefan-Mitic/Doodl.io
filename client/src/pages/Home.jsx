@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Header, {socket} from '../components/Header';
-import api from '../api';
+import Header from '../components/Header';
+import api, {emitJoin} from '../api';
 import history from '../history';
 
 class Home extends Component {
@@ -25,13 +25,7 @@ class Home extends Component {
                     username: username,
                     gameId: id
                 };
-                socket.emit('join', params, function(err) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        console.log("joined successfully");
-                    }
-                });
+                emitJoin(params);
                 history.push({ pathname: "/lobby/" + id, state: { host: true }});
             }).catch(err => {
                 console.log(err);
@@ -49,13 +43,7 @@ class Home extends Component {
             gameId: gameId
         };
         api.patch(`/api/game/join/`, params).then(res => {
-            socket.emit('join', params, function(err) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log("joined successfully");
-                }
-            });
+            emitJoin(params);
             history.push({ pathname: "/lobby/" + gameId, state: { host: false }});
         }).catch(err => {
             console.log(err);
