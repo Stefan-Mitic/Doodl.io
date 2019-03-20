@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import api from '../api';
+import api, { subscribeToUpdateUserList, subscribeToGameStart, emitStartGame} from '../api';
 import history from '../history';
-import Header, {socket} from '../components/Header';
+import Header from '../components/Header';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 
@@ -15,13 +15,9 @@ class Lobby extends Component {
         this.host = this.props.location.state.host;
         this.gameId = this.props.match.params.id;
         this.startGame = this.startGame.bind(this);
-
-        // Sockets
-        socket.on('updateUserList', this.getPlayers);
-        socket.on('gameStart', this.startGame);
-        socket.on('newMessage', function (message) {
-            console.log(`${message.from}: ${message.text}`);
-        });
+        this.redirectToGame = this.redirectToGame.bind(this);
+        subscribeToGameStart(this.redirectToGame);
+        subscribeToUpdateUserList(this.getPlayers);
     }
 
     componentDidMount() {
@@ -46,26 +42,36 @@ class Lobby extends Component {
         this.setState({ show: true });
     }
 
+    redirectToGame() {
+        let images = [];
+        api
+          .get(`/api/game/images/`)
+          .then(res => {
+            console.log(res.data);
+            images = res.data;
+          })
+          .catch(err => {
+            console.log(err);
+          });
+
+        api
+          .post(`/api/game/start/`, { id: this.gameId })
+          .then(res => {
+            console.log(res);
+            history.push({
+              pathname: "/game/" + this.gameId,
+              state: { images: images, players: this.state.data }
+            });
+          })
+          .catch(err => {
+            console.log(err);
+          });
+    }
+
     startGame = event => {
         event.preventDefault();
-        let images = [];
-        api.get(`/api/game/images/`)
-            .then(res => {
-                console.log(res.data);
-                images = res.data;
-            }).catch(err => {
-                console.log(err);
-            });
-
-        api.post(`/api/game/start/`, { id: this.gameId })
-            .then(res => {
-                console.log(res);
-                // socket emit code here
-                if (this.host) socket.emit('startGame', this.gameId);
-                history.push({ pathname: "/game/" + this.gameId, state: { images: images, players: this.state.data } });
-            }).catch(err => {
-                console.log(err);
-            });
+        if (this.host) emitStartGame(this.gameId);
+        this.redirectToGame();
     }
 
     render() {

@@ -65,6 +65,7 @@ app.get('/api/users/:username/friends/', auth.isAuthenticated, friends.getFriend
 app.get('/api/leaderboard/', scores.getTopPlayers);
 app.get('/api/leaderboard/me/', auth.isAuthenticated, scores.getPlayerLeaderboard);
 app.get('/api/leaderboard/history/', auth.isAuthenticated, scores.getPlayerHistory);
+app.post('/api/leaderboard/:username/', scores.addPlayerScore);
 
 // game image routes
 app.get('/api/game/images/:id/', validator.checkId, gameImages.getImage);
@@ -116,7 +117,7 @@ io.on('connection', function(socket) {
 
     socket.on('startGame', function(gameId, callback) {
         //let gameId = params.gameId;
-        // socket.to(gameId).emit('gameStart');
+        socket.to(gameId).emit('gameStart');
     });
 
     socket.on('roundStart', function(params, counter) {

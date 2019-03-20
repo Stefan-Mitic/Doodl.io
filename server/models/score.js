@@ -3,13 +3,11 @@ const mongoose = require('mongoose');
 const ScoreSchema = new mongoose.Schema({
     gameId: { // id of game played
         type: String,
-        required: true,
-        index: true
+        default: ''
     },
     player: { // player username
         type: String,
-        required: true,
-        index: true
+        default: ''
     },
     score: { // player's score
         type: Number,

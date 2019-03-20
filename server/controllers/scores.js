@@ -53,7 +53,18 @@ exports.getPlayerHistory = function (req, res) {
         .skip(page * GAME_HISTORY_PAGE_SIZE)
         .limit(GAME_HISTORY_PAGE_SIZE)
         .exec(function (err, history) {
-            if (err) res.status(500).end(err);
+            if (err) return res.status(500).end(err);
             return res.json(history);
         });  
+};
+
+// adds player score, TODO: update global leaderboard
+exports.addPlayerScore = function (req, res) {
+    let player = req.params.username.toLowerCase();
+    let gameId = req.body.gameId;
+    let score = parseInt(req.body.score);
+    ScoreModel.create({ player, gameId, score }, function (err, result) {
+        if (err) return res.status(500).end(err);
+        return res.json(result);
+    });
 };
