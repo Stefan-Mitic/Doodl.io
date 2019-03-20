@@ -14,17 +14,19 @@ import history from './history';
 import UpdateInfo from './pages/Profile/UpdateInfo';
 import Friends from './pages/Profile/Friends';
 import GameHistory from './pages/Profile/GameHistory';
+import Leaderboard from './pages/Leaderboard';
 
 ReactDOM.render(<Router history={history}>
     <Switch>
         <PrivateRoute exact path="/" component={Home} />
         <Route path="/login" component={Login} />
-        <Route path="/lobby/:id" component={Lobby} />
-        <Route path="/game/:id" component={Game} />
-        <Route path="/postgame/:id" component={PostGame} />
+        <PrivateRoute path="/lobby/:id" component={Lobby} />
+        <PrivateRoute path="/game/:id" component={Game} />
+        <PrivateRoute path="/postgame/:id" component={PostGame} />
         <PrivateRoute path="/profile/friends" component={Friends} />
         <PrivateRoute path="/profile/gamehistory" component={GameHistory} />
         <PrivateRoute path="/profile/updateinfo" component={UpdateInfo} />
+        <PrivateRoute path="/leaderboard" component={Leaderboard} />
     </Switch>
 </Router>, document.getElementById('root'));
 

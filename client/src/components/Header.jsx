@@ -4,7 +4,6 @@ import { NavLink } from 'react-router-dom';
 import history from '../history';
 import api from '../api';
 
-let socket;
 class Header extends Component {
     constructor() {
         super();
@@ -48,6 +47,9 @@ class Header extends Component {
                                 <NavLink exact to="/profile/updateinfo" className="nav-link">Update Info</NavLink>
                             </NavItem>
                         </NavDropdown>
+                        <NavItem>
+                            <NavLink exact to="/leaderboard" className="nav-link" activeClassName="active">Leaderboard</NavLink>
+                        </NavItem>
                     </Nav>
                     <Nav className="ml-auto">
                         {
