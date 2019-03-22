@@ -29,6 +29,10 @@ function emitStartGame(gameId) {
     socket.emit('startGame', gameId);
 }
 
+function emitRoundStart(gameId, counter) {
+    socket.emit('roundStart', gameId, counter);
+}
+
 
 export default axios.create({
     baseURL: `http://localhost:5000/`
