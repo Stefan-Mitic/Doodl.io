@@ -41,6 +41,10 @@ code {
   max-width: 320px;
 }
 
+.table {
+  background-color: white;
+}
+
 #infoPanel {
   background-color: greenyellow;
   border-radius: 3rem;
