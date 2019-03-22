@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import CanvasDraw from "react-canvas-draw";
 import ReactCountdownClock from 'react-countdown-clock';
 import html2canvas from 'html2canvas';
-import api, { saveDrawing, imageCompare, getImageId, getImage } from '../api';
+import { saveDrawing, imageCompare, getImageId, getImage } from '../api';
 import history from '../history';
 
 class Game extends Component {
@@ -23,7 +23,6 @@ class Game extends Component {
     componentDidMount() {
         // this.state.round = 1; // Get round
 
-        console.log(this.gameId)
         getImageId(this.gameId, (res) => {
             console.log(res);
             this.imageId = res.data;
