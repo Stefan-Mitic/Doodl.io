@@ -20,14 +20,12 @@ class PostGame extends Component {
     getResults() {
         getPlayers(this.gameId, (res) => {
             const results = [];
-            console.log(res.data);
             for (const player of res.data) {
                 getPlayerScore(this.gameId, player, (score) => {
-                    console.log(score.data);
                     const newRecord = { name: player, score: score.data };
-                    console.log(newRecord);
                     results.push(newRecord);
                     this.setState({ data: results });
+                    console.log(results);
                 }, (err) => {
                     alert(err);
                 });
@@ -56,7 +54,7 @@ class PostGame extends Component {
                         columns={columns}
                         loadingText={''}
                         showPagination={false}
-                        defaultPageSize={1}
+                        defaultPageSize={4}
                     />
                 </div>
                 <div className="row offset-sm-8">

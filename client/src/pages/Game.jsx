@@ -65,8 +65,6 @@ class Game extends Component {
                 imageCompare(this.imageId, drawingId, (res) => {
                     console.log(res);
                     this.updatePlayerScore(res.data.difference);
-                    if (this.state.round === 1)
-                        this.gameEnd();
                 }, (err) => {
                     alert(err);
                 });
@@ -80,13 +78,14 @@ class Game extends Component {
         console.log(score);
         addPlayerScore(localStorage.getItem('username'), this.gameId, score, (res) => {
             console.log(res);
+            if (this.state.round === 1)
+                this.gameEnd();
         }, (err) => {
             alert(err);
         });
     }
 
     gameEnd() {
-        alert('Game has Ended');
         history.push({ pathname: "/postgame/" + this.gameId });
     }
 
