@@ -142,6 +142,34 @@ export function getPlayerScore(gameId, username, callback, errorcallback) {
         });
 }
 
+export function updateName(newname, callback, errorcallback) {
+    axios.patch('/api/users/name/', { name: newname })
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
+export function updatePassword(oldPassword, newPassword, callback, errorcallback) {
+    axios.patch('/api/users/name/', { oldPassword: oldPassword, newPassword: newPassword })
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
 // SOCKETIO ===================================================================
 
 const socket = openSocket('http://localhost:5000');

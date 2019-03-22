@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import api from '../../api';
+import { updateName, updatePassword } from '../../api';
 import Profile from '../../components/Profile';
 
 class UpdateInfo extends Component {
     constructor(props) {
         super(props);
         this.newName = React.createRef();
+        this.oldPwd = React.createRef();
         this.newPwd = React.createRef();
         this.updateName = this.updateName.bind(this);
         this.updatePwd = this.updatePwd.bind(this);
@@ -14,28 +15,24 @@ class UpdateInfo extends Component {
     updateName = event => {
         event.preventDefault();
 
-        let username = this.newName.current.value;
-        api.patch(`/api/users/` + username + `/`)
-            .then(res => {
-                console.log(res);
-                localStorage.setItem('username', username);
-                this.newName.current.value = '';
-            }).catch(err => {
-                console.log(err);
-            });
+        let newname = this.newName.current.value;
+        updateName(newname, (res) => {
+            console.log(res);
+        }, (err) => {
+            alert(err);
+        });
     };
 
     updatePwd = event => {
         event.preventDefault();
 
-        let password = this.newPwd.current.value;
-        api.patch(`/api/users/` + password + `/`)
-            .then(res => {
-                console.log(res);
-                this.newPwd.current.value = '';
-            }).catch(err => {
-                console.log(err);
-            });
+        let oldPassword = this.oldPwd.current.value;
+        let newPassword = this.newPwd.current.value;
+        updatePassword(oldPassword, newPassword, (res) => {
+            console.log(res);
+        }, (err) => {
+            alert(err);
+        });
     }
 
     render() {
@@ -47,6 +44,7 @@ class UpdateInfo extends Component {
                     <button className="col-sm-2 btn btn-success" onClick={this.updateName}>Update</button>
                 </div>
                 <div className="row">
+                    <input className="offset-sm-4 col-sm-3" ref={this.oldPwd} type="text" maxLength="30" placeholder="enter old password"></input>
                     <input className="offset-sm-4 col-sm-3" ref={this.newPwd} type="text" maxLength="30" placeholder="enter new password"></input>
                     <button className="col-sm-2 btn btn-success" onClick={this.updatePwd}>Update</button>
                 </div>
