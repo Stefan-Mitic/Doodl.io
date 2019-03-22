@@ -45,20 +45,9 @@ class Lobby extends Component {
     }
 
     redirectToGame() {
-        // let images = [];
-        // api
-        //   .get(`/api/game/images/`)
-        //   .then(res => {
-        //     console.log(res.data);
-        //     images = res.data;
-        //   })
-        //   .catch(err => {
-        //     console.log(err);
-        //   });
         startGame(this.gameId, 1, (res) => {
             history.push({
               pathname: "/game/" + this.gameId,
-            //   state: { images: images, players: this.state.data },
               state: { players: this.state.data }
             });
         }, (err) => {
@@ -83,7 +72,7 @@ class Lobby extends Component {
                 <Header></Header>
                 <div className="title">Lobby</div>
                 <div className="row">
-                    <ReactTable className="offset-sm-2 col-sm-3 table "
+                    <ReactTable className="offset-sm-2 col-sm-3 table"
                         data={this.state.data}
                         columns={columns}
                         loadingText={''}
