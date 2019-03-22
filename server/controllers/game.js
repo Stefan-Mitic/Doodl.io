@@ -45,11 +45,14 @@ exports.startGame = function(req, res) {
 exports.getNextImage = function(req, res) {
     GameModel.findOne({ _id: req.params.id }, function(err, game) {
         if (err) return res.status(500).end(err);
-        let currRound = game.currRound;
-        GameModel.updateOne({ _id: req.params.id }, { $inc: { currRound: 1 } }, function(err, result) {
-            if (err) return res.status(500).end(err);
-            res.json(game.images[currRound]);
-        });
+        res.json(game.images[game.currRound]);
+    });
+};
+
+exports.incrementRound = function(req, res) {
+    GameModel.updateOne({ _id: req.body.id }, { $inc: { currRound: 1 } }, function(err, result) {
+        if (err) return res.status(500).end(err);
+        res.json(result);
     });
 };
 
