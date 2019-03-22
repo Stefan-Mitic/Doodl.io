@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Header from '../components/Header';
-import api, {emitJoin} from '../api';
+import { emitJoin, createGame, joinGame } from '../api';
 import history from '../history';
 
 class Home extends Component {
@@ -18,35 +18,32 @@ class Home extends Component {
             rounds: 1,
             username: username
         };
-        api.post(`/api/game/`, gameSettings)
-            .then(res => {
-                let id = res.data;
-                const params = {
-                    username: username,
-                    gameId: id
-                };
-                emitJoin(params);
-                history.push({ pathname: "/lobby/" + id, state: { host: true }});
-            }).catch(err => {
-                console.log(err);
-            });
-        
+        createGame(gameSettings, (res) => {
+            let id = res.data;
+            const params = {
+                username: username,
+                gameId: id
+            };
+            emitJoin(params);
+            history.push({ pathname: "/lobby/" + id, state: { host: true } });
+        }, (err) => {
+            alert(err);
+        });
     };
 
     joinGame = event => {
         event.preventDefault();
         var gameId = this.inputRef.current.value;
-        console.log(gameId);
         let username = localStorage.getItem('username');
         const params = {
             username: username,
             gameId: gameId
         };
-        api.patch(`/api/game/join/`, params).then(res => {
+        joinGame(params, (res) => {
             emitJoin(params);
-            history.push({ pathname: "/lobby/" + gameId, state: { host: false }});
-        }).catch(err => {
-            console.log(err);
+            history.push({ pathname: "/lobby/" + gameId, state: { host: false } });
+        }, (err) => {
+            alert(err);
         });
     };
 

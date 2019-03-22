@@ -44,8 +44,8 @@ export function getPlayers(gameId, callback, errorcallback) {
         });
 }
 
-export function startGame(gameId, callback, errorcallback) {
-    axios.get('/api/game/start/', { id: gameId })
+export function startGame(gameId, rounds, callback, errorcallback) {
+    axios.post('/api/game/start/', { id: gameId, rounds: rounds })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -74,6 +74,34 @@ export function saveDrawing(config, callback, errorcallback) {
 
 export function imageCompare(imageId, drawingId, callback, errorcallback) {
     axios.post('/api/game/images/' + imageId + '/compare/', { drawingId: drawingId })
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
+export function getImageId(gameId, callback, errorcallback) {
+    axios.get('/api/game/' + gameId + '/nextImage/')
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
+export function getImage(imageId, callback, errorcallback) {
+    axios.get('/api/game/images/' + imageId + '/file/')
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -116,11 +144,12 @@ export function emitStartGame(gameId) {
     socket.emit('startGame', gameId);
 }
 
-function emitRoundStart(gameId, counter) {
+export function emitRoundStart(gameId, counter) {
     socket.emit('roundStart', gameId, counter);
 }
 
 
+// SHOULD REMOVE LATER
 export default axios.create({
     baseURL: `http://localhost:5000/`
 });

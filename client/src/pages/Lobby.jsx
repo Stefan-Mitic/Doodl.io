@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import api, { subscribeToUpdateUserList, subscribeToGameStart, emitStartGame} from '../api';
+import { subscribeToUpdateUserList, subscribeToGameStart, emitStartGame, getPlayers, startGame} from '../api';
 import history from '../history';
 import Header from '../components/Header';
 import ReactTable from "react-table";
@@ -16,23 +16,25 @@ class Lobby extends Component {
         this.gameId = this.props.match.params.id;
         this.startGame = this.startGame.bind(this);
         this.redirectToGame = this.redirectToGame.bind(this);
-        subscribeToGameStart(this.redirectToGame);
-        subscribeToUpdateUserList(this.getPlayers);
     }
 
     componentDidMount() {
         this.getPlayers();
+        subscribeToGameStart(this.redirectToGame);
+        subscribeToUpdateUserList(this.getPlayers);
     }
 
-    async getPlayers() {
-        let res = await api.get(`/api/game/` + this.gameId + `/players/`);
-        let data = await res.data;
-        const players = [];
-        for (const name of data) {
-            const newRecord = { name: name };
-            players.push(newRecord);
-        }
-        this.setState({ data: players });
+    getPlayers() {
+        getPlayers(this.gameId, (res) => {
+            const players = [];
+            for (const name of res.data) {
+                const newRecord = { name: name };
+                players.push(newRecord);
+            }
+            this.setState({ data: players });
+        }, (err) => {
+            alert(err);
+        });
     }
 
     copyText() {
@@ -43,29 +45,25 @@ class Lobby extends Component {
     }
 
     redirectToGame() {
-        let images = [];
-        api
-          .get(`/api/game/images/`)
-          .then(res => {
-            console.log(res.data);
-            images = res.data;
-          })
-          .catch(err => {
-            console.log(err);
-          });
-
-        api
-          .post(`/api/game/start/`, { id: this.gameId })
-          .then(res => {
-            console.log(res);
+        // let images = [];
+        // api
+        //   .get(`/api/game/images/`)
+        //   .then(res => {
+        //     console.log(res.data);
+        //     images = res.data;
+        //   })
+        //   .catch(err => {
+        //     console.log(err);
+        //   });
+        startGame(this.gameId, 1, (res) => {
             history.push({
               pathname: "/game/" + this.gameId,
-              state: { images: images, players: this.state.data }
+            //   state: { images: images, players: this.state.data },
+              state: { players: this.state.data }
             });
-          })
-          .catch(err => {
-            console.log(err);
-          });
+        }, (err) => {
+            alert(err);
+        });
     }
 
     startGame = event => {
@@ -85,7 +83,7 @@ class Lobby extends Component {
                 <Header></Header>
                 <div className="title">Lobby</div>
                 <div className="row">
-                    <ReactTable id="playerTable" className="offset-sm-2 col-sm-3 table table-bordered table-dark"
+                    <ReactTable className="offset-sm-2 col-sm-3 table "
                         data={this.state.data}
                         columns={columns}
                         loadingText={''}

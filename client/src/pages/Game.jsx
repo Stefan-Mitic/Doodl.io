@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import CanvasDraw from "react-canvas-draw";
 import ReactCountdownClock from 'react-countdown-clock';
 import html2canvas from 'html2canvas';
-import api from '../api';
+import api, { saveDrawing, imageCompare, getImageId, getImage } from '../api';
 import history from '../history';
 
 class Game extends Component {
@@ -15,21 +15,29 @@ class Game extends Component {
         this.clockRef = React.createRef();
         this.canvas = React.createRef();
         this.image = React.createRef();
-        this.images = this.props.location.state.images;
         this.players = this.props.location.state.players;
         this.gameId = this.props.match.params.id;
+        this.imageId = -1;
     }
 
     componentDidMount() {
         // this.state.round = 1; // Get round
 
-        api.get(`/api/game/images/` + this.images[0] + '/file/')
-            .then(res => {
-                console.log(res);
-                this.image.src = res.config.url;
-            }).catch(err => {
-                console.log(err);
-            });
+        console.log(this.gameId)
+        getImageId(this.gameId, (res) => {
+            console.log(res);
+            this.imageId = res.data;
+            if (this.imageId !== -1) {
+                getImage(this.imageId, (res) => {
+                    console.log(res);
+                    this.image.src = res.config.url;
+                }, (err) => {
+                    alert(err);
+                });
+            }
+        }, (err) => {
+            alert(err);
+        });
     }
 
     async roundEnd() {
@@ -45,42 +53,33 @@ class Game extends Component {
         });
 
         const drawing = {
-            imageId: this.images[0],
+            imageId: this.imageId,
             gameId: this.gameId,
             dataURL: img.src
         };
 
-        let imgId = -1;
-        //save drawing to DB
-        await api.post('/api/drawings/', drawing)
-            .then(res => {
-                console.log(res);
-                imgId = res.data._id;
-            }).catch(err => {
-                console.log(err);
-            });
-
-        if (imgId !== -1) {
-            const data = {
-                drawingId: imgId
-            };
-
-            //compare drawing with image
-            await api.post(`/api/game/images/` + this.images[0] + `/compare/`, data)
-                .then(res => {
+        let drawingId = -1;
+        saveDrawing(drawing, (res) => {
+            console.log(res);
+            drawingId = res.data._id;
+            if (drawingId !== -1) {
+                imageCompare(this.imageId, drawingId, (res) => {
                     console.log(res);
                     this.updatePlayerScore(res.data.difference);
-                }).catch(err => {
-                    console.log(err);
+                }, (err) => {
+                    alert(err);
                 });
-        }
+            }
+        }, (err) => {
+            alert(err);
+        });
 
         if (this.state.round === 1)
             this.gameEnd();
     }
 
     updatePlayerScore(score) {
-
+        console.log(score);
     }
 
     gameEnd() {
