@@ -45,6 +45,13 @@ code {
   background-color: white;
 }
 
+.player-leaderboard {
+  background-color: rgb(58, 58, 58);
+  font-size: 30px;
+  text-align: center;
+  color: white
+}
+
 #infoPanel {
   background-color: greenyellow;
   border-radius: 3rem;
