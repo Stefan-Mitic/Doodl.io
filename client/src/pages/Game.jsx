@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import CanvasDraw from "react-canvas-draw";
 import ReactCountdownClock from 'react-countdown-clock';
 import html2canvas from 'html2canvas';
-import { saveDrawing, imageCompare, getImageId, getImage } from '../api';
+import { saveDrawing, imageCompare, getImageId, getImage, addPlayerScore } from '../api';
 import history from '../history';
 
 class Game extends Component {
@@ -65,6 +65,8 @@ class Game extends Component {
                 imageCompare(this.imageId, drawingId, (res) => {
                     console.log(res);
                     this.updatePlayerScore(res.data.difference);
+                    if (this.state.round === 1)
+                        this.gameEnd();
                 }, (err) => {
                     alert(err);
                 });
@@ -72,17 +74,20 @@ class Game extends Component {
         }, (err) => {
             alert(err);
         });
-
-        if (this.state.round === 1)
-            this.gameEnd();
     }
 
     updatePlayerScore(score) {
         console.log(score);
+        addPlayerScore(localStorage.getItem('username'), this.gameId, score, (res) => {
+            console.log(res);
+        }, (err) => {
+            alert(err);
+        });
     }
 
     gameEnd() {
-        history.push({ pathname: "/postgame/" + this.gameId, state: { players: this.players } });
+        alert('Game has Ended');
+        history.push({ pathname: "/postgame/" + this.gameId });
     }
 
     render() {

@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
+import { getPlayers, getPlayerScore } from '../api';
 
 class PostGame extends Component {
     constructor(props) {
         super(props);
         this.getResults = this.getResults.bind(this);
-        this.state = { players: this.props.location.state.players, data: [] };
-        console.log(this.state.players);
+        this.gameId = this.props.match.params.id;
+        this.state = { data: [] };
     }
 
     componentDidMount() {
@@ -17,14 +18,23 @@ class PostGame extends Component {
     }
 
     getResults() {
-        // API Scores Call
-
-        const results = [];
-        for (const player of this.state.players) {
-            const newRecord = { name: player.name, score: 0 };
-            results.push(newRecord);
-        }
-        this.setState({ data: results });
+        getPlayers(this.gameId, (res) => {
+            const results = [];
+            console.log(res.data);
+            for (const player of res.data) {
+                getPlayerScore(this.gameId, player, (score) => {
+                    console.log(score.data);
+                    const newRecord = { name: player, score: score.data };
+                    console.log(newRecord);
+                    results.push(newRecord);
+                    this.setState({ data: results });
+                }, (err) => {
+                    alert(err);
+                });
+            }
+        }, (err) => {
+            alert(err);
+        });
     }
 
     render() {

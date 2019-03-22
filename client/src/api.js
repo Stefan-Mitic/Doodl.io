@@ -114,6 +114,34 @@ export function getImage(imageId, callback, errorcallback) {
         });
 }
 
+export function addPlayerScore(username, gameId, score, callback, errorcallback) {
+    axios.post('/api/leaderboard/' + username + '/', { gameId: gameId, score: score })
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
+export function getPlayerScore(gameId, username, callback, errorcallback) {
+    axios.get('/api/leaderboard/' + gameId + '/' + username + '/')
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
 // SOCKETIO ===================================================================
 
 const socket = openSocket('http://localhost:5000');
