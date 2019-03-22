@@ -14,9 +14,9 @@ Doodl.io is an online multi-player canvas based drawing game where players can c
 - Lobby that updates real-time as players join a game.
 - Game play with multiple rounds set-up and canvas utility.
 - Post game results where a winner is chosen by an image recognition api.
-- Chat room in each game for player communication.
 
 ### Additional Features
+- Chat room in each game for player communication.
 - Leaderboard which has the highest scored players.
 - Public and private matches with different settings.
 - List of multiple games and a search bar so players can choose a public match to join.
