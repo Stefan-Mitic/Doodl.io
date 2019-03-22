@@ -170,6 +170,48 @@ export function updatePassword(oldPassword, newPassword, callback, errorcallback
         });
 }
 
+export function getTopPlayers(callback, errorcallback) {
+    axios.get('/api/leaderboard/')
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
+export function getPlayerLeaderboard(username, callback, errorcallback) {
+    axios.get('/api/leaderboard/me/', { username: username })
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
+export function getPlayerHistory(page, callback, errorcallback) {
+    axios.get('/api/leaderboard/history/', { query: { page: page }})
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
 // SOCKETIO ===================================================================
 
 const socket = openSocket('http://localhost:5000');
