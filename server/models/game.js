@@ -17,10 +17,15 @@ const GameSchema = new mongoose.Schema({
         type: [String],
         default: [],
     },
-    rounds: { // number of rounds played
+    rounds: { // total rounds
         type: Number,
         required: false,
-        default: 0,
+        default: 1,
+    },
+    currRound: {
+        type: Number,
+        required: false,
+        default: 0
     },
     started: { // false when created, true when game starts 
         type: Boolean,

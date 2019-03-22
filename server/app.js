@@ -88,6 +88,7 @@ app.post('/api/game/start/', games.startGame);
 app.patch('/api/game/join/', games.addPlayer);
 app.get('/api/game/:id/players/', games.getPlayers);
 app.get('/api/game/:id/', games.getGame);
+app.get('/api/game/:id/nextImage/', games.getNextImage);
 
 // setup server
 const http = require('http');
@@ -120,8 +121,7 @@ io.on('connection', function(socket) {
         socket.to(gameId).emit('gameStart');
     });
 
-    socket.on('roundStart', function(params, counter) {
-        let room = params.gameId;
+    socket.on('roundStart', function(room, counter) {
         let countdown = setInterval(function() {
             io.to(room).emit('counter', counter);
             counter--;

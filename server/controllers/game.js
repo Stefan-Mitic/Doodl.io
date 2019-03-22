@@ -8,16 +8,14 @@
 const mongoose = require('mongoose');
 const GameModel = mongoose.model('Game');
 const UserModel = mongoose.model('User');
+const ImageModel = mongoose.model('Image');
 const crypto = require("crypto");
 //TODO: Delete game, update score
-
-
 
 exports.createGame = function(req, res) {
     let id = crypto.randomBytes(15).toString('hex');
     GameModel.create({
         _id: id,
-        rounds: parseInt(req.body.rounds),
         players: [req.body.username],
         started: false
     }).then(function(game) {
@@ -28,13 +26,30 @@ exports.createGame = function(req, res) {
 };
 
 exports.startGame = function(req, res) {
-    GameModel.findOne({ _id: req.body.id }, function(err, game) {
+    let rounds = parseInt(req.body.rounds);
+    ImageModel.aggregate([{ $sample: { size: rounds } }], function(err, images) {
         if (err) return res.status(500).end(err);
-        GameModel.updateOne({ _id: req.body.id }, { $set: { started: true } },
-            function(err, result) {
-                if (err) return res.status(500).end(err);
-                res.json(result);
-            });
+        images = images.map(image => image._id);
+        GameModel.findOne({ _id: req.body.id }, function(err, game) {
+            if (err) return res.status(500).end(err);
+            GameModel.updateOne({ _id: req.body.id }, { $set: { started: true, images: images, rounds: rounds } },
+                function(err, result) {
+                    if (err) return res.status(500).end(err);
+                    res.json(result);
+                });
+        });
+    });
+
+};
+
+exports.getNextImage = function(req, res) {
+    GameModel.findOne({ _id: req.params.id }, function(err, game) {
+        if (err) return res.status(500).end(err);
+        let currRound = game.currRound;
+        GameModel.updateOne({ _id: req.params.id }, { $inc: { currRound: 1 } }, function(err, result) {
+            if (err) return res.status(500).end(err);
+            res.json(game.images[currRound]);
+        });
     });
 };
 
