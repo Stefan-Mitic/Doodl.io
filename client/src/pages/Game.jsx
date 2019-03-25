@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import CanvasDraw from "react-canvas-draw";
+import CanvasDraw from "../components/CanvasDraw";
 import ReactCountdownClock from 'react-countdown-clock';
 import html2canvas from 'html2canvas';
 import { saveDrawing, imageCompare, getImageId, getImage, addPlayerScore } from '../api';
@@ -8,28 +8,29 @@ import history from '../history';
 class Game extends Component {
     constructor(props) {
         super(props);
-        this.state = { round: 1 };
+        this.state = { round: 1, bgsrc: null };
         this.roundEnd = this.roundEnd.bind(this);
         this.gameEnd = this.gameEnd.bind(this);
         this.updatePlayerScore = this.updatePlayerScore.bind(this);
+        this.loadImage = this.loadImage.bind(this);
         this.clockRef = React.createRef();
         this.canvas = React.createRef();
         this.image = React.createRef();
         this.players = this.props.location.state.players;
         this.gameId = this.props.match.params.id;
         this.imageId = -1;
+        this.loadImage();
     }
 
-    componentDidMount() {
-        // this.state.round = 1; // Get round
-
+    loadImage() {
         getImageId(this.gameId, (res) => {
             console.log(res);
             this.imageId = res.data;
             if (this.imageId !== -1) {
                 getImage(this.imageId, (res) => {
                     console.log(res);
-                    this.image.src = res.config.url;
+                    this.setState({ bgsrc: res.config.url });
+                    console.log(this.state.bgsrc);
                 }, (err) => {
                     alert(err);
                 });
@@ -42,7 +43,7 @@ class Game extends Component {
     async roundEnd() {
         let img = new Image();
         //get drawing from frontend
-        await html2canvas(document.getElementById("canvas"), {
+        await html2canvas(document.getElementById("canvas-div"), {
             width: 475,
             height: 475
         }).then(canvas => {
@@ -105,11 +106,11 @@ class Game extends Component {
                                 onComplete={this.roundEnd}
                             />
                         </div>
-                        <div className="col-sm-4">
-                            <img ref={image => this.image = image} width={475} alt={''}></img>
-                        </div>
-                        <div id="canvas" className="col-sm-4">
-                            <CanvasDraw ref={canvas => this.canvas = canvas} canvasWidth={475} canvasHeight={475} brushRadius={8} hideGrid={true} brushColor={"black"} />
+                        <div id="canvas-div">
+                            {this.state.bgsrc ?
+                                <CanvasDraw bgsrc={this.state.bgsrc}></CanvasDraw>
+                                : null
+                            }
                         </div>
                     </div>
                 </div>
