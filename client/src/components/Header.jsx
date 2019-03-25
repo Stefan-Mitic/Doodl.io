@@ -28,7 +28,9 @@ class Header extends Component {
         return (
             <Navbar className="navbar">
                 <Navbar.Brand>
-                    <img src={require("./../Doodlio.png")} width={200} alt={"logo"}></img>
+                    <NavLink exact to="/" className="nav-link" activeClassName="active">
+                        <img src={require("./../Doodlio.png")} width={200} alt={"logo"}></img>
+                    </NavLink>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
