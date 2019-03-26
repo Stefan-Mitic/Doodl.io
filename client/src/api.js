@@ -212,6 +212,106 @@ export function getPlayerHistory(page, callback, errorcallback) {
         });
 }
 
+export function sendFriendRequest(username, callback, errorcallback) {
+    axios.patch('/api/users/friend/', { query: { target: username }})
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
+export function getSentFriendRequests(username, callback, errorcallback) {
+    axios.get('/api/users/' + username + '/sentrequests/')
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
+export function getReceivedFriendRequests(username, callback, errorcallback) {
+    axios.get('/api/users/' + username + '/recievedrequests/')
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
+// MAYBE ADD removeFreindRequests
+
+export function acceptFriendRequests(requester, callback, errorcallback) {
+    axios.patch('/api/users/acceptrequest/', { query: { target: requester }})
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
+export function rejectFriendRequests(requester, callback, errorcallback) {
+    axios.patch('/api/users/rejectrequest/', { query: { target: requester }})
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
+export function getFriends(username, callback, errorcallback) {
+    axios.get('/api/users/' + username + '/friends/')
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
+export function unfriend(friend, callback, errorcallback) {
+    axios.patch('/api/users/unfriend/', { query: { target: friend }})
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
 // SOCKETIO ===================================================================
 
 const socket = openSocket('http://localhost:5000');
