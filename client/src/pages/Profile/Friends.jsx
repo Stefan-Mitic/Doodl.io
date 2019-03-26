@@ -2,11 +2,90 @@ import React, { Component } from 'react';
 import Profile from '../../components/Profile';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
+import { sendFriendRequest, getSentFriendRequests, getReceivedFriendRequests, getFriends } from '../../api';
 
 class Friends extends Component {
     constructor(props) {
         super(props);
         this.state = { friends: [], sentReq: [], recReq: [] };
+        this.friendName = React.createRef();
+        this.sendRequest = this.sendRequest.bind(this);
+        this.getSent = this.getSent.bind(this);
+        this.getReceived = this.getReceived.bind(this);
+        this.getFriends = this.getFriends.bind(this);
+        this.unfriend = this.unfriend.bind(this);
+        this.remove = this.remove.bind(this);
+        this.reject = this.reject.bind(this);
+    }
+
+    componentDidMount() {
+        this.getSent();
+        this.getReceived();
+        this.getFriends();
+    }
+
+    getSent() {
+        getSentFriendRequests(localStorage.getItem('username'), (res) => {
+            const sent = [];
+            for (const request of res.data) {
+                const newRecord = { name: request.recipient, time: request.createdAt };
+                sent.push(newRecord);
+            }
+            this.setState({ sentReq: sent });
+        }, (err) => {
+            alert(err);
+        });
+    }
+
+    getReceived() {
+        getReceivedFriendRequests(localStorage.getItem('username'), (res) => {
+            const received = [];
+            for (const request of res.data) {
+                const newRecord = { name: request.requester, time: request.createdAt };
+                received.push(newRecord);
+            }
+            this.setState({ recReq: received });
+        }, (err) => {
+            alert(err);
+        });
+    }
+
+    getFriends() {
+        getFriends(localStorage.getItem('username'), (res) => {
+            const friends = [];
+            for (const friend of res.data.friends) {
+                const newRecord = { name: friend };
+                friends.push(newRecord);
+            }
+            this.setState({ friends: friends });
+        }, (err) => {
+            alert(err);
+        });
+    }
+
+    sendRequest(e) {
+        e.preventDefault();
+        let recipient = this.friendName.current.value;
+        sendFriendRequest(recipient, (res) => {
+            console.log(res);
+            this.friendName.current.value = '';
+        }, (err) => {
+            alert(err);
+        });
+
+        this.getSent() //update sent requests
+    }
+
+    unfriend(e, row) {
+        
+    }
+
+    remove(e, row) {
+
+    }
+
+    reject(e, row) {
+
     }
 
     render() {
@@ -17,7 +96,7 @@ class Friends extends Component {
                 accessor: 'name'
             }, {
                 Header: 'Remove',
-                render: ({ row }) => (<button onClick={(e) => this.handleButtonClick(e, row)}>Click Me</button>)
+                render: ({ row }) => (<button onClick={(e) => this.unfriend(e, row)}>Click Me</button>)
             }]
         }];
 
@@ -31,7 +110,7 @@ class Friends extends Component {
                 accessor: 'time'
             }, {
                 Header: 'Remove',
-                render: ({ row }) => (<button onClick={(e) => this.handleButtonClick(e, row)}>Click Me</button>)
+                render: ({ row }) => (<button onClick={(e) => this.remove(e, row)}>Click Me</button>)
             }]
         }];
 
@@ -45,7 +124,7 @@ class Friends extends Component {
                 accessor: 'time'
             }, {
                 Header: 'Reject',
-                render: ({ row }) => (<button onClick={(e) => this.handleButtonClick(e, row)}>Click Me</button>)
+                render: ({ row }) => (<button onClick={(e) => this.reject(e, row)}>Click Me</button>)
             }]
         }];
 
@@ -74,8 +153,8 @@ class Friends extends Component {
                             defaultPageSize={5}
                         />
                         Add A Friend:
-                        <input ref={this.newPwd} type="text" maxLength="30" placeholder="player username"></input>
-                        <button className="btn btn-success" onClick={this.updatePwd}>Request</button>
+                        <input ref={this.friendName} type="text" maxLength="30" placeholder="player username"></input>
+                        <button className="btn btn-success" onClick={(e) => this.sendRequest(e)}>Request</button>
                     </div>
                     <div className="col-sm-5">
                         <ReactTable className="table"
