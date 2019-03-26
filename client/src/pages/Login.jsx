@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import api from '../api';
+import { signin } from '../api';
 import { Button, FormGroup, FormControl, FormLabel, Form } from "react-bootstrap";
 import Header from '../components/Header';
 
@@ -10,34 +10,34 @@ class Login extends Component {
             username: '',
             password: ''
         }
-        this.signin = this.signin.bind(this);
-        this.signup = this.signup.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    signin(e) {
+    handleSubmit(e, signup) {
         e.preventDefault();
-        this.handleSubmit("signin")
-    }
 
-    signup(e) {
-        e.preventDefault();
-        this.handleSubmit("signup");
-    }
-
-    handleSubmit(action) {
         const user = {
             username: this.state.username,
             password: this.state.password
         }
-        api.post(`/` + action + `/`, user)
-        .then(res => {
-            console.log(res);
-            localStorage.setItem('username', res.data);
-            this.props.history.push("/");
-        }).catch(err => {
-            console.log(err);
-        })
+
+        if (signup) {
+            signup(user, (res) => {
+                console.log(res);
+                localStorage.setItem('username', res.data);
+                this.props.history.push("/");
+            }, (err) => {
+                alert(err);
+            });
+        } else {
+            signin(user, (res) => {
+                console.log(res);
+                localStorage.setItem('username', res.data);
+                this.props.history.push("/");
+            }, (err) => {
+                alert(err);
+            });
+        }
     }
 
     validateForm() {
@@ -74,7 +74,7 @@ class Login extends Component {
                             />
                         </FormGroup>
                         <div className="text-center">
-                            <Button disabled={!this.validateForm()} type="submit" onClick={(e) => this.signin(e)}>Sign in</Button> or <Button disabled={!this.validateForm()} type="submit" onClick={(e) => this.signup(e)}>Sign up</Button>
+                            <Button disabled={!this.validateForm()} type="submit" onClick={(e) => this.handleSubmit(e, false)}>Sign in</Button> or <Button disabled={!this.validateForm()} type="submit" onClick={(e) => this.handleSubmit(e, true)}>Sign up</Button>
                         </div>
                     </Form>
                 </div>
