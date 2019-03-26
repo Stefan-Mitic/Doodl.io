@@ -55,9 +55,38 @@ exports.sanitizeContent = function (req, res, next) {
     next();
 };
 
-// checks if id is valid
+// checks if id is a valid MongoDB id
 exports.checkId = function (req, res, next) {
-    let validId = isValidId(req.params.id);
-    if (!validId) return res.status(400).end("bad input");
+    let objectId = req.params.id;
+    if (!objectId) return res.status(400).end("id is required");
+    let validId = isValidId(objectId);
+    if (!validId) return res.status(400).end("id is not a valid object id");
+    next();
+};
+
+// checks if id in JSON body is a valid MongoDB id
+exports.checkBodyId = function (req, res, next) {
+    let objectId = req.body.id;
+    if (!objectId) return res.status(400).end("id is required");
+    let validId = isValidId(objectId);
+    if (!validId) return res.status(400).end("id is not a valid object id");
+    next();
+};
+
+// checks if game id is valid
+exports.checkGameId = function (req, res, next) {
+    let gameId = req.body.id;
+    if (!gameId) return res.status(400).end("game id is required");
+    let validId = validator.isAlphanumeric(gameId) && gameId.length >= 24;
+    if (!validId) return res.status(400).end("game id is not valid");
+    next();
+};
+
+// checks if game id in JSON body is valid
+exports.checkBodyGameId = function (req, res, next) {
+    let gameId = req.body.id;
+    if (!gameId) return res.status(400).end("game id is required");
+    let validId = validator.isAlphanumeric(gameId) && gameId.length >= 24;
+    if (!validId) return res.status(400).end("game id is not valid");
     next();
 };
