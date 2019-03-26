@@ -15,13 +15,13 @@ class Login extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    signin = event => {
-        event.preventDefault();
+    signin(e) {
+        e.preventDefault();
         this.handleSubmit("signin")
     }
 
-    signup = event => {
-        event.preventDefault();
+    signup(e) {
+        e.preventDefault();
         this.handleSubmit("signup");
     }
 
@@ -74,7 +74,7 @@ class Login extends Component {
                             />
                         </FormGroup>
                         <div className="text-center">
-                            <Button disabled={!this.validateForm()} type="submit" onClick={this.signin}>Sign in</Button> or <Button disabled={!this.validateForm()} type="submit" onClick={this.signup}>Sign up</Button>
+                            <Button disabled={!this.validateForm()} type="submit" onClick={(e) => this.signin(e)}>Sign in</Button> or <Button disabled={!this.validateForm()} type="submit" onClick={(e) => this.signup(e)}>Sign up</Button>
                         </div>
                     </Form>
                 </div>

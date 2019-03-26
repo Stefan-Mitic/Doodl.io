@@ -55,8 +55,8 @@ class Lobby extends Component {
         });
     }
 
-    startGame = event => {
-        event.preventDefault();
+    startGame(e) {
+        e.preventDefault();
         if (this.host) emitStartGame(this.gameId);
         this.redirectToGame();
     }
@@ -95,7 +95,7 @@ class Lobby extends Component {
                     <div className="offset-sm-6 col-sm-3" style={{ visibility: !this.host ? 'visible' : 'hidden' }}>
                         Cannot start, not host!
                     </div>
-                    <button type="button" className="col-sm-2 btn btn-success" disabled={!this.host} onClick={this.startGame}>Start Game</button>
+                    <button type="button" className="col-sm-2 btn btn-success" disabled={!this.host} onClick={(e) => this.startGame(e)}>Start Game</button>
                 </div>
             </div>
         );
