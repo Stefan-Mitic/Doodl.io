@@ -8,14 +8,11 @@ const cors = require('cors');
 const express = require('express');
 const app = express();
 const socketIO = require('socket.io');
+const sharedsession = require('express-socket.io-session');
 
 // middleware dependencies
 const validator = require('./middlewares/validation');
 const auth = require('./middlewares/authentication');
-
-// middleware module to handle multipart/form-data
-const multer = require('multer');
-let upload = multer({ dest: path.join(__dirname, 'assets') });
 
 // setup global middlewares
 app.use(cors());
@@ -46,7 +43,8 @@ const comparison = require('./controllers/comparison');
 // user authentication routes
 app.post('/signin/', validator.checkUsername, users.signin);
 app.post('/signup/', validator.checkUsername, validator.checkPassword, users.signup);
-app.get('/signout/', auth.isAuthenticated, users.signout);
+app.get('/signout/', // auth.isAuthenticated,
+    users.signout);
 app.get('/api/users/:username/', users.getUser);
 app.get('/api/users/', users.getUsers);
 app.patch('/api/users/name/', auth.isAuthenticated, validator.checkDisplayName, users.updateName);
@@ -86,7 +84,7 @@ app.post('/api/game/images/:id/compare/', validator.checkId, comparison.gameComp
 // game routes
 app.post('/api/game/', games.createGame);
 app.post('/api/game/start/', games.startGame);
-app.patch('/api/game/join/', games.addPlayer);
+app.patch('/api/game/join/', validator.checkBodyGameId, games.addPlayer);
 app.get('/api/game/:id/players/', games.getPlayers);
 app.get('/api/game/:id/', games.getGame);
 app.get('/api/game/:id/nextImage/', games.getNextImage);
@@ -103,6 +101,11 @@ const io = socketIO(server);
 // Dependencies
 const { generateMessage } = require('./utils/message');
 const { isRealString } = require('./utils/realstring');
+
+// use shared session middleware for socket.io
+io.use(sharedsession(auth.sessionSettings, {
+    autoSave: true
+}));
 
 io.on('connection', function(socket) {
     console.log('User connected ' + socket.id);
@@ -150,5 +153,5 @@ server.listen(PORT, function(err) {
     if (err)
         console.log(err);
     else
-        console.log('HTTP server on https://localhost:%s', PORT);
+        console.log('HTTP server on http://localhost:%s', PORT);
 });

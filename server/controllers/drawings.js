@@ -57,7 +57,7 @@ exports.addDrawing = function (req, res) {
         if (err) return res.status(500).end(err);
         // save the drawing file to backend
         let pngdata = dataURL.replace(/^data:image\/\w+;base64,/, "");
-        fs.writeFile(filepath, new Buffer(pngdata, 'base64'), function (err) {
+        fs.writeFile(filepath, Buffer.from(pngdata, 'base64'), function (err) {
             if (err) return res.status(500).end(err);
             return res.json(result);
         }); 

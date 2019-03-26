@@ -45,7 +45,12 @@ exports.setCookie = function (username) {
 
 exports.setUsername = function (req, res, next) {
     req.username = (req.session.username) ? req.session.username : null;
-    console.log("HTTP request", req.username, req.method, req.url, req.body);
+    if (req.body.dataURL) {
+        let smallbody = { imageId: req.body.imageId, gameId: req.body.gameId };
+        console.log("HTTP request", req.username, req.method, req.url, smallbody);
+    } else {
+        console.log("HTTP request", req.username, req.method, req.url, req.body);
+    }
     next();
 };
 

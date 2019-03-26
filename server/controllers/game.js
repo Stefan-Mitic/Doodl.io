@@ -39,7 +39,6 @@ exports.startGame = function(req, res) {
                 });
         });
     });
-
 };
 
 exports.getNextImage = function(req, res) {
@@ -50,20 +49,22 @@ exports.getNextImage = function(req, res) {
 };
 
 exports.incrementRound = function(req, res) {
-    GameModel.updateOne({ _id: req.body.id }, { $inc: { currRound: 1 } }, function(err, result) {
+    let gameId = req.body.id;
+    GameModel.findByIdAndUpdate(gameId, { $inc: { currRound: 1 } }, function(err, result) {
         if (err) return res.status(500).end(err);
         res.json(result);
     });
 };
 
 exports.addPlayer = function(req, res) {
-    GameModel.findOne({ _id: req.body.gameId }, function(err, game) {
+    let gameId = req.body.gameId;
+    GameModel.findById(gameId, function(err, game) {
         if (err) return res.status(500).end(err);
         let players = game.players;
         players.push(req.body.username);
         // Won't allow more than 4 players
         if (game.players.length > 4) return res.status(409).end("Lobby full");
-        GameModel.updateOne({ _id: req.body.gameId }, { $set: { players: players } },
+        GameModel.findByIdAndUpdate(gameId, { $set: { players: players } },
             function(err, result) {
                 if (err) return res.status(500).end(err);
                 res.json(result);
@@ -72,12 +73,14 @@ exports.addPlayer = function(req, res) {
 };
 
 exports.removePlayer = function(req, res) {
-    GameModel.findOne({ _id: req.body.id }, function(err, game) {
+    let username = req.username;
+    let gameId = req.body.id;
+    GameModel.findById(gameId, function(err, game) {
         if (err) return res.status(500).end(err);
         let players = game.players;
-        let index = players.indexOf(req.username);
+        let index = players.indexOf(username);
         if (index !== -1) players.splice(index, 1);
-        GameModel.updateOne({ _id: req.body.id }, { $set: { players: players } },
+        GameModel.findByIdAndUpdate(gameId, { $set: { players: players } },
             function(err, result) {
                 if (err) return res.status(500).end(err);
                 res.json(result);
@@ -86,14 +89,16 @@ exports.removePlayer = function(req, res) {
 };
 
 exports.getPlayers = function(req, res) {
-    GameModel.findOne({ _id: req.params.id }, function(err, game) {
+    let gameId = req.params.id;
+    GameModel.findById(gameId, function(err, game) {
         if (err) return res.status(500).end(err);
         res.json(game.players);
     });
 };
 
 exports.getGame = function(req, res) {
-    GameModel.findOne({ _id: req.params.id }, function(err, game) {
+    let gameId = req.params.id;
+    GameModel.findById(gameId, function(err, game) {
         if (err) return res.status(500).end(err);
         res.json(game);
     });
