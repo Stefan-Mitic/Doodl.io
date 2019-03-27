@@ -81,7 +81,7 @@ exports.signin = function (req, res) {
 exports.signout = function (req, res) {
     req.session.destroy();
     res.setHeader('Set-Cookie', auth.setCookie(''));
-    res.redirect('/');
+    res.json('successful');
 };
 
 // updates the user's display name

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Navbar, Nav, NavItem, NavDropdown } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
 import history from '../history';
-import api from '../api';
+import { signout } from '../api';
 
 class Header extends Component {
     constructor() {
@@ -10,18 +10,15 @@ class Header extends Component {
         this.signout = this.signout.bind(this);
     }
 
-    signout = event => {
-        event.preventDefault();
-
-        api.post(`/signout/`)
-            .then(res => {
-                console.log(res);
-                history.push("/login");
-                localStorage.clear();
-            }).catch(err => {
-                console.log(err);
-                localStorage.clear();
-            });
+    signout(e) {
+        e.preventDefault();
+        signout(() => {
+            localStorage.clear();
+            history.push("/login");
+        }, (err) => {
+            alert(err);
+            localStorage.clear();
+        });
     };
 
     render() {
@@ -61,7 +58,7 @@ class Header extends Component {
                                 </NavItem>
                                 :
                                 <NavItem>
-                                    <NavLink to="/login" className="nav-link" onClick={this.signout}>Signout</NavLink>
+                                    <NavLink to="/login" className="nav-link" onClick={(e) => this.signout(e)}>Signout</NavLink>
                                 </NavItem>
                         }
                     </Nav>

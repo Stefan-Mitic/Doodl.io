@@ -2,6 +2,45 @@ import axios from 'axios';
 import openSocket from "socket.io-client";
 axios.defaults.baseURL = 'http://localhost:5000/';
 
+export function signin(user, callback, errorcallback) {
+    axios.post('/signin/', user)
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        }).catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        })
+}
+
+export function signup(user, callback, errorcallback) {
+    axios.post('/signup/', user)
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        }).catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        })
+}
+
+export function signout(callback, errorcallback) {
+    axios.get('/signout/')
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        }).catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        })
+}
+
 export function createGame(config, callback, errorcallback) {
     axios.post('/api/game/', config)
         .then(res => {
