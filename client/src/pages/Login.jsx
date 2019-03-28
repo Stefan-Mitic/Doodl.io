@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import { signin } from '../api';
 import { Button, FormGroup, FormControl, FormLabel, Form } from "react-bootstrap";
+import Cookies from 'universal-cookie';
+import { signin } from '../api';
 import Header from '../components/Header';
+
+const cookies = new Cookies();
 
 class Login extends Component {
     constructor(props) {
@@ -21,9 +24,11 @@ class Login extends Component {
             password: this.state.password
         }
 
+        let cookieOptions = { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 };
         if (signup) {
             signup(user, (res) => {
                 console.log(res);
+                cookies.set('username', res.data, cookieOptions);
                 localStorage.setItem('username', res.data);
                 this.props.history.push("/");
             }, (err) => {
@@ -32,6 +37,7 @@ class Login extends Component {
         } else {
             signin(user, (res) => {
                 console.log(res);
+                cookies.set('username', res.data, cookieOptions);
                 localStorage.setItem('username', res.data);
                 this.props.history.push("/");
             }, (err) => {

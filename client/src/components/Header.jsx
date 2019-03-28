@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import { Navbar, Nav, NavItem, NavDropdown } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
+import Cookies from 'universal-cookie';
 import history from '../history';
 import { signout } from '../api';
+
+const cookies = new Cookies();
 
 class Header extends Component {
     constructor() {
@@ -19,7 +22,8 @@ class Header extends Component {
             alert(err);
             localStorage.clear();
         });
-    };
+        cookies.set('username', '');
+    }
 
     render() {
         return (

@@ -24,7 +24,7 @@ function populateImageDB() {
     let clipartsPath = path.join(__dirname, '../assets/cliparts');
     // read through each clipart
     fs.readdir(clipartsPath, function (err, filenames) {
-        if (err) return console.log(err);
+        if (err) return console.err(err);
         filenames.forEach(function (filename, index) {
             let name = filename.split('.').slice(0, -1).join('.');
             let filepath = path.join(clipartsPath, filename);
@@ -33,8 +33,8 @@ function populateImageDB() {
                 file: { mimetype: 'image/png', destination: clipartsPath, filename: filename, path: filepath }
             };
             ImageModel.create(imagedata, function (err, raw) {
-                if (err) return console.log(err);
-                return console.log(raw);
+                if (err) return console.err(err);
+                return console.log(name);
             });
         });
     });
