@@ -8,11 +8,12 @@ import history from '../history';
 class Game extends Component {
     constructor(props) {
         super(props);
-        this.state = { round: 1, bgsrc: null };
+        this.state = { round: 1, bgsrc: null, lineWidth: 10 };
         this.roundEnd = this.roundEnd.bind(this);
         this.gameEnd = this.gameEnd.bind(this);
         this.updatePlayerScore = this.updatePlayerScore.bind(this);
         this.loadImage = this.loadImage.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.clockRef = React.createRef();
         this.canvas = React.createRef();
         this.image = React.createRef();
@@ -90,6 +91,10 @@ class Game extends Component {
         history.push({ pathname: "/postgame/" + this.gameId });
     }
 
+    handleChange(e) {
+        this.setState({ lineWidth: e.target.value });
+    }
+
     render() {
         return (
             <div>
@@ -105,10 +110,20 @@ class Game extends Component {
                                 size={100}
                                 onComplete={this.roundEnd}
                             />
+                            <div>Line Width</div>
+                            <select
+                                value={this.state.selectValue}
+                                onChange={this.handleChange}
+                            >
+                                <option value={5}>5</option>
+                                <option value={10} selected>10</option>
+                                <option value={15}>15</option>
+                                <option value={20}>20</option>
+                            </select>
                         </div>
                         <div id="canvas-div">
                             {this.state.bgsrc ?
-                                <CanvasDraw bgsrc={this.state.bgsrc}></CanvasDraw>
+                                <CanvasDraw bgsrc={this.state.bgsrc} lineWidth={this.state.lineWidth}></CanvasDraw>
                                 : null
                             }
                         </div>

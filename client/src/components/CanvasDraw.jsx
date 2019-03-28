@@ -84,7 +84,7 @@ class CanvasDraw extends Component {
         if (this.ctx !== null) {
             this.ctx.beginPath();
 
-            this.ctx.lineWidth = 10;
+            this.ctx.lineWidth = this.props.lineWidth;
             this.ctx.lineCap = 'round';
             this.ctx.strokeStyle = '#000000';
 
