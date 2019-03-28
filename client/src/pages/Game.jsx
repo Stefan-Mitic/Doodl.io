@@ -8,7 +8,7 @@ import history from '../history';
 class Game extends Component {
     constructor(props) {
         super(props);
-        this.state = { round: 1, bgsrc: null, lineWidth: 10 };
+        this.state = { round: 1, bgsrc: null, lineWidth: 5 };
         this.roundEnd = this.roundEnd.bind(this);
         this.gameEnd = this.gameEnd.bind(this);
         this.updatePlayerScore = this.updatePlayerScore.bind(this);
@@ -116,7 +116,7 @@ class Game extends Component {
                                 onChange={this.handleChange}
                             >
                                 <option value={5}>5</option>
-                                <option value={10} selected>10</option>
+                                <option value={10}>10</option>
                                 <option value={15}>15</option>
                                 <option value={20}>20</option>
                             </select>
