@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, FormGroup, FormControl, FormLabel, Form } from "react-bootstrap";
 import Cookies from 'universal-cookie';
-import { signin } from '../api';
+import { signin, signup } from '../api';
 import Header from '../components/Header';
 
 const cookies = new Cookies();
@@ -16,7 +16,7 @@ class Login extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleSubmit(e, signup) {
+    handleSubmit(e) {
         e.preventDefault();
 
         const user = {
