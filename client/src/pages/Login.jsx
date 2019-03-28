@@ -16,7 +16,7 @@ class Login extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleSubmit(e) {
+    handleSubmit(e, isSignup) {
         e.preventDefault();
 
         const user = {
@@ -25,7 +25,7 @@ class Login extends Component {
         }
 
         let cookieOptions = { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 };
-        if (signup) {
+        if (isSignup) {
             signup(user, (res) => {
                 console.log(res);
                 cookies.set('username', res.data, cookieOptions);
