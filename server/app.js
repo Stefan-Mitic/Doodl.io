@@ -10,6 +10,9 @@ const app = express();
 const socketIO = require('socket.io');
 const sharedsession = require('express-socket.io-session');
 
+// server settings
+const keys = require('./config/keys');
+
 // middleware dependencies
 const validator = require('./middlewares/validation');
 const auth = require('./middlewares/authentication');
@@ -23,7 +26,8 @@ app.use(auth.setUsername);
 
 // connect to db
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/doodlio', { useNewUrlParser: true, useCreateIndex: true });
+// 'mongodb://localhost/doodlio'
+mongoose.connect(keys.mongoURI, { useNewUrlParser: true, useCreateIndex: true });
 
 // initialize all models
 const models = path.join(__dirname, './models');
@@ -43,8 +47,7 @@ const comparison = require('./controllers/comparison');
 // user authentication routes
 app.post('/signin/', validator.checkUsername, users.signin);
 app.post('/signup/', validator.checkUsername, validator.checkPassword, users.signup);
-app.get('/signout/', // auth.isAuthenticated,
-    users.signout);
+app.get('/signout/', auth.isAuthenticated, users.signout);
 app.get('/api/users/:username/', users.getUser);
 app.get('/api/users/', users.getUsers);
 app.patch('/api/users/name/', auth.isAuthenticated, validator.checkDisplayName, users.updateName);

@@ -6,8 +6,9 @@
  */
 
 const mongoose = require('mongoose');
+const UserModel = mongoose.model('User');
 const ScoreModel = mongoose.model('Score');
-const LeaderboardModel = mongoose.model('Leaderboard');
+// const LeaderboardModel = mongoose.model('Leaderboard');
 
 /**
  * Exported functions.
@@ -15,28 +16,28 @@ const LeaderboardModel = mongoose.model('Leaderboard');
 
 // gets top 10 players
 exports.getTopPlayers = function(req, res) {
-    LeaderboardModel.find({})
-        .sort({ score: -1 })
-        .limit(10)
-        .exec(function(err, players) {
-            if (err) res.status(500).end(err);
-            return res.json(players);
-        });
+    UserModel.find({})
+    .sort({ score: -1 })
+    .limit(10)
+    .exec(function(err, players) {
+        if (err) return res.status(500).end(err);
+        return res.json(players);
+    });
 };
 
 // gets given player's score and position on the leaderboard
 exports.getPlayerLeaderboard = function(req, res) {
     let username = req.username.toLowerCase();
-    LeaderboardModel.findById(username, function(err, player) {
-        if (err) res.status(500).end(err);
+    UserModel.findById(username, function(err, player) {
+        if (err) return res.status(500).end(err);
         if (!player) res.status(404).end(`player ${player} does not exist on leaderboard`);
-        LeaderboardModel.find({ score: { $gte: player.score } })
+        UserModel.find({ score: { $gte: player.score } })
             .countDocuments(function(err, position) {
-                if (err) res.status(500).end(err);
+                if (err) return res.status(500).end(err);
                 return res.json({
                     player: username,
                     score: player.score,
-                    position: (position + 1)
+                    position: position
                 });
             });
     });
@@ -45,11 +46,11 @@ exports.getPlayerLeaderboard = function(req, res) {
 // increment to total number of wins
 exports.incrementPlayerLeaderboard = function (req, res) {
     let username = req.params.username.toLowerCase();
-    LeaderboardModel.findByIdAndUpdate(username, { $inc: { score: 1 } }, function(err, result) {
+    UserModel.findByIdAndUpdate(username, { $inc: { wins: 1 } }, function(err, result) {
         if (err) return res.status(500).end(err);
         res.json(result);
     });
-}
+};
 
 const GAME_HISTORY_PAGE_SIZE = 10;
 
@@ -74,7 +75,9 @@ exports.addPlayerScore = function(req, res) {
     let score = parseInt(req.body.score);
     ScoreModel.create({ player, gameId, score }, function(err, result) {
         if (err) return res.status(500).end(err);
-        return res.json(result);
+        UserModel.findOneAndUpdate(player, { $inc: { score: score } }, function (err, result) {
+            return res.json(result);
+        });
     });
 };
 

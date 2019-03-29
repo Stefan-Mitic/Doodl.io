@@ -33,14 +33,12 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    score: { // total score this user has earned
+        type: Number,
+        default: 0
+    }
 }, {
     timestamps: true,
-});
-
-// by default, the user's display name is the username
-UserSchema.pre('save', function(next) {
-    this.name = this.get('_id');
-    next();
 });
 
 const User = mongoose.model('User', UserSchema);
