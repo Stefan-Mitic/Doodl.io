@@ -31,8 +31,8 @@ class Login extends Component {
                 cookies.set('username', res.data, cookieOptions);
                 localStorage.setItem('username', res.data);
                 this.props.history.push("/");
-            }, (err) => {
-                alert(err);
+            }, () => {
+                alert("Invalid Input:\nusername must be at least 3 characters\npassword must be at least 6 characters");
             });
         } else {
             signin(user, (res) => {
@@ -40,8 +40,8 @@ class Login extends Component {
                 cookies.set('username', res.data, cookieOptions);
                 localStorage.setItem('username', res.data);
                 this.props.history.push("/");
-            }, (err) => {
-                alert(err);
+            }, () => {
+                alert("Incorrect username and password");
             });
         }
     }
@@ -50,9 +50,9 @@ class Login extends Component {
         return this.state.username.length > 0 && this.state.password.length > 0;
     }
 
-    handleChange = event => {
+    handleChange(e) {
         this.setState({
-            [event.target.id]: event.target.value
+            [e.target.id]: e.target.value
         });
     }
 
@@ -68,14 +68,14 @@ class Login extends Component {
                                 autoFocus
                                 type="text"
                                 value={this.state.username}
-                                onChange={this.handleChange}
+                                onChange={(e) => this.handleChange(e)}
                             />
                         </FormGroup>
                         <FormGroup controlId="password">
                             <FormLabel>Password</FormLabel>
                             <FormControl
                                 value={this.state.password}
-                                onChange={this.handleChange}
+                                onChange={(e) => this.handleChange(e)}
                                 type="password"
                             />
                         </FormGroup>
