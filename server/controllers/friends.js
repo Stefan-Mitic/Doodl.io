@@ -85,7 +85,7 @@ exports.getSentRequests = function (req, res) {
     let page = parseInt(req.query.page) || 0;
     let username = req.username;
     FriendRequestModel
-        .findOne({ requester: username }, { _id: 0, __v: 0 })
+        .find({ requester: username }, { _id: 0, __v: 0 })
         .skip(page * FR_PAGE_SIZE)
         .limit(FR_PAGE_SIZE)
         .exec(function (err, results) {
@@ -99,7 +99,7 @@ exports.getRecievedRequests = function (req, res) {
     let page = parseInt(req.query.page) || 0;
     let username = req.username;
     FriendRequestModel
-        .findOne({ recipient: username }, { _id: 0, __v: 0 })
+        .find({ recipient: username }, { _id: 0, __v: 0 })
         .skip(page * FR_PAGE_SIZE)
         .limit(FR_PAGE_SIZE)
         .exec(function (err, results) {

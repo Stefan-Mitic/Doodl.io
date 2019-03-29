@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import Profile from '../../components/Profile';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-import { sendFriendRequest, getSentFriendRequests, getReceivedFriendRequests, getFriends } from '../../api';
+import { sendFriendRequest, getSentFriendRequests, getReceivedFriendRequests, getFriends, acceptFriendRequests, rejectFriendRequests, unfriend } from '../../api';
 
 class Friends extends Component {
     constructor(props) {
         super(props);
-        this.state = { friends: [{ name: 'xxx' }], sentReq: [], recReq: [] };
+        this.state = { friends: [], sentReq: [], recReq: [] };
         this.friendName = React.createRef();
         this.sendRequest = this.sendRequest.bind(this);
         this.getSent = this.getSent.bind(this);
@@ -15,20 +15,23 @@ class Friends extends Component {
         this.getFriends = this.getFriends.bind(this);
         this.unfriend = this.unfriend.bind(this);
         this.remove = this.remove.bind(this);
+        this.accept = this.accept.bind(this);
         this.reject = this.reject.bind(this);
     }
 
     componentDidMount() {
-        // this.getSent();
-        // this.getReceived();
-        // this.getFriends();
+        this.getSent();
+        this.getReceived();
+        this.getFriends();
     }
 
     getSent() {
         getSentFriendRequests(localStorage.getItem('username'), (res) => {
+            console.log(res);
             const sent = [];
             for (const request of res.data) {
-                const newRecord = { name: request.recipient, time: request.createdAt };
+                let date = new Date(request.createdAt);
+                const newRecord = { name: request.recipient, date: date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear().toString().slice(-2) };
                 sent.push(newRecord);
             }
             this.setState({ sentReq: sent });
@@ -39,9 +42,11 @@ class Friends extends Component {
 
     getReceived() {
         getReceivedFriendRequests(localStorage.getItem('username'), (res) => {
+            console.log(res);
             const received = [];
             for (const request of res.data) {
-                const newRecord = { name: request.requester, time: request.createdAt };
+                let date = new Date(request.createdAt);
+                const newRecord = { name: request.requester, date: date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear().toString().slice(-2) };
                 received.push(newRecord);
             }
             this.setState({ recReq: received });
@@ -52,8 +57,9 @@ class Friends extends Component {
 
     getFriends() {
         getFriends(localStorage.getItem('username'), (res) => {
+            console.log(res);
             const friends = [];
-            for (const friend of res.data.friends) {
+            for (const friend of res.data) {
                 const newRecord = { name: friend };
                 friends.push(newRecord);
             }
@@ -69,24 +75,58 @@ class Friends extends Component {
         sendFriendRequest(recipient, (res) => {
             console.log(res);
             this.friendName.current.value = '';
+            this.getSent();
         }, (err) => {
             alert(err);
         });
-
-        this.getSent() //update sent requests
     }
 
     unfriend(e, row) {
         e.preventDefault();
-        console.log(row);
+
+        unfriend(row.name, (res) => {
+            console.log(res);
+            this.getFriends();
+        }, (err) => {
+            alert(err);
+        });
     }
 
     remove(e, row) {
+        e.preventDefault();
 
+        // TODO: Add to API
+        // removeFriendRequest(row.name, (res) => {
+        //     console.log(res);
+        // }, (err) => {
+        //     alert(err);
+        // });
+
+        // this.getFriends();
+        // this.getReceived();
+    }
+
+    accept(e, row) {
+        e.preventDefault();
+
+        acceptFriendRequests(row.name, (res) => {
+            console.log(res);
+            this.getFriends();
+            this.getReceived();
+        }, (err) => {
+            alert(err);
+        });
     }
 
     reject(e, row) {
+        e.preventDefault();
 
+        rejectFriendRequests(row.name, (res) => {
+            console.log(res);
+            this.getReceived();
+        }, (err) => {
+            alert(err);
+        });
     }
 
     render() {
@@ -96,6 +136,7 @@ class Friends extends Component {
                 Header: 'Player',
                 accessor: 'name'
             }, {
+                width: 100,
                 Header: 'Remove',
                 style: {
                     textAlign: 'center',
@@ -111,14 +152,13 @@ class Friends extends Component {
                 accessor: 'name'
             }, {
                 Header: 'Date',
-                accessor: 'Date'
-            }, {
-                Header: 'Remove',
-                style: {
-                    textAlign: 'center',
-                },
-                Cell: ({ row }) => (<button onClick={(e) => this.remove(e, row)}>Click Me</button>)
-            }]
+                accessor: 'date'
+            }
+                // , {
+                //     Header: 'Remove',
+                //     Cell: ({ row }) => (<button onClick={(e) => this.remove(e, row)}>Click Me</button>)
+                // }
+            ]
         }];
 
         const recCols = [{
@@ -130,11 +170,13 @@ class Friends extends Component {
                 Header: 'Date',
                 accessor: 'date'
             }, {
+                width: 75,
+                Header: 'Accept',
+                Cell: ({ row }) => (<button onClick={(e) => this.accept(e, row)}>Yes</button>)
+            }, {
+                width: 75,
                 Header: 'Reject',
-                style: {
-                    textAlign: 'center',
-                },
-                Cell: ({ row }) => (<button onClick={(e) => this.reject(e, row)}>Click Me</button>)
+                Cell: ({ row }) => (<button onClick={(e) => this.reject(e, row)}>No</button>)
             }]
         }];
 
@@ -143,8 +185,8 @@ class Friends extends Component {
             <div>
                 <Profile></Profile>
                 <div className="row">
-                    <div className="offset-sm-4 col-sm-4">
-                        <ReactTable className="table"
+                    <div className="offset-sm-3 col-sm-6">
+                        <ReactTable className="table center"
                             data={this.state.friends}
                             columns={friendCols}
                             loadingText={''}
@@ -155,7 +197,7 @@ class Friends extends Component {
                 </div>
                 <div className="row">
                     <div className="offset-sm-1 col-sm-5">
-                        <ReactTable className="table"
+                        <ReactTable className="table center"
                             data={this.state.sentReq}
                             columns={sentCols}
                             loadingText={''}
@@ -167,7 +209,7 @@ class Friends extends Component {
                         <button className="btn btn-success" onClick={(e) => this.sendRequest(e)}>Request</button>
                     </div>
                     <div className="col-sm-5">
-                        <ReactTable className="table"
+                        <ReactTable className="table center"
                             data={this.state.recReq}
                             columns={recCols}
                             loadingText={''}
