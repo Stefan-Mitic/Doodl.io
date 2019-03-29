@@ -87,11 +87,11 @@ exports.signout = function (req, res) {
 // updates the user's display name
 exports.updateName = function (req, res) {
     let username = req.username;
-    let newname = req.params.name;
+    let newname = req.body.name;
     // check if the new name is not already used
     UserModel.findOne({ name: newname }, { _id: 1, name: 1 }, function (err, user) {
         if (err) return res.status(500).end(err);
-        if (user._id === username) return res.status(204);
+        if (user !== null && user._id === username) return res.status(204);
         if (user) return res.status(409).end(`name ${newname} is already used`);
         // update name
         UserModel.updateOne({ _id: username }, { $set: { name: newname }}, function (err, result) {
@@ -104,8 +104,8 @@ exports.updateName = function (req, res) {
 // updates the user's password
 exports.updatePassword = function (req, res) {
     let username = req.username;
-    let oldPassword = req.params.oldPassword;
-    let newPassword = req.params.newPassword;
+    let oldPassword = req.body.oldPassword;
+    let newPassword = req.body.newPassword;
     // retrieve user from the database
     UserModel.findById(username, { hash: 1, salt: 1 }, function (err, user) {
         if (err) return res.status(500).end(err);
