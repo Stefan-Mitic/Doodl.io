@@ -41,11 +41,5 @@ const UserSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-// by default, the user's display name is the username
-UserSchema.pre('save', function(next) {
-    this.name = this.get('_id');
-    next();
-});
-
 const User = mongoose.model('User', UserSchema);
 module.export = User;

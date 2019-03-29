@@ -51,16 +51,12 @@ exports.signup = function (req, res) {
         let salt = crypto.generateSalt();
         let hash = crypto.generateHash(password, salt);
         // insert new user into database
-        UserModel.updateOne({ _id: username }, { _id: username, salt, hash }, { upsert: true }, function (err) {
+        UserModel.updateOne({ _id: username }, { _id: username, name: username, salt, hash }, { upsert: true }, function (err) {
             if (err) return res.status(500).end(err);
             // start a session
             req.session.username = username;
             res.setHeader('Set-Cookie', auth.setCookie(username));
-            // create leaderboard for player
-            LeaderboardModel.updateOne({ _id: username }, { _id: username }, { upsert: true }, function (err, result) {
-                if (err) return res.status(500).end(err);
-                return res.json(username);
-            });
+            return res.json(username);
         });
     });
 };
