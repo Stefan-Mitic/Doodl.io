@@ -37,7 +37,7 @@ exports.getPlayerLeaderboard = function(req, res) {
                 return res.json({
                     player: username,
                     score: player.score,
-                    position: (position + 1)
+                    position: position
                 });
             });
     });
@@ -75,7 +75,9 @@ exports.addPlayerScore = function(req, res) {
     let score = parseInt(req.body.score);
     ScoreModel.create({ player, gameId, score }, function(err, result) {
         if (err) return res.status(500).end(err);
-        return res.json(result);
+        UserModel.findOneAndUpdate(player, { $inc: { score: score } }, function (err, result) {
+            return res.json(result);
+        });
     });
 };
 
