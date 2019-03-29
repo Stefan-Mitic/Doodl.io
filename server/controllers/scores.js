@@ -31,7 +31,7 @@ exports.getPlayerLeaderboard = function(req, res) {
         if (err) res.status(500).end(err);
         if (!player) res.status(404).end(`player ${player} does not exist on leaderboard`);
         LeaderboardModel.find({ score: { $gte: player.score } })
-            .count(function(err, position) {
+            .countDocuments(function(err, position) {
                 if (err) res.status(500).end(err);
                 return res.json({
                     player: username,
