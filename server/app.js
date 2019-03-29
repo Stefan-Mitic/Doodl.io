@@ -67,8 +67,8 @@ app.post('/api/leaderboard/:username/', scores.addPlayerScore);
 app.get('/api/leaderboard/:gameId/:username/', scores.getScore);
 
 // game image routes
-app.get('/api/game/images/:id/', validator.checkId, gameImages.getImage);
-app.get('/api/game/images/:id/file/', validator.checkId, gameImages.getImageFile);
+app.get('/api/game/images/:id/', gameImages.getImage);
+app.get('/api/game/images/:id/file/', gameImages.getImageFile);
 
 // canvas drawing image routes
 app.post('/api/drawings/', // auth.isAuthenticated,
@@ -78,7 +78,7 @@ app.get('/api/drawings/:id/file/', auth.isAuthenticated, validator.checkId, draw
 app.delete('/api/drawings/:id/', auth.isAuthenticated, validator.checkId, drawings.removeDrawing);
 
 // image comparison routes
-app.post('/api/game/images/:id/compare/', validator.checkId, comparison.gameCompare);
+app.post('/api/game/images/:id/compare/', comparison.gameCompare);
 
 // game routes
 app.post('/api/game/', games.createGame);
