@@ -47,8 +47,8 @@ class UpdateInfo extends Component {
                     <button className="col-sm-2 btn btn-success" onClick={(e) => this.updateName(e)}>Update</button>
                 </div>
                 <div className="row">
-                    <input className="offset-sm-4 col-sm-3" ref={this.oldPwd} type="text" maxLength="30" type="password" placeholder="enter old password"></input>
-                    <input className="offset-sm-4 col-sm-3" ref={this.newPwd} type="text" maxLength="30" type="password" placeholder="enter new password"></input>
+                    <input className="offset-sm-4 col-sm-3" ref={this.oldPwd} maxLength="30" type="password" placeholder="enter old password"></input>
+                    <input className="offset-sm-4 col-sm-3" ref={this.newPwd} maxLength="30" type="password" placeholder="enter new password"></input>
                     <button className="col-sm-2 btn btn-success" onClick={(e) => this.updatePwd(e)}>Update</button>
                 </div>
             </div>
