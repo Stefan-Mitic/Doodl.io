@@ -12,24 +12,27 @@ class UpdateInfo extends Component {
         this.updatePwd = this.updatePwd.bind(this);
     }
 
-    updateName = event => {
-        event.preventDefault();
+    updateName(e) {
+        e.preventDefault();
 
         let newname = this.newName.current.value;
         updateName(newname, (res) => {
             console.log(res);
+            this.newName.current.value = '';
         }, (err) => {
             alert(err);
         });
     };
 
-    updatePwd = event => {
-        event.preventDefault();
+    updatePwd(e) {
+        e.preventDefault();
 
         let oldPassword = this.oldPwd.current.value;
         let newPassword = this.newPwd.current.value;
         updatePassword(oldPassword, newPassword, (res) => {
             console.log(res);
+            this.oldPwd.current.value = '';
+            this.newPwd.current.value = '';
         }, (err) => {
             alert(err);
         });
@@ -41,12 +44,12 @@ class UpdateInfo extends Component {
                 <Profile></Profile>
                 <div className="row">
                     <input className="offset-sm-4 col-sm-3" ref={this.newName} type="text" maxLength="30" placeholder="enter new username"></input>
-                    <button className="col-sm-2 btn btn-success" onClick={this.updateName}>Update</button>
+                    <button className="col-sm-2 btn btn-success" onClick={(e) => this.updateName(e)}>Update</button>
                 </div>
                 <div className="row">
-                    <input className="offset-sm-4 col-sm-3" ref={this.oldPwd} type="text" maxLength="30" placeholder="enter old password"></input>
-                    <input className="offset-sm-4 col-sm-3" ref={this.newPwd} type="text" maxLength="30" placeholder="enter new password"></input>
-                    <button className="col-sm-2 btn btn-success" onClick={this.updatePwd}>Update</button>
+                    <input className="offset-sm-4 col-sm-3" ref={this.oldPwd} type="text" maxLength="30" type="password" placeholder="enter old password"></input>
+                    <input className="offset-sm-4 col-sm-3" ref={this.newPwd} type="text" maxLength="30" type="password" placeholder="enter new password"></input>
+                    <button className="col-sm-2 btn btn-success" onClick={(e) => this.updatePwd(e)}>Update</button>
                 </div>
             </div>
         );

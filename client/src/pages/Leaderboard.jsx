@@ -13,11 +13,13 @@ class Leaderboard extends Component {
     }
 
     componentDidMount() {
+        this.getPlayerData();
         this.getTopPlayers();
     }
 
     getPlayerData() {
-        getPlayerLeaderboard(localStorage.getItem('username'), (res) => {
+        getPlayerLeaderboard((res) => {
+            console.log(res);
             this.setState({ rank: res.data.position, player: res.data.player, score: res.data.score });
         }, (err) => {
             alert(err);
@@ -26,6 +28,7 @@ class Leaderboard extends Component {
 
     getTopPlayers() {
         getTopPlayers((res) => {
+            console.log(res);
             const players = [];
             let i = 1;
             for (const name of res.data) {

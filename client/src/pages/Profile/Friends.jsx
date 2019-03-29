@@ -7,7 +7,7 @@ import { sendFriendRequest, getSentFriendRequests, getReceivedFriendRequests, ge
 class Friends extends Component {
     constructor(props) {
         super(props);
-        this.state = { friends: [], sentReq: [], recReq: [] };
+        this.state = { friends: [{ name: 'xxx' }], sentReq: [], recReq: [] };
         this.friendName = React.createRef();
         this.sendRequest = this.sendRequest.bind(this);
         this.getSent = this.getSent.bind(this);
@@ -19,9 +19,9 @@ class Friends extends Component {
     }
 
     componentDidMount() {
-        this.getSent();
-        this.getReceived();
-        this.getFriends();
+        // this.getSent();
+        // this.getReceived();
+        // this.getFriends();
     }
 
     getSent() {
@@ -77,7 +77,8 @@ class Friends extends Component {
     }
 
     unfriend(e, row) {
-        
+        e.preventDefault();
+        console.log(row);
     }
 
     remove(e, row) {
@@ -96,7 +97,10 @@ class Friends extends Component {
                 accessor: 'name'
             }, {
                 Header: 'Remove',
-                render: ({ row }) => (<button onClick={(e) => this.unfriend(e, row)}>Click Me</button>)
+                style: {
+                    textAlign: 'center',
+                },
+                Cell: ({ row }) => (<button onClick={(e) => this.unfriend(e, row)}>Unfriend</button>)
             }]
         }];
 
@@ -106,11 +110,14 @@ class Friends extends Component {
                 Header: 'Player',
                 accessor: 'name'
             }, {
-                Header: 'Time',
-                accessor: 'time'
+                Header: 'Date',
+                accessor: 'Date'
             }, {
                 Header: 'Remove',
-                render: ({ row }) => (<button onClick={(e) => this.remove(e, row)}>Click Me</button>)
+                style: {
+                    textAlign: 'center',
+                },
+                Cell: ({ row }) => (<button onClick={(e) => this.remove(e, row)}>Click Me</button>)
             }]
         }];
 
@@ -120,11 +127,14 @@ class Friends extends Component {
                 Header: 'Player',
                 accessor: 'name'
             }, {
-                Header: 'Time',
-                accessor: 'time'
+                Header: 'Date',
+                accessor: 'date'
             }, {
                 Header: 'Reject',
-                render: ({ row }) => (<button onClick={(e) => this.reject(e, row)}>Click Me</button>)
+                style: {
+                    textAlign: 'center',
+                },
+                Cell: ({ row }) => (<button onClick={(e) => this.reject(e, row)}>Click Me</button>)
             }]
         }];
 

@@ -196,7 +196,7 @@ export function updateName(newname, callback, errorcallback) {
 }
 
 export function updatePassword(oldPassword, newPassword, callback, errorcallback) {
-    axios.patch('/api/users/name/', { oldPassword: oldPassword, newPassword: newPassword })
+    axios.patch('/api/users/password/', { oldPassword: oldPassword, newPassword: newPassword })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -223,8 +223,8 @@ export function getTopPlayers(callback, errorcallback) {
         });
 }
 
-export function getPlayerLeaderboard(username, callback, errorcallback) {
-    axios.get('/api/leaderboard/me/', { username: username })
+export function getPlayerLeaderboard(callback, errorcallback) {
+    axios.get('/api/leaderboard/me/')
         .then(res => {
             if (callback != null) {
                 callback(res);

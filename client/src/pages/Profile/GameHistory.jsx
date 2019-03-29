@@ -19,7 +19,8 @@ class GameHistory extends Component {
         getPlayerHistory(0, (res) => {
             const games = [];
             for (const game of res.data) {
-                const newRecord = { name: game.player, score: game.score, time: game.createdAt };
+                let date = new Date(game.createdAt);
+                const newRecord = { name: game.player, score: game.score, time: date.getDate() + '/' + date.getDay() + ' - ' + date.getHours() + ':' + date.getMinutes() };
                 games.push(newRecord);
             }
             this.setState({ data: games });
@@ -44,7 +45,7 @@ class GameHistory extends Component {
             <div>
                 <Profile></Profile>
                 <div className="row">
-                    <ReactTable className="offset-sm-4 col-sm-4 table"
+                    <ReactTable className="offset-sm-3 col-sm-6 table"
                         data={this.state.data}
                         columns={columns}
                         loadingText={''}
