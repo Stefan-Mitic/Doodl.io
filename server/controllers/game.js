@@ -27,7 +27,10 @@ exports.createGame = function(req, res) {
 
 exports.startGame = function(req, res) {
     let rounds = parseInt(req.body.rounds);
-    ImageModel.aggregate([{ $sample: { size: rounds } }], function(err, images) {
+    ImageModel.aggregate([
+        { $match: { isTrace: true } },
+        { $sample: { size: rounds } }
+    ], function(err, images) {
         if (err) return res.status(500).end(err);
         images = images.map(image => image._id);
         GameModel.findOne({ _id: req.body.id }, function(err, game) {

@@ -238,7 +238,7 @@ export function getPlayerLeaderboard(username, callback, errorcallback) {
 }
 
 export function getPlayerHistory(page, callback, errorcallback) {
-    axios.get('/api/leaderboard/history/', { query: { page: page }})
+    axios.get('/api/leaderboard/history/', { query: { page: page } })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -252,7 +252,7 @@ export function getPlayerHistory(page, callback, errorcallback) {
 }
 
 export function sendFriendRequest(username, callback, errorcallback) {
-    axios.patch('/api/users/friend/', { query: { target: username }})
+    axios.patch('/api/users/friend/', { query: { target: username } })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -296,7 +296,7 @@ export function getReceivedFriendRequests(username, callback, errorcallback) {
 // MAYBE ADD removeFreindRequests
 
 export function acceptFriendRequests(requester, callback, errorcallback) {
-    axios.patch('/api/users/acceptrequest/', { query: { target: requester }})
+    axios.patch('/api/users/acceptrequest/', { query: { target: requester } })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -310,7 +310,7 @@ export function acceptFriendRequests(requester, callback, errorcallback) {
 }
 
 export function rejectFriendRequests(requester, callback, errorcallback) {
-    axios.patch('/api/users/rejectrequest/', { query: { target: requester }})
+    axios.patch('/api/users/rejectrequest/', { query: { target: requester } })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -338,7 +338,7 @@ export function getFriends(username, callback, errorcallback) {
 }
 
 export function unfriend(friend, callback, errorcallback) {
-    axios.patch('/api/users/unfriend/', { query: { target: friend }})
+    axios.patch('/api/users/unfriend/', { query: { target: friend } })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -356,19 +356,19 @@ export function unfriend(friend, callback, errorcallback) {
 const socket = openSocket('http://localhost:5000');
 
 export function subscribeToUpdateUserList(updateList) {
-    socket.on('updateUserList', function () {
+    socket.on('updateUserList', function() {
         updateList();
     });
 }
 
 export function subscribeToGameStart(startGame) {
-    socket.on('gameStart', function () {
+    socket.on('gameStart', function() {
         startGame();
     });
 }
 
 export function emitJoin(params) {
-    socket.emit('join', params, function (err) {
+    socket.emit('join', params, function(err) {
         if (err) {
             console.log(err);
         } else {

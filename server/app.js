@@ -69,7 +69,6 @@ app.get('/api/leaderboard/:gameId/:username/', scores.getScore);
 // game image routes
 app.get('/api/game/images/:id/', validator.checkId, gameImages.getImage);
 app.get('/api/game/images/:id/file/', validator.checkId, gameImages.getImageFile);
-app.get('/api/game/images/', gameImages.getRandomImages);
 
 // canvas drawing image routes
 app.post('/api/drawings/', // auth.isAuthenticated,
@@ -84,11 +83,11 @@ app.post('/api/game/images/:id/compare/', validator.checkId, comparison.gameComp
 // game routes
 app.post('/api/game/', games.createGame);
 app.post('/api/game/start/', games.startGame);
-app.patch('/api/game/join/', validator.checkBodyGameId, games.addPlayer);
+app.patch('/api/game/join/', games.addPlayer);
 app.get('/api/game/:id/players/', games.getPlayers);
 app.get('/api/game/:id/', games.getGame);
 app.get('/api/game/:id/nextImage/', games.getNextImage);
-app.post('/api/game/nextRound/', games.incrementRound);
+app.patch('/api/game/nextRound/', games.incrementRound);
 
 // setup server
 const http = require('http');

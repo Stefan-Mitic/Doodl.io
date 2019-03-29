@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 
 const ImageSchema = new mongoose.Schema({
-    name: {
-        type: String,
+    _id: { // Name of image
+        type: String
+    },
+    isTrace: { // True if trace file, False if clipart
+        type: Boolean,
         required: true
     },
     file: { // contains the image file metadata
