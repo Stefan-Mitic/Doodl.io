@@ -154,7 +154,7 @@ export function getImage(imageId, callback, errorcallback) {
 }
 
 export function addPlayerScore(username, gameId, score, callback, errorcallback) {
-    axios.post('/api/leaderboard/' + username + '/', { gameId: gameId, score: score })
+    axios.post('/api/leaderboard/' + gameId + '/' + username + '/', { score: score })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -197,6 +197,20 @@ export function updateName(newname, callback, errorcallback) {
 
 export function updatePassword(oldPassword, newPassword, callback, errorcallback) {
     axios.patch('/api/users/password/', { oldPassword: oldPassword, newPassword: newPassword })
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
+export function incrementPlayerLeaderboard(username, callback, errorcallback) {
+    axios.patch('/api/leaderboard/' + username + '/')
         .then(res => {
             if (callback != null) {
                 callback(res);

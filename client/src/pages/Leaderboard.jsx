@@ -20,7 +20,11 @@ class Leaderboard extends Component {
     getPlayerData() {
         getPlayerLeaderboard((res) => {
             console.log(res);
-            this.setState({ rank: res.data.position, player: res.data.player, score: res.data.score });
+            this.setState({
+                rank: res.data.position,
+                player: res.data.player,
+                score: res.data.score
+            });
         }, (err) => {
             alert(err);
         });
@@ -31,8 +35,8 @@ class Leaderboard extends Component {
             console.log(res);
             const players = [];
             let i = 1;
-            for (const name of res.data) {
-                const newRecord = { rank: i, name: name };
+            for (const player of res.data) {
+                const newRecord = { rank: i, name: player._id, score: player.score };
                 players.push(newRecord);
                 i++;
             }
@@ -47,8 +51,11 @@ class Leaderboard extends Component {
             Header: 'Ranking',
             accessor: 'rank'
         }, {
-            Header: 'Players',
+            Header: 'Player',
             accessor: 'name'
+        }, {
+            Header: 'Score',
+            accessor: 'score'
         }]
 
         return (
@@ -61,7 +68,7 @@ class Leaderboard extends Component {
                     <div className="player-leaderboard col-sm-2">{this.state.score}</div>
                 </div>
                 <div className="row">
-                    <ReactTable className="offset-sm-4 col-sm-4 table"
+                    <ReactTable className="offset-sm-3 col-sm-6 table center"
                         data={this.state.data}
                         columns={columns}
                         loadingText={''}

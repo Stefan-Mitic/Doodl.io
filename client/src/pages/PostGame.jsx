@@ -3,14 +3,15 @@ import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
-import { getPlayers, getPlayerScore } from '../api';
+import { getPlayers, getPlayerScore, incrementPlayerLeaderboard } from '../api';
 
 class PostGame extends Component {
     constructor(props) {
         super(props);
         this.getResults = this.getResults.bind(this);
+        this.getWinner = this.getWinner.bind(this);
         this.gameId = this.props.match.params.id;
-        this.state = { data: [] };
+        this.state = { data: [], winner: null };
     }
 
     componentDidMount() {
@@ -20,16 +21,35 @@ class PostGame extends Component {
     getResults() {
         getPlayers(this.gameId, (res) => {
             const results = [];
+            let bestScore = -1;
             for (const player of res.data) {
                 getPlayerScore(this.gameId, player, (score) => {
                     const newRecord = { name: player, score: score.data };
                     results.push(newRecord);
                     this.setState({ data: results });
-                    console.log(results);
+
+                    // find winner
+                    if (bestScore === -1 || bestScore > score.data) {
+                        bestScore = score.data;
+                        this.winner = player;
+                    }
+
+                    // if on last player
+                    if (res.data.slice(-1)[0]  === player) {
+                        this.getWinner();
+                    }
                 }, (err) => {
                     alert(err);
                 });
             }
+        }, (err) => {
+            alert(err);
+        });
+    }
+
+    getWinner() {
+        incrementPlayerLeaderboard(this.winner, (res) => {
+            console.log(res);
         }, (err) => {
             alert(err);
         });

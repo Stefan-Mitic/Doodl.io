@@ -7,6 +7,7 @@
 
 const mongoose = require('mongoose');
 const UserModel = mongoose.model('User');
+const LeaderboardModel = mongoose.model('Leaderboard');
 const auth = require('../middlewares/authentication');
 const crypto = require('../middlewares/cryptography');
 
@@ -55,7 +56,11 @@ exports.signup = function (req, res) {
             // start a session
             req.session.username = username;
             res.setHeader('Set-Cookie', auth.setCookie(username));
-            return res.json(username);
+            // create leaderboard for player
+            LeaderboardModel.updateOne({ _id: username }, { _id: username }, { upsert: true }, function (err, result) {
+                if (err) return res.status(500).end(err);
+                return res.json(username);
+            });
         });
     });
 };
@@ -94,7 +99,7 @@ exports.updateName = function (req, res) {
         if (user !== null && user._id === username) return res.status(204);
         if (user) return res.status(409).end(`name ${newname} is already used`);
         // update name
-        UserModel.updateOne({ _id: username }, { $set: { name: newname }}, function (err, result) {
+        UserModel.updateOne({ _id: username }, { $set: { name: newname } }, function (err, result) {
             if (err) return res.status(500).end(err);
             res.json(result);
         });

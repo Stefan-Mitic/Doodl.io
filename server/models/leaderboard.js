@@ -5,7 +5,7 @@ const LeaderboardSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    score: { // player's total score
+    score: { // player's total number of wins
         type: Number,
         default: 0,
         index: true

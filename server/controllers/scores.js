@@ -15,7 +15,7 @@ const LeaderboardModel = mongoose.model('Leaderboard');
 
 // gets top 10 players
 exports.getTopPlayers = function(req, res) {
-    LeaderboardModel.find({}, { _id: 0 })
+    LeaderboardModel.find({})
         .sort({ score: -1 })
         .limit(10)
         .exec(function(err, players) {
@@ -36,11 +36,20 @@ exports.getPlayerLeaderboard = function(req, res) {
                 return res.json({
                     player: username,
                     score: player.score,
-                    position: position
+                    position: (position + 1)
                 });
             });
     });
 };
+
+// increment to total number of wins
+exports.incrementPlayerLeaderboard = function (req, res) {
+    let username = req.params.username.toLowerCase();
+    LeaderboardModel.findByIdAndUpdate(username, { $inc: { score: 1 } }, function(err, result) {
+        if (err) return res.status(500).end(err);
+        res.json(result);
+    });
+}
 
 const GAME_HISTORY_PAGE_SIZE = 10;
 
@@ -58,10 +67,10 @@ exports.getPlayerHistory = function(req, res) {
         });
 };
 
-// adds player score, TODO: update global leaderboard
+// adds player score
 exports.addPlayerScore = function(req, res) {
     let player = req.params.username.toLowerCase();
-    let gameId = req.body.gameId;
+    let gameId = req.params.gameId;
     let score = parseInt(req.body.score);
     ScoreModel.create({ player, gameId, score }, function(err, result) {
         if (err) return res.status(500).end(err);
