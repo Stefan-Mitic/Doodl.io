@@ -11,8 +11,8 @@ class Home extends Component {
         this.inputRef = React.createRef();
     }
 
-    createGame = event => {
-        event.preventDefault();
+    createGame(e) {
+        e.preventDefault();
         let username = localStorage.getItem('username');
         const gameSettings = {
             rounds: 1,
@@ -31,8 +31,8 @@ class Home extends Component {
         });
     };
 
-    joinGame = event => {
-        event.preventDefault();
+    joinGame(e) {
+        e.preventDefault();
         var gameId = this.inputRef.current.value;
         let username = localStorage.getItem('username');
         const params = {
@@ -53,11 +53,11 @@ class Home extends Component {
                 <Header></Header>
                 <div className="title">Main Menu</div>
                 <div className="row">
-                    <button className="offset-sm-4 col-sm-4 btn btn-success btn-lg btn-block" onClick={this.createGame}>Create Game</button>
+                    <button className="offset-sm-4 col-sm-4 btn btn-success btn-lg btn-block" onClick={(e) => this.createGame(e)}>Create Game</button>
                 </div>
                 <div className="row">
                     <input className="offset-sm-4 col-sm-2" ref={this.inputRef} type="text" maxLength="30" placeholder="Enter Game ID"></input>
-                    <button className="col-sm-2 btn btn-success btn-lg" onClick={this.joinGame}>Join Game</button>
+                    <button className="col-sm-2 btn btn-success btn-lg" onClick={(e) => this.joinGame(e)}>Join Game</button>
                 </div>
             </div>
         );
