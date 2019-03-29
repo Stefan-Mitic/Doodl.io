@@ -196,7 +196,7 @@ export function updateName(newname, callback, errorcallback) {
 }
 
 export function updatePassword(oldPassword, newPassword, callback, errorcallback) {
-    axios.patch('/api/users/name/', { oldPassword: oldPassword, newPassword: newPassword })
+    axios.patch('/api/users/password/', { oldPassword: oldPassword, newPassword: newPassword })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -223,8 +223,8 @@ export function getTopPlayers(callback, errorcallback) {
         });
 }
 
-export function getPlayerLeaderboard(username, callback, errorcallback) {
-    axios.get('/api/leaderboard/me/', { username: username })
+export function getPlayerLeaderboard(callback, errorcallback) {
+    axios.get('/api/leaderboard/me/')
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -238,7 +238,7 @@ export function getPlayerLeaderboard(username, callback, errorcallback) {
 }
 
 export function getPlayerHistory(page, callback, errorcallback) {
-    axios.get('/api/leaderboard/history/', { query: { page: page }})
+    axios.get('/api/leaderboard/history/', { query: { page: page } })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -252,7 +252,7 @@ export function getPlayerHistory(page, callback, errorcallback) {
 }
 
 export function sendFriendRequest(username, callback, errorcallback) {
-    axios.patch('/api/users/friend/', { query: { target: username }})
+    axios.patch('/api/users/friend/', { query: { target: username } })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -296,7 +296,7 @@ export function getReceivedFriendRequests(username, callback, errorcallback) {
 // MAYBE ADD removeFreindRequests
 
 export function acceptFriendRequests(requester, callback, errorcallback) {
-    axios.patch('/api/users/acceptrequest/', { query: { target: requester }})
+    axios.patch('/api/users/acceptrequest/', { query: { target: requester } })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -310,7 +310,7 @@ export function acceptFriendRequests(requester, callback, errorcallback) {
 }
 
 export function rejectFriendRequests(requester, callback, errorcallback) {
-    axios.patch('/api/users/rejectrequest/', { query: { target: requester }})
+    axios.patch('/api/users/rejectrequest/', { query: { target: requester } })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -338,7 +338,7 @@ export function getFriends(username, callback, errorcallback) {
 }
 
 export function unfriend(friend, callback, errorcallback) {
-    axios.patch('/api/users/unfriend/', { query: { target: friend }})
+    axios.patch('/api/users/unfriend/', { query: { target: friend } })
         .then(res => {
             if (callback != null) {
                 callback(res);
