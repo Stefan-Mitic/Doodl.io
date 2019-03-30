@@ -368,19 +368,31 @@ export function unfriend(friend, callback, errorcallback) {
 const socket = openSocket('http://localhost:5000');
 
 export function subscribeToUpdateUserList(updateList) {
-    socket.on('updateUserList', function () {
+    socket.on('updateUserList', function() {
         updateList();
     });
 }
 
 export function subscribeToGameStart(startGame) {
-    socket.on('gameStart', function () {
+    socket.on('gameStart', function() {
         startGame();
     });
 }
 
+export function subscribeToNewMessage() {
+    socket.on('newMessage', function(message) {
+        // TODO: Add new message to chat
+    });
+}
+
+export function subscribeToUserLeft() {
+    socket.on('userLeft', function(user) {
+        // TODO: Remove user from the game
+    });
+}
+
 export function emitJoin(params) {
-    socket.emit('join', params, function (err) {
+    socket.emit('join', params, function(err) {
         if (err) {
             console.log(err);
         } else {
@@ -397,6 +409,14 @@ export function emitRoundStart(gameId, counter) {
     socket.emit('roundStart', gameId, counter);
 }
 
+export function emitMessage(gameId, username, message) {
+    let params = {
+        gameId: gameId,
+        username: username,
+        message: message
+    };
+    socket.emit('createMessage', params);
+}
 
 // SHOULD REMOVE LATER
 export default axios.create({

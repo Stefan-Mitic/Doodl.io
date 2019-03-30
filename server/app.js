@@ -149,6 +149,7 @@ io.on('connection', function(socket) {
 
     socket.on('disconnect', function(gameId) {
         socket.leave(gameId);
+        socket.to(gameId).emit('userLeft', username);
         console.log('User disconnected');
     });
 });
