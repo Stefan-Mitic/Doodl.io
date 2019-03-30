@@ -419,6 +419,22 @@ export function subscribeToUserLeft() {
     });
 }
 
+export function unsubscribeToUpdateUserList(updateList) {
+    socket.off('updateUserList');
+}
+
+export function unsubscribeToGameStart(startGame) {
+    socket.off('gameStart');
+}
+
+export function unsubscribeToNewMessage() {
+    socket.off('newMessage');
+}
+
+export function unsubscribeToUserLeft() {
+    socket.off('userLeft');
+}
+
 export function emitJoin(params) {
     socket.emit('join', params, function(err) {
         if (err) {
