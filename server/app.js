@@ -150,7 +150,7 @@ io.on('connection', function(socket) {
 
     socket.on('disconnect', function(gameId) {
         socket.leave(gameId);
-        socket.to(gameId).emit('userLeft', username);
+        socket.to(gameId).emit('userLeft');
         console.log('User disconnected');
     });
 });
