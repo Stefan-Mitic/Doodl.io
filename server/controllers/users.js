@@ -149,11 +149,3 @@ exports.getGameRequests = function(req, res) {
             res.json(results);
         });
 };
-
-exports.deleteGameRequests = function(req, res) {
-    let gameId = req.params.gameId;
-    GameRequestModel.remove({ gameId: gameId }, function(err, results) {
-        if (err) return res.status(500).end(err);
-        res.json(results);
-    });
-};

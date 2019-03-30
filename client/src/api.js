@@ -391,20 +391,6 @@ export function sendGameRequest(username, gameId, callback, errorcallback) {
         });
 }
 
-export function deleteGameRequests(gameId, callback, errorcallback) {
-    axios.delete('/api/users/gamerequest/' + gameId + '/', null)
-        .then(res => {
-            if (callback != null) {
-                callback(res);
-            }
-        })
-        .catch(err => {
-            if (errorcallback != null) {
-                errorcallback(err);
-            }
-        });
-}
-
 // SOCKETIO ===================================================================
 
 const socket = openSocket('http://localhost:5000');

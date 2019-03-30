@@ -9,6 +9,7 @@ const mongoose = require('mongoose');
 const GameModel = mongoose.model('Game');
 const UserModel = mongoose.model('User');
 const ImageModel = mongoose.model('Image');
+const GameRequestModel = mongoose.model('GameRequest');
 const crypto = require("crypto");
 //TODO: Delete game, update score
 
@@ -27,15 +28,20 @@ exports.createGame = function(req, res) {
 
 exports.startGame = function(req, res) {
     let rounds = parseInt(req.body.rounds);
+    let gameId = req.body.id;
     ImageModel.aggregate([
         { $match: { isTrace: true } },
         { $sample: { size: rounds } }
     ], function(err, images) {
         if (err) return res.status(500).end(err);
         images = images.map(image => image._id);
-        GameModel.findOne({ _id: req.body.id }, function(err, game) {
+        // Delete game requests
+        GameRequestModel.remove({ gameId: gameId }, function(err, results) {
             if (err) return res.status(500).end(err);
-            GameModel.updateOne({ _id: req.body.id }, { $set: { started: true, images: images, rounds: rounds } },
+        });
+        GameModel.findOne({ _id: gameId }, function(err, game) {
+            if (err) return res.status(500).end(err);
+            GameModel.updateOne({ _id: gameId }, { $set: { started: true, images: images, rounds: rounds } },
                 function(err, result) {
                     if (err) return res.status(500).end(err);
                     res.json(result);
@@ -63,6 +69,7 @@ exports.addPlayer = function(req, res) {
     let gameId = req.body.gameId;
     GameModel.findById(gameId, function(err, game) {
         if (err) return res.status(500).end(err);
+        if (game.started) return res.status(409).end("Game already started");
         let players = game.players;
         players.push(req.body.username);
         // Won't allow more than 4 players
