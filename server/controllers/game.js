@@ -76,7 +76,7 @@ exports.addPlayer = function(req, res) {
 };
 
 exports.removePlayer = function(req, res) {
-    let username = req.username;
+    let username = req.body.username;
     let gameId = req.body.id;
     GameModel.findById(gameId, function(err, game) {
         if (err) return res.status(500).end(err);
@@ -102,6 +102,13 @@ exports.getPlayers = function(req, res) {
 exports.getGame = function(req, res) {
     let gameId = req.params.id;
     GameModel.findById(gameId, function(err, game) {
+        if (err) return res.status(500).end(err);
+        res.json(game);
+    });
+};
+
+exports.deleteGame = function(req, res) {
+    GameModel.remove({ gameId: req.params.id }, function(err, game) {
         if (err) return res.status(500).end(err);
         res.json(game);
     });

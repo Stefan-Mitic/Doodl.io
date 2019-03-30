@@ -92,6 +92,8 @@ app.get('/api/game/:id/players/', games.getPlayers);
 app.get('/api/game/:id/', games.getGame);
 app.get('/api/game/:id/nextImage/', games.getNextImage);
 app.patch('/api/game/nextRound/', games.incrementRound);
+app.patch('/api/game/removePlayer/', games.removePlayer);
+app.delete('/api/game/:id/', games.deleteGame);
 
 // setup server
 const http = require('http');
