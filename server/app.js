@@ -15,7 +15,8 @@ const keys = require('./config/keys');
 
 // connect to db
 const mongoose = require('mongoose');
-mongoose.connect(keys.mongoURI, { useNewUrlParser: true, useCreateIndex: true });
+// keys.mongoURI
+mongoose.connect('mongodb://localhost/doodlio', { useNewUrlParser: true, useCreateIndex: true });
 
 // initialize all models
 const models = path.join(__dirname, './models');
