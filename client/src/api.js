@@ -378,7 +378,7 @@ export function getGameRequests(username, callback, errorcallback) {
 }
 
 export function sendGameRequest(username, callback, errorcallback) {
-    axios.post('/api/users/game/request/', null, { params: { target: username } })
+    axios.post('/api/users/gamerequest/', null, { params: { target: username } })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -414,7 +414,7 @@ export function subscribeToNewMessage() {
 }
 
 export function subscribeToUserLeft() {
-    socket.on('userLeft', function() {
+    socket.on('userLeft', function(user) {
         // TODO: Remove user from the game
     });
 }
