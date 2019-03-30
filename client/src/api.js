@@ -414,7 +414,7 @@ export function subscribeToNewMessage() {
 }
 
 export function subscribeToUserLeft() {
-    socket.on('userLeft', function(user) {
+    socket.on('userLeft', function() {
         // TODO: Remove user from the game
     });
 }
