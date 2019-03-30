@@ -363,6 +363,34 @@ export function unfriend(friend, callback, errorcallback) {
         });
 }
 
+export function getGameRequests(username, callback, errorcallback) {
+    axios.get('/api/users/' + username + '/gamerequests/')
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
+export function sendGameRequest(username, callback, errorcallback) {
+    axios.post('/api/users/game/request/', null, { params: { target: username } })
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
 // SOCKETIO ===================================================================
 
 const socket = openSocket('http://localhost:5000');
