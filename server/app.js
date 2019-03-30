@@ -13,6 +13,16 @@ const sharedsession = require('express-socket.io-session');
 // server settings
 const keys = require('./config/keys');
 
+// connect to db
+const mongoose = require('mongoose');
+mongoose.connect(keys.mongoURI, { useNewUrlParser: true, useCreateIndex: true });
+
+// initialize all models
+const models = path.join(__dirname, './models');
+fs.readdirSync(models)
+    .filter(file => ~file.search(/^[^.].*\.js$/))
+    .forEach(file => require(path.join(models, file)));
+
 // middleware dependencies
 const validator = require('./middlewares/validation');
 const auth = require('./middlewares/authentication');
@@ -23,17 +33,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(auth.sessionSettings);
 app.use(auth.setUsername);
-
-// connect to db
-const mongoose = require('mongoose');
-// 'mongodb://localhost/doodlio'
-mongoose.connect(keys.mongoURI, { useNewUrlParser: true, useCreateIndex: true });
-
-// initialize all models
-const models = path.join(__dirname, './models');
-fs.readdirSync(models)
-    .filter(file => ~file.search(/^[^.].*\.js$/))
-    .forEach(file => require(path.join(models, file)));
 
 // module dependencies
 const users = require('./controllers/users');

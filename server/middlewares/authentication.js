@@ -7,9 +7,6 @@
 
 const session = require('express-session');
 const cookie = require('cookie');
-const mongoose = require('mongoose');
-
-mongoose.connect('mongodb://localhost/doodlio', { useNewUrlParser: true });
 
 /**
  * Exported helper functions
