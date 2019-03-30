@@ -82,20 +82,20 @@ exports.signin = function (req, res) {
 exports.signout = function (req, res) {
     req.session.destroy();
     res.setHeader('Set-Cookie', auth.setCookie(''));
-    res.json('successful');
+    return res.json('successful');
 };
 
 // updates the user's display name
 exports.updateName = function (req, res) {
     let username = req.username;
-    let newname = req.body.name;
+    let new_name = req.body.name;
     // check if the new name is not already used
-    UserModel.findOne({ name: newname }, { _id: 1, name: 1 }, function (err, user) {
+    UserModel.findOne({ name: new_name }, { _id: 1, name: 1 }, function (err, user) {
         if (err) return res.status(500).end(err);
         if (user !== null && user._id === username) return res.status(204);
-        if (user) return res.status(409).end(`name ${newname} is already used`);
+        if (user) return res.status(409).end(`name ${new_name} is already used`);
         // update name
-        UserModel.updateOne({ _id: username }, { $set: { name: newname } }, function (err, result) {
+        UserModel.updateOne({ _id: username }, { $set: { name: new_name } }, function (err, result) {
             if (err) return res.status(500).end(err);
             res.json(result);
         });
