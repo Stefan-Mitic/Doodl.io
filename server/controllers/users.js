@@ -126,7 +126,7 @@ exports.updatePassword = function(req, res) {
 
 exports.sendGameRequest = function(req, res) {
     let requester = req.username;
-    let recipient = req.body.target;
+    let recipient = req.query.target;
 
     // check if recipient exists
     UserModel.findById(recipient, function(err, user) {
