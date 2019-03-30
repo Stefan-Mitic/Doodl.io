@@ -98,6 +98,7 @@ app.delete('/api/game/:id/', games.deleteGame);
 // Game Request routes
 app.get('/api/users/:username/gamerequests/', users.getGameRequests);
 app.post('/api/users/gamerequest/', users.sendGameRequest);
+app.delete('/api/users/gamerequest/:gameId/', users.deleteGameRequests);
 
 // setup server
 const http = require('http');

@@ -10,6 +10,11 @@ const GameRequestSchema = new mongoose.Schema({
         type: String,
         required: true,
         index: true,
+    },
+    gameId: { // id of game
+        type: String,
+        required: true,
+        index: true
     }
 }, {
     timestamps: true

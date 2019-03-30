@@ -127,12 +127,13 @@ exports.updatePassword = function(req, res) {
 exports.sendGameRequest = function(req, res) {
     let requester = req.username;
     let recipient = req.body.target;
+    let gameId = req.body.gameId;
 
     // check if recipient exists
     UserModel.findById(recipient, function(err, user) {
         if (err) return res.status(500).end(err);
         if (!user) return res.status(401).end(`User ${recipient} does not exist`);
-        GameRequestModel.updateOne({}, { requester, recipient }, { upsert: true }, function(err, raw) {
+        GameRequestModel.updateOne({}, { requester, recipient, gameId }, { upsert: true }, function(err, raw) {
             if (err) return res.status(500).end(err);
             return res.json(raw);
         });
@@ -147,4 +148,12 @@ exports.getGameRequests = function(req, res) {
             if (err) return res.status(500).end(err);
             res.json(results);
         });
+};
+
+exports.deleteGameRequests = function(req, res) {
+    let gameId = req.params.gameId;
+    GameRequestModel.remove({ gameId: gameId }, function(err, results) {
+        if (err) return res.status(500).end(err);
+        res.json(results);
+    });
 };

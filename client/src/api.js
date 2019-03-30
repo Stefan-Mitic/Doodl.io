@@ -377,8 +377,22 @@ export function getGameRequests(username, callback, errorcallback) {
         });
 }
 
-export function sendGameRequest(username, callback, errorcallback) {
-    axios.post('/api/users/gamerequest/', null, { params: { target: username } })
+export function sendGameRequest(username, gameId, callback, errorcallback) {
+    axios.post('/api/users/gamerequest/', null, { params: { target: username, gameId: gameId } })
+        .then(res => {
+            if (callback != null) {
+                callback(res);
+            }
+        })
+        .catch(err => {
+            if (errorcallback != null) {
+                errorcallback(err);
+            }
+        });
+}
+
+export function deleteGameRequests(gameId, callback, errorcallback) {
+    axios.delete('/api/users/gamerequest/' + gameId + '/', null)
         .then(res => {
             if (callback != null) {
                 callback(res);
