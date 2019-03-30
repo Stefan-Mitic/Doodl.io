@@ -378,7 +378,7 @@ export function getGameRequests(username, callback, errorcallback) {
 }
 
 export function sendGameRequest(username, gameId, callback, errorcallback) {
-    axios.post('/api/users/gamerequest/', null, { params: { target: username, gameId: gameId } })
+    axios.post('/api/users/gamerequest/', { gameId: gameId }, { params: { target: username } })
         .then(res => {
             if (callback != null) {
                 callback(res);

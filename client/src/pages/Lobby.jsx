@@ -73,7 +73,7 @@ class Lobby extends Component {
     sendRequest(e, row) {
         e.preventDefault();
 
-        sendGameRequest(row.name, (res) => {
+        sendGameRequest(row.name, this.gameId, (res) => {
             console.log(res);
             alert('Game Request sent to: ' + row.name);
         }, (err) => {
