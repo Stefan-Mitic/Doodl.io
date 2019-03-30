@@ -1,13 +1,12 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
+import Cookies from 'universal-cookie';
 
-// let getUsername = function(){
-//     return document.cookie.replace(/(?:(?:^|.*;\s*)username\s*\=\s*([^;]*).*$)|^.*$/, "$1");
-// };
+const cookies = new Cookies();
 
 export const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={props => (
-        localStorage.getItem('username')
+        cookies.get('username')
             ? <Component {...props} />
             : <Redirect to="/login" />
     )} />
