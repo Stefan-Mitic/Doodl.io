@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { subscribeToUpdateUserList, subscribeToGameStart, emitStartGame, getPlayers, startGame, getFriends, sendGameRequest } from '../api';
+import { subscribeToUpdateUserList, subscribeToGameStart, emitStartGame, getPlayers, startGame, getFriends, sendGameRequest, unsubscribeToGameStart, unsubscribeToUpdateUserList, unsubscribeToUserLeft } from '../api';
 import history from '../history';
 import Header from '../components/Header';
 import ReactTable from "react-table";
@@ -25,6 +25,12 @@ class Lobby extends Component {
         this.getFriends();
         subscribeToGameStart(this.redirectToGame);
         subscribeToUpdateUserList(this.getPlayers);
+    }
+
+    componentWillUnmount() {
+        unsubscribeToGameStart();
+        unsubscribeToUpdateUserList();
+        unsubscribeToUserLeft();
     }
 
     getPlayers() {
