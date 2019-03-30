@@ -95,6 +95,10 @@ app.patch('/api/game/nextRound/', games.incrementRound);
 app.patch('/api/game/removePlayer/', games.removePlayer);
 app.delete('/api/game/:id/', games.deleteGame);
 
+// Game Request routes
+app.get('/api/users/:username/gamerequests/', users.getGameRequests);
+app.post('/api/users/gamerequest/', users.sendGameRequest);
+
 // setup server
 const http = require('http');
 const PORT = 5000;
