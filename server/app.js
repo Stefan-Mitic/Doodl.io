@@ -160,13 +160,16 @@ io.on('connection', function(socket) {
     });
 
     socket.on('disconnect', function(gameId) {
-        socket.leave(gameId);
-        let players = Object.keys(io.sockets.adapter.rooms[gameId].sockets);
-        for (let id in players) {
-            io.to(id).emit('removePeer', { 'peer_id': socket.id, 'should_create_offer': false });
-            socket.emit('removePeer', { 'peer_id': id });
+        let game = io.sockets.adapter.rooms[gameId];
+        if (game) {
+            let players = Object.keys(game.sockets);
+            for (let id in players) {
+                io.to(id).emit('removePeer', { 'peer_id': socket.id, 'should_create_offer': false });
+                socket.emit('removePeer', { 'peer_id': id });
+            }
+            socket.leave(gameId);
+            socket.to(gameId).emit('userLeft');
         }
-        socket.to(gameId).emit('userLeft');
         console.log('User disconnected');
     });
 
