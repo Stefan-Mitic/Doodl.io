@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { updateName, updatePassword } from '../../api';
 import Profile from '../../components/Profile';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 class UpdateInfo extends Component {
     constructor(props) {
@@ -19,6 +22,8 @@ class UpdateInfo extends Component {
         updateName(newname, (res) => {
             console.log(res);
             this.newName.current.value = '';
+            let cookieOptions = { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 };
+            cookies.set('name', newname, cookieOptions);
         }, (err) => {
             alert(err);
         });

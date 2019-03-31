@@ -29,6 +29,7 @@ class Login extends Component {
             signup(user, (res) => {
                 console.log(res);
                 cookies.set('username', res.data, cookieOptions);
+                cookies.set('name', res.data, cookieOptions);
                 this.props.history.push("/");
             }, () => {
                 alert("Invalid Input:\nusername must be at least 3 characters\npassword must be at least 6 characters");
@@ -36,7 +37,8 @@ class Login extends Component {
         } else {
             signin(user, (res) => {
                 console.log(res);
-                cookies.set('username', res.data, cookieOptions);
+                cookies.set('username', res.data.username, cookieOptions);
+                cookies.set('name', res.data.name, cookieOptions);
                 this.props.history.push("/");
             }, () => {
                 alert("Incorrect username and password");

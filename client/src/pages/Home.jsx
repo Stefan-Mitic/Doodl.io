@@ -93,6 +93,7 @@ class Home extends Component {
             <div>
                 <Header></Header>
                 <div className="title">Main Menu</div>
+                <div className="welcome">Welcome {cookies.get('name')}</div>
                 <div className="row">
                     <div className="offset-sm-2 col-sm-3">
                         <ReactTable className="table"

@@ -35,6 +35,17 @@ code {
     margin-right: 10%;
 }
 
+.welcome {
+    background-color: rgb(68, 0, 255);
+    border-radius: 5rem;
+    color: white;
+    font-size: 30px;
+    font-weight: bolder;
+    text-align: center;
+    margin-left: 30%;
+    margin-right: 30%;
+}
+
 .login {
     padding: 100px;
 }
