@@ -69,6 +69,7 @@ exports.addPlayer = function(req, res) {
     let gameId = req.body.gameId;
     GameModel.findById(gameId, function(err, game) {
         if (err) return res.status(500).end(err);
+        if (!game) return res.status(404).end("Incorrect Game Id");
         if (game.started) return res.status(409).end("Game already started");
         let players = game.players;
         players.push(req.body.username);
