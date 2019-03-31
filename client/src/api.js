@@ -419,19 +419,29 @@ export function subscribeToUserLeft() {
     });
 }
 
-export function unsubscribeToUpdateUserList(updateList) {
+export function subscribeToCounter() {
+    socket.on('counter', function(counter) {
+        console.log(counter);
+    });
+}
+
+export function unsubscribeFromCounter() {
+    socket.off('counter');
+}
+
+export function unsubscribeFromUpdateUserList(updateList) {
     socket.off('updateUserList');
 }
 
-export function unsubscribeToGameStart(startGame) {
+export function unsubscribeFromGameStart(startGame) {
     socket.off('gameStart');
 }
 
-export function unsubscribeToNewMessage() {
+export function unsubscribeFromNewMessage() {
     socket.off('newMessage');
 }
 
-export function unsubscribeToUserLeft() {
+export function unsubscribeFromUserLeft() {
     socket.off('userLeft');
 }
 
@@ -452,6 +462,8 @@ export function emitStartGame(gameId) {
 export function emitRoundStart(gameId, counter) {
     socket.emit('roundStart', gameId, counter);
 }
+
+
 
 export function emitMessage(gameId, username, message) {
     let params = {
