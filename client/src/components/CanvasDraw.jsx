@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {subscribeToAddPeer} from '../api';
 import ReactDOM from 'react-dom';
 
 // https://stackoverflow.com/questions/2368784/draw-on-html5-canvas-using-a-mouse
@@ -13,6 +14,10 @@ class CanvasDraw extends Component {
         this.draw = this.draw.bind(this);
         this.stream1 = null;
         this.stream = null;
+        this.connectToStream = this.connectToStream.bind(this);
+        this.peer_media1 = [];
+        this.peer_media2 = [];
+        this.peer_media3 = [];
     }
 
     componentDidMount() {
@@ -31,9 +36,34 @@ class CanvasDraw extends Component {
         ReactDOM.findDOMNode(this).addEventListener('mousedown', this.setPosition);
         ReactDOM.findDOMNode(this).addEventListener('mouseenter', this.setPosition);
 
-        this.stream1 = document.getElementById('stream_1');
         this.stream = this.canvas.captureStream();
-        this.stream1.srcObject = this.stream;
+        this.my_stream = document.getElementById('stream_1');
+        this.my_stream.srcObject = this.stream;
+
+        // [0]: is already streaming? [1]: stream
+        this.peer_media1[0] = false;
+        this.peer_media2[0] = false;
+        this.peer_media3[0] = false;
+        this.peer_media1[1] = document.getElementById('stream_2');
+        this.peer_media2[1] = document.getElementById('stream_3');
+        this.peer_media3[1] = document.getElementById('stream_4');
+        
+        subscribeToAddPeer(this.stream, this.connectToStream);
+    }
+
+    connectToStream(stream) {
+        if (!this.peer_media1[0]) {
+            this.peer_media1[1].srcObject = stream;
+            this.peer_media1[0] = true;
+        } else if (!this.peer_media2[0]) {
+            this.peer_media2[1].srcObject = stream;
+            this.peer_media2[0] = true;
+        } else if (!this.peer_media3[0]) {
+            this.peer_media3[1].srcObject = stream;
+            this.peer_media3[0] = true;
+        } else {
+            console.log("Error: Media full");
+        }
     }
 
     setPosition(e) {

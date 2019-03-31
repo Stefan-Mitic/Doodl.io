@@ -36,7 +36,7 @@ exports.startGame = function(req, res) {
         if (err) return res.status(500).end(err);
         images = images.map(image => image._id);
         // Delete game requests
-        GameRequestModel.remove({ gameId: gameId }, function(err, results) {
+        GameRequestModel.deleteMany({ gameId: gameId }, function(err, results) {
             if (err) return res.status(500).end(err);
         });
         GameModel.findOne({ _id: gameId }, function(err, game) {

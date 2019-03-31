@@ -127,21 +127,19 @@ io.on('connection', function(socket) {
         socket.join(gameId);
         socket.in(gameId).emit('updateUserList');
         socket.to(gameId).emit('newMessage', generateMessage(username, `Joined room ${gameId}`));
-
-        // WebRTC
-        io.of('/').in(gameId).clients((error, clients) => {
-            if (error) throw error;
-            for (let id in clients) {
-                io.to(id).emit('addPeer', { 'peer_id': socket.id, 'should_create_offer': false });
-                socket.emit('addPeer', { 'peer_id': id, 'should_create_offer': true });
-            }
-        });
         callback();
     });
 
     socket.on('startGame', function(gameId, callback) {
-        //let gameId = params.gameId;
         socket.to(gameId).emit('gameStart');
+        // WebRTC
+        let players = Object.keys(io.sockets.adapter.rooms[gameId].sockets);
+        for (let id in players) {
+            if (id !== socket.id) {
+                io.to(id).emit('addPeer', { 'peer_id': socket.id, 'should_create_offer': false });
+                socket.emit('addPeer', { 'peer_id': id, 'should_create_offer': true });
+            }
+        }
     });
 
     socket.on('roundStart', function(room, counter) {
@@ -163,8 +161,35 @@ io.on('connection', function(socket) {
 
     socket.on('disconnect', function(gameId) {
         socket.leave(gameId);
+        let players = Object.keys(io.sockets.adapter.rooms[gameId].sockets);
+        for (let id in players) {
+            io.to(id).emit('removePeer', { 'peer_id': socket.id, 'should_create_offer': false });
+            socket.emit('removePeer', { 'peer_id': id });
+        }
         socket.to(gameId).emit('userLeft');
         console.log('User disconnected');
+    });
+
+    // WEB RTC
+
+    socket.on('relayICECandidate', function(config) {
+        let peer_id = config.peer_id;
+        let ice_candidate = config.ice_candidate;
+        // console.log("[" + socket.id + "] relaying ICE candidate to [" + peer_id + "] ", ice_candidate);
+
+        if (peer_id in Object.keys(io.sockets.sockets)) {
+            io.to(peer_id).emit('iceCandidate', { 'peer_id': socket.id, 'ice_candidate': ice_candidate });
+        }
+    });
+
+    socket.on('relaySessionDescription', function(config) {
+        let peer_id = config.peer_id;
+        let session_description = config.session_description;
+        // console.log("[" + socket.id + "] relaying session description to [" + peer_id + "] ", session_description);
+
+        if (peer_id in Object.keys(io.sockets.sockets)) {
+            io.to(peer_id).emit('sessionDescription', { 'peer_id': socket.id, 'session_description': session_description });
+        }
     });
 });
 
