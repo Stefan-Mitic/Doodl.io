@@ -30,10 +30,10 @@ class PostGame extends Component {
     }
 
     getPlayerScore(player, players) {
-        const results = [];
         let bestScore = -1;
         getPlayerScore(this.gameId, player, (score) => {
             const newRecord = { name: player, score: score.data };
+            let results = this.state.data;
             results.push(newRecord);
             this.setState({
                 data: results.sort((a, b) =>
