@@ -10,6 +10,7 @@ class PostGame extends Component {
         super(props);
         this.getResults = this.getResults.bind(this);
         this.getWinner = this.getWinner.bind(this);
+        this.getPlayerScore = this.getPlayerScore.bind(this);
         this.gameId = this.props.match.params.id;
         this.state = { data: [], winner: null };
     }
@@ -20,30 +21,34 @@ class PostGame extends Component {
 
     getResults() {
         getPlayers(this.gameId, (res) => {
-            const results = [];
-            let bestScore = -1;
             for (const player of res.data) {
-                getPlayerScore(this.gameId, player, (score) => {
-                    const newRecord = { name: player, score: score.data };
-                    results.push(newRecord);
-                    this.setState({
-                        data: results.sort((a, b) =>
-                            (a.score > b.score) ? 1 : -1)
-                    });
+                this.getPlayerScore(player, res.data);
+            }
+        }, (err) => {
+            alert(err);
+        });
+    }
 
-                    // find winner
-                    if (bestScore === -1 || bestScore > score.data) {
-                        bestScore = score.data;
-                        this.winner = player;
-                    }
+    getPlayerScore(player, players) {
+        const results = [];
+        let bestScore = -1;
+        getPlayerScore(this.gameId, player, (score) => {
+            const newRecord = { name: player, score: score.data };
+            results.push(newRecord);
+            this.setState({
+                data: results.sort((a, b) =>
+                    (a.score > b.score) ? 1 : -1)
+            });
 
-                    // if on last player
-                    if (res.data.slice(-1)[0] === player) {
-                        this.getWinner();
-                    }
-                }, (err) => {
-                    alert(err);
-                });
+            // find winner
+            if (bestScore === -1 || bestScore > score.data) {
+                bestScore = score.data;
+                this.winner = player;
+            }
+
+            // if on last player
+            if (players.slice(-1)[0] === player) {
+                this.getWinner();
             }
         }, (err) => {
             alert(err);
