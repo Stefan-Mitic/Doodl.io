@@ -11,7 +11,7 @@ const cookies = new Cookies();
 class Lobby extends Component {
     constructor(props) {
         super(props);
-        this.state = { show: false, data: [], friends: [] };
+        this.state = { show: false, data: [], friends: [], friendsPage: 0 };
         this.urlRef = React.createRef();
         this.getPlayers = this.getPlayers.bind(this);
         this.copyText = this.copyText.bind(this);
@@ -87,15 +87,24 @@ class Lobby extends Component {
         });
     }
 
-    getFriends() {
-        getFriends(cookies.get('username'), (res) => {
+    getFriends(e, isNext) {
+        if (e) e.preventDefault();
+        let page = this.state.friendsPage;
+        if (isNext)
+            page = page + 1;
+        else if (page !== 0) {
+            page = page - 1;
+        }
+
+        getFriends(cookies.get('username'), page, (res) => {
             console.log(res);
             const friends = [];
             for (const friend of res.data) {
                 const newRecord = { name: friend };
                 friends.push(newRecord);
             }
-            this.setState({ friends: friends });
+            if (res.data && res.data.length > 0)
+                this.setState({ friends: friends, friendsPage: page });
         }, (err) => {
             alert(err);
         });
@@ -145,13 +154,25 @@ class Lobby extends Component {
                         }
                     </div>
                     <div className="offset-sm-1 col-sm-5">
-                        <ReactTable className="table"
-                            data={this.state.friends}
-                            columns={friendCols}
-                            loadingText={''}
-                            showPagination={true}
-                            defaultPageSize={5}
-                        />
+                        <div className="custom-table">
+                            <ReactTable className="table center"
+                                data={this.state.friends}
+                                columns={friendCols}
+                                loadingText={''}
+                                showPagination={false}
+                                pageSize={5}
+                            />
+                            <div className="center">
+                                <button
+                                    onClick={(e) => this.getFriends(e, false)}>
+                                    Prev
+                                </button>
+                                <button
+                                    onClick={(e) => this.getFriends(e, true)}>
+                                    Next
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="row">
