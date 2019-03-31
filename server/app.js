@@ -127,6 +127,15 @@ io.on('connection', function(socket) {
         socket.join(gameId);
         socket.in(gameId).emit('updateUserList');
         socket.to(gameId).emit('newMessage', generateMessage(username, `Joined room ${gameId}`));
+
+        // WebRTC
+        io.of('/').in(gameId).clients((error, clients) => {
+            if (error) throw error;
+            for (let id in clients) {
+                io.to(id).emit('addPeer', { 'peer_id': socket.id, 'should_create_offer': false });
+                socket.emit('addPeer', { 'peer_id': id, 'should_create_offer': true });
+            }
+        });
         callback();
     });
 

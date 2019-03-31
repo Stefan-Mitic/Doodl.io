@@ -1,98 +1,98 @@
 body {
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 .row {
-  padding-top: 2%;
-  padding-bottom: 1%;
-  width: 100%;
+    padding-top: 2%;
+    padding-bottom: 1%;
+    width: 100%;
 }
 
 .navbar {
-  background-color: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
 }
 
 .center {
-  text-align: center;
+    text-align: center;
 }
 
 .title {
-  background-color: rgb(0, 153, 255);
-  border-radius: 5rem;
-  color: white;
-  font-size: 50px;
-  font-weight: bolder;
-  text-align: center;
-  margin-left: 10%;
-  margin-right: 10%;
+    background-color: rgb(0, 153, 255);
+    border-radius: 5rem;
+    color: white;
+    font-size: 50px;
+    font-weight: bolder;
+    text-align: center;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
 .login {
-  padding: 100px;
+    padding: 100px;
 }
 
 .login form {
-  margin: 0 auto;
-  max-width: 320px;
+    margin: 0 auto;
+    max-width: 320px;
 }
 
 .table {
-  background-color: white;
+    background-color: white;
 }
 
 .player-leaderboard {
-  background-color: rgb(58, 58, 58);
-  font-size: 30px;
-  text-align: center;
-  color: white
+    background-color: rgb(58, 58, 58);
+    font-size: 30px;
+    text-align: center;
+    color: white
 }
 
 #infoPanel {
-  background-color: greenyellow;
-  border-radius: 3rem;
-  margin-left: 2%;
-  height: 500px;
+    background-color: greenyellow;
+    border-radius: 3rem;
+    margin-left: 2%;
+    height: 500px;
 }
 
 #canvas {
-  background-size: 475px;
+    background-size: 475px;
 }
 
 #canvasBackground {
-  background-color: rgb(0, 153, 255);
-  border-radius: 3rem;
-  text-align: center;
+    background-color: rgb(0, 153, 255);
+    border-radius: 3rem;
+    text-align: center;
 }
 
 video {
-  width: 150px;
-  height: 150px;
-  background-color: black;
-  position: fixed;
+    width: 150px;
+    height: 150px;
+    background-color: rgb(255, 255, 255);
+    position: fixed;
 }
 
 #stream_1 {
-  right: 100px;
+    right: 100px;
 }
+
 #stream_2 {
-  right: 255px;
+    right: 255px;
 }
+
 #stream_3 {
-  right: 100px;
-  top: 185px;
+    right: 100px;
+    top: 185px;
 }
+
 #stream_4 {
-  right: 255px;
-  top: 185px;
+    right: 255px;
+    top: 185px;
 }
