@@ -25,18 +25,18 @@ exports.getTopPlayers = function(req, res) {
     });
 };
 
-// gets given player's score and position on the leaderboard
+// gets given player's wins and position on the leaderboard
 exports.getPlayerLeaderboard = function(req, res) {
     let username = req.username.toLowerCase();
     UserModel.findById(username, function(err, player) {
         if (err) return res.status(500).end(err);
         if (!player) res.status(404).end(`player ${player} does not exist on leaderboard`);
-        UserModel.find({ score: { $gte: player.score } })
+        UserModel.find({ wins: { $gte: player.wins } })
             .countDocuments(function(err, position) {
                 if (err) return res.status(500).end(err);
                 return res.json({
                     player: username,
-                    score: player.score,
+                    wins: player.wins,
                     position: position
                 });
             });

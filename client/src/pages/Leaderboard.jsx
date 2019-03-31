@@ -7,7 +7,7 @@ import { getTopPlayers, getPlayerLeaderboard } from '../api';
 class Leaderboard extends Component {
     constructor(props) {
         super(props);
-        this.state = { rank: -1, player: null, score: -1, data: [] };
+        this.state = { rank: -1, player: null, wins: -1, data: [] };
         this.getPlayerData = this.getPlayerData.bind(this);
         this.getTopPlayers = this.getTopPlayers.bind(this);
     }
@@ -23,7 +23,7 @@ class Leaderboard extends Component {
             this.setState({
                 rank: res.data.position,
                 player: res.data.player,
-                score: res.data.score
+                wins: res.data.wins
             });
         }, (err) => {
             alert(err);
@@ -36,7 +36,7 @@ class Leaderboard extends Component {
             const players = [];
             let i = 1;
             for (const player of res.data) {
-                const newRecord = { rank: i, name: player._id, score: player.score };
+                const newRecord = { rank: i, name: player._id, wins: player.wins };
                 players.push(newRecord);
                 i++;
             }
@@ -54,8 +54,8 @@ class Leaderboard extends Component {
             Header: 'Player',
             accessor: 'name'
         }, {
-            Header: 'Score',
-            accessor: 'score'
+            Header: 'Wins',
+            accessor: 'wins'
         }]
 
         return (
@@ -65,7 +65,7 @@ class Leaderboard extends Component {
                 <div className="row">
                     <div className="player-leaderboard offset-sm-3 col-sm-2">{this.state.rank}</div>
                     <div className="player-leaderboard col-sm-2">{this.state.player}</div>
-                    <div className="player-leaderboard col-sm-2">{this.state.score}</div>
+                    <div className="player-leaderboard col-sm-2">{this.state.wins}</div>
                 </div>
                 <div className="row">
                     <ReactTable className="offset-sm-3 col-sm-6 table center"

@@ -7,7 +7,6 @@
 
 const mongoose = require('mongoose');
 const UserModel = mongoose.model('User');
-const LeaderboardModel = mongoose.model('Leaderboard');
 const auth = require('../middlewares/authentication');
 const crypto = require('../middlewares/cryptography');
 const GameRequestModel = mongoose.model('GameRequest');
