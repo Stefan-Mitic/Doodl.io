@@ -396,31 +396,37 @@ export function sendGameRequest(username, gameId, callback, errorcallback) {
 const socket = openSocket('http://localhost:5000');
 
 export function subscribeToUpdateUserList(updateList) {
-    socket.on('updateUserList', function () {
+    socket.on('updateUserList', function() {
         updateList();
     });
 }
 
 export function subscribeToGameStart(startGame) {
-    socket.on('gameStart', function () {
+    socket.on('gameStart', function() {
         startGame();
     });
 }
 
 export function subscribeToNewMessage(getMsgs) {
-    socket.on('newMessage', function (message) {
+    socket.on('newMessage', function(message) {
         getMsgs(message);
     });
 }
 
 export function subscribeToUserLeft() {
-    socket.on('userLeft', function (user) {
+    socket.on('userLeft', function(user) {
         // TODO: Remove user from the game
     });
 }
 
+export function subscribeToMouse(draw) {
+    socket.on('streamMouse', function(username, data) {
+        draw(username, data);
+    });
+}
+
 export function subscribeToCounter(updateCounter) {
-    socket.on('counter', function (counter) {
+    socket.on('counter', function(counter) {
         updateCounter(counter);
     });
 }
@@ -446,7 +452,7 @@ export function unsubscribeFromUserLeft() {
 }
 
 export function emitJoin(params) {
-    socket.emit('join', params, function (err) {
+    socket.emit('join', params, function(err) {
         if (err) {
             console.log(err);
         } else {
@@ -472,8 +478,12 @@ export function emitMessage(gameId, username, message) {
     socket.emit('createMessage', params);
 }
 
-// WEB RTC: mostly references https://github.com/anoek/webrtc-group-chat-example.git
+export function emitMouse(gameId, username, data) {
+    socket.emit('mouse', gameId, username, data);
+}
 
+// WEB RTC: mostly references https://github.com/anoek/webrtc-group-chat-example.git
+/*
 const ICE_SERVERS = [{
     url: "stun:stun.l.google.com:19302"
 }];
@@ -605,7 +615,7 @@ export function subscribeToRemovePeer() {
         delete peer_media_elements[config.peer_id];
     });
 }
-
+*/
 // SHOULD REMOVE LATER
 export default axios.create({
     baseURL: `http://localhost:5000/`

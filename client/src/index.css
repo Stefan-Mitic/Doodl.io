@@ -97,20 +97,27 @@ video {
     position: fixed;
 }
 
+.streams {
+    width: 150px;
+    height: 150px;
+    background-color: rgb(255, 255, 255);
+    position: fixed;
+}
+
 #stream_1 {
-    right: 100px;
+    right: 255px;
 }
 
 #stream_2 {
-    right: 255px;
+    right: 100px;
 }
 
 #stream_3 {
-    right: 100px;
-    top: 185px;
+    right: 255px;
+    top: 190px;
 }
 
 #stream_4 {
-    right: 255px;
-    top: 185px;
+    right: 100px;
+    top: 190px;
 }

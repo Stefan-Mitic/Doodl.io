@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import {subscribeToAddPeer} from '../api';
+// import {subscribeToAddPeer} from '../api';
 import ReactDOM from 'react-dom';
+import Cookies from 'universal-cookie';
+import { emitMouse, getPlayers, subscribeToMouse } from '../api';
 
+const cookies = new Cookies();
 // https://stackoverflow.com/questions/2368784/draw-on-html5-canvas-using-a-mouse
 
 class CanvasDraw extends Component {
@@ -11,13 +14,12 @@ class CanvasDraw extends Component {
         this.ctx = null;
         this.pos = null;
         this.setPosition = this.setPosition.bind(this);
+        this.streamDraw = this.streamDraw.bind(this);
         this.draw = this.draw.bind(this);
-        this.stream1 = null;
-        this.stream = null;
-        this.connectToStream = this.connectToStream.bind(this);
-        this.peer_media1 = [];
-        this.peer_media2 = [];
-        this.peer_media3 = [];
+        this.peer_media = [];
+        this.gameId = this.props.gameId;
+        this.username = cookies.get('username');
+        this.players = this.props.players;
     }
 
     componentDidMount() {
@@ -36,35 +38,23 @@ class CanvasDraw extends Component {
         ReactDOM.findDOMNode(this).addEventListener('mousedown', this.setPosition);
         ReactDOM.findDOMNode(this).addEventListener('mouseenter', this.setPosition);
 
-        this.stream = this.canvas.captureStream();
-        this.my_stream = document.getElementById('stream_1');
-        this.my_stream.srcObject = this.stream;
+        // this.stream = this.canvas.captureStream();
+        // this.my_stream = document.getElementById('stream_1');
+        // this.my_stream.srcObject = this.stream;
 
-        // [0]: is already streaming? [1]: stream
-        this.peer_media1[0] = false;
-        this.peer_media2[0] = false;
-        this.peer_media3[0] = false;
-        this.peer_media1[1] = document.getElementById('stream_2');
-        this.peer_media2[1] = document.getElementById('stream_3');
-        this.peer_media3[1] = document.getElementById('stream_4');
-        
-        subscribeToAddPeer(this.stream, this.connectToStream);
-    }
-
-    connectToStream(stream) {
-        if (!this.peer_media1[0]) {
-            this.peer_media1[1].srcObject = stream;
-            this.peer_media1[0] = true;
-        } else if (!this.peer_media2[0]) {
-            this.peer_media2[1].srcObject = stream;
-            this.peer_media2[0] = true;
-        } else if (!this.peer_media3[0]) {
-            this.peer_media3[1].srcObject = stream;
-            this.peer_media3[0] = true;
-        } else {
-            console.log("Error: Media full");
+        // [0]: username [1]: stream
+        for (let i = 0; i < this.players.length; i++) {
+            this.peer_media[this.players[i].name] = document.getElementById('stream_' + (i + 1));
         }
+        subscribeToMouse(this.streamDraw);
     }
+
+    streamDraw(username, data) {
+        let ctx = this.peer_media[username].getContext('2d');
+        console.log(`Draw from ${username}: ${data.x} ${data.y}`);
+        ctx.fillStyle = '#000000';
+        ctx.fillRect(data.x, data.y, 5, 5);
+    }   
 
     setPosition(e) {
         this.pos.x = e.clientX - this.canvas.offsetLeft;
@@ -86,6 +76,7 @@ class CanvasDraw extends Component {
             this.ctx.lineTo(this.pos.x, this.pos.y);
 
             this.ctx.stroke();
+            emitMouse(this.gameId, this.username, {x: this.pos.x, y: this.pos.y});
         }
     }
 
@@ -93,10 +84,10 @@ class CanvasDraw extends Component {
         return (
             <div>
                 <canvas id="canvas"></canvas>
-                <video id="stream_1" playsInline autoPlay></video>
-                <video id="stream_2" playsInline autoPlay></video>
-                <video id="stream_3" playsInline autoPlay></video>
-                <video id="stream_4" playsInline autoPlay></video>
+                <canvas className="streams" id="stream_1"></canvas>
+                <canvas className="streams" id="stream_2"></canvas>
+                <canvas className="streams" id="stream_3"></canvas>
+                <canvas className="streams" id="stream_4"></canvas>
             </div>
         );
     }

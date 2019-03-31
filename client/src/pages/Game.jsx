@@ -135,7 +135,7 @@ class Game extends Component {
                         </div>
                         <div id="canvas-div">
                             {this.state.bgsrc ?
-                                <CanvasDraw bgsrc={this.state.bgsrc} lineWidth={this.state.lineWidth}></CanvasDraw>
+                                <CanvasDraw bgsrc={this.state.bgsrc} lineWidth={this.state.lineWidth} gameId={this.gameId} players={this.players}></CanvasDraw>
                                 : null
                             }
                         </div>
