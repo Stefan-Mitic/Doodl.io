@@ -26,7 +26,10 @@ class PostGame extends Component {
                 getPlayerScore(this.gameId, player, (score) => {
                     const newRecord = { name: player, score: score.data };
                     results.push(newRecord);
-                    this.setState({ data: results });
+                    this.setState({
+                        data: results.sort((a, b) =>
+                            (a.score > b.score) ? 1 : -1)
+                    });
 
                     // find winner
                     if (bestScore === -1 || bestScore > score.data) {
@@ -35,7 +38,7 @@ class PostGame extends Component {
                     }
 
                     // if on last player
-                    if (res.data.slice(-1)[0]  === player) {
+                    if (res.data.slice(-1)[0] === player) {
                         this.getWinner();
                     }
                 }, (err) => {
@@ -57,6 +60,14 @@ class PostGame extends Component {
 
     render() {
         const columns = [{
+            Header: "",
+            id: "i",
+            maxWidth: 50,
+            filterable: false,
+            Cell: (row) => {
+                return <div>{row.index + 1}</div>;
+            }
+        }, {
             Header: 'Players',
             accessor: 'name'
         }, {
@@ -69,7 +80,7 @@ class PostGame extends Component {
                 <Header></Header>
                 <div className="title">Results</div>
                 <div className="row">
-                    <ReactTable className="offset-sm-2 col-sm-4 table table-bordered table-dark"
+                    <ReactTable className="offset-sm-2 col-sm-4 table table-bordered table-dark center"
                         data={this.state.data}
                         columns={columns}
                         loadingText={''}
