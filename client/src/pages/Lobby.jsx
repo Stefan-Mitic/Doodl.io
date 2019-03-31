@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { subscribeToUpdateUserList, subscribeToGameStart, emitStartGame, getPlayers, startGame, getFriends, sendGameRequest, unsubscribeFromGameStart, unsubscribeFromUpdateUserList, unsubscribeFromUserLeft } from '../api';
+import { subscribeToUpdateUserList, subscribeToGameStart, emitStartGame, getPlayers, startGame, getFriends, sendGameRequest, unsubscribeFromGameStart, unsubscribeFromUpdateUserList, unsubscribeFromUserLeft, emitRoundStart } from '../api';
 import history from '../history';
 import Header from '../components/Header';
 import ReactTable from "react-table";
@@ -69,7 +69,10 @@ class Lobby extends Component {
 
     startGame(e) {
         e.preventDefault();
-        if (this.host) emitStartGame(this.gameId);
+        if (this.host) {
+            emitStartGame(this.gameId);
+            emitRoundStart(this.gameId, 10);
+        }
         this.redirectToGame();
     }
 

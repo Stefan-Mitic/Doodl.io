@@ -419,9 +419,9 @@ export function subscribeToUserLeft() {
     });
 }
 
-export function subscribeToCounter() {
+export function subscribeToCounter(updateCounter) {
     socket.on('counter', function(counter) {
-        console.log(counter);
+        updateCounter(counter);
     });
 }
 

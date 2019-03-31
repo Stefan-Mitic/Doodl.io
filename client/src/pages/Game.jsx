@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import CanvasDraw from "../components/CanvasDraw";
-import ReactCountdownClock from 'react-countdown-clock';
 import html2canvas from 'html2canvas';
-import { saveDrawing, imageCompare, getImageId, getImage, addPlayerScore } from '../api';
+import { saveDrawing, imageCompare, getImageId, getImage, addPlayerScore, unsubscribeFromCounter, subscribeToCounter } from '../api';
 import history from '../history';
 import Cookies from 'universal-cookie';
 
 class Game extends Component {
     constructor(props) {
         super(props);
-        this.state = { round: 1, bgsrc: null, lineWidth: 5 };
+        this.state = { round: 1, bgsrc: null, lineWidth: 5, time: 10 };
         this.roundEnd = this.roundEnd.bind(this);
         this.gameEnd = this.gameEnd.bind(this);
+        this.updateCounter = this.updateCounter.bind(this);
         this.updatePlayerScore = this.updatePlayerScore.bind(this);
         this.loadImage = this.loadImage.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -22,6 +22,14 @@ class Game extends Component {
         this.gameId = this.props.match.params.id;
         this.imageId = -1;
         this.loadImage();
+    }
+
+    componentDidMount() {
+        subscribeToCounter(this.updateCounter);
+    }
+
+    componentWillUnmount() {
+        unsubscribeFromCounter();
     }
 
     loadImage() {
@@ -97,6 +105,14 @@ class Game extends Component {
         this.setState({ lineWidth: e.target.value });
     }
 
+    updateCounter(counter) {
+        if (counter === -1) {
+            this.roundEnd();
+        } else {
+            this.setState({ time: counter });
+        }
+    }
+
     render() {
         return (
             <div>
@@ -105,13 +121,7 @@ class Game extends Component {
                     <div className="row">
                         <div id="infoPanel" className="col-sm-2">
                             <h1>Round {this.state.round}</h1>
-                            <ReactCountdownClock ref={this.clockRef}
-                                seconds={10}
-                                color={"blue"}
-                                alpha={0.9}
-                                size={100}
-                                onComplete={this.roundEnd}
-                            />
+                            <h3>Time: {this.state.time}</h3>
                             <div>Line Width</div>
                             <select
                                 value={this.state.selectValue}

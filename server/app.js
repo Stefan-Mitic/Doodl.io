@@ -139,8 +139,8 @@ io.on('connection', function(socket) {
         let countdown = setInterval(function() {
             io.to(room).emit('counter', counter);
             counter--;
-            if (counter === 0) {
-                io.to(room).emit('counter', "Time's up!");
+            if (counter === -1) {
+                io.to(room).emit('counter', -1);
                 clearInterval(countdown);
             }
         }, 1000);
