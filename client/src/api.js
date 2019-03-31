@@ -252,7 +252,7 @@ export function getPlayerLeaderboard(callback, errorcallback) {
 }
 
 export function getPlayerHistory(page, callback, errorcallback) {
-    axios.get('/api/leaderboard/history/', null, { params: { page: page } })
+    axios.get('/api/leaderboard/history/', { params: { page: page } })
         .then(res => {
             if (callback != null) {
                 callback(res);
