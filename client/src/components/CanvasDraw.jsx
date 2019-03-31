@@ -98,7 +98,13 @@ class CanvasDraw extends Component {
 
     render() {
         return (
-            <canvas id="canvas"></canvas>
+            <div>
+                <canvas id="canvas"></canvas>
+                <video id="stream_1" playsinline autoPlay></video>
+                <video id="stream_2" playsinline autoPlay></video>
+                <video id="stream_3" playsinline autoPlay></video>
+                <video id="stream_4" playsinline autoPlay></video>
+            </div>
         );
     }
 }

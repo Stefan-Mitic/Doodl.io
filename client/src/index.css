@@ -74,3 +74,25 @@ code {
   border-radius: 3rem;
   text-align: center;
 }
+
+video {
+  width: 150px;
+  height: 150px;
+  background-color: black;
+  position: fixed;
+}
+
+#stream_1 {
+  right: 100px;
+}
+#stream_2 {
+  right: 255px;
+}
+#stream_3 {
+  right: 100px;
+  top: 185px;
+}
+#stream_4 {
+  right: 255px;
+  top: 185px;
+}
