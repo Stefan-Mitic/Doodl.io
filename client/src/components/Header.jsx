@@ -16,11 +16,9 @@ class Header extends Component {
     signout(e) {
         e.preventDefault();
         signout(() => {
-            localStorage.clear();
             history.push("/login");
         }, (err) => {
             alert(err);
-            localStorage.clear();
         });
         cookies.set('username', '');
     }
@@ -56,7 +54,7 @@ class Header extends Component {
                     </Nav>
                     <Nav className="ml-auto">
                         {
-                            !localStorage.getItem('username') ?
+                            !cookies.get('username') ?
                                 <NavItem>
                                     <NavLink exact to="/login" className="nav-link">Login</NavLink>
                                 </NavItem>

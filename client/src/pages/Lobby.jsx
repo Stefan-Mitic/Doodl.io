@@ -4,6 +4,9 @@ import history from '../history';
 import Header from '../components/Header';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 class Lobby extends Component {
     constructor(props) {
@@ -82,7 +85,7 @@ class Lobby extends Component {
     }
 
     getFriends() {
-        getFriends(localStorage.getItem('username'), (res) => {
+        getFriends(cookies.get('username'), (res) => {
             console.log(res);
             const friends = [];
             for (const friend of res.data) {

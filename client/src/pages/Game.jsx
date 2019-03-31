@@ -4,6 +4,7 @@ import ReactCountdownClock from 'react-countdown-clock';
 import html2canvas from 'html2canvas';
 import { saveDrawing, imageCompare, getImageId, getImage, addPlayerScore } from '../api';
 import history from '../history';
+import Cookies from 'universal-cookie';
 
 class Game extends Component {
     constructor(props) {
@@ -77,8 +78,9 @@ class Game extends Component {
     }
 
     updatePlayerScore(score) {
-        console.log(score);
-        addPlayerScore(localStorage.getItem('username'), this.gameId, score, (res) => {
+        const cookies = new Cookies();
+
+        addPlayerScore(cookies.get('username'), this.gameId, score, (res) => {
             console.log(res);
             if (this.state.round === 1)
                 this.gameEnd();

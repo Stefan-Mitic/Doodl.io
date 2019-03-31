@@ -3,6 +3,9 @@ import Profile from '../../components/Profile';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { sendFriendRequest, getSentFriendRequests, getReceivedFriendRequests, getFriends, acceptFriendRequests, rejectFriendRequests, unfriend } from '../../api';
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 class Friends extends Component {
     constructor(props) {
@@ -26,7 +29,7 @@ class Friends extends Component {
     }
 
     getSent() {
-        getSentFriendRequests(localStorage.getItem('username'), (res) => {
+        getSentFriendRequests(cookies.get('username'), (res) => {
             console.log(res);
             const sent = [];
             for (const request of res.data) {
@@ -41,7 +44,7 @@ class Friends extends Component {
     }
 
     getReceived() {
-        getReceivedFriendRequests(localStorage.getItem('username'), (res) => {
+        getReceivedFriendRequests(cookies.get('username'), (res) => {
             console.log(res);
             const received = [];
             for (const request of res.data) {
@@ -56,7 +59,7 @@ class Friends extends Component {
     }
 
     getFriends() {
-        getFriends(localStorage.getItem('username'), (res) => {
+        getFriends(cookies.get('username'), (res) => {
             console.log(res);
             const friends = [];
             for (const friend of res.data) {

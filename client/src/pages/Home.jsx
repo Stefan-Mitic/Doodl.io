@@ -4,6 +4,9 @@ import { emitJoin, createGame, joinGame, getGameRequests } from '../api';
 import history from '../history';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
+import Cookies from 'universal-cookie';
+
+const cookies = new Cookies();
 
 class Home extends Component {
     constructor(props) {
@@ -21,7 +24,7 @@ class Home extends Component {
 
     createGame(e) {
         e.preventDefault();
-        let username = localStorage.getItem('username');
+        let username = cookies.get('username');
         const gameSettings = {
             rounds: 1,
             username: username
@@ -44,7 +47,7 @@ class Home extends Component {
 
         var gameId = row ? row._original.gameId
             : this.inputRef.current.value;
-        let username = localStorage.getItem('username');
+        let username = cookies.get('username');
         const params = {
             username: username,
             gameId: gameId
@@ -58,7 +61,7 @@ class Home extends Component {
     };
 
     getGameRequests() {
-        getGameRequests(localStorage.getItem('username'), (res) => {
+        getGameRequests(cookies.get('username'), (res) => {
             const invites = [];
             for (const request of res.data) {
                 const newRecord = { name: request.requester, gameId: request.gameId };
