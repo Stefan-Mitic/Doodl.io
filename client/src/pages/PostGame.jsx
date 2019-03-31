@@ -25,7 +25,7 @@ class PostGame extends Component {
                 this.getPlayerScore(player, res.data);
             }
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 
@@ -51,7 +51,7 @@ class PostGame extends Component {
                 this.getWinner();
             }
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 
@@ -59,7 +59,7 @@ class PostGame extends Component {
         incrementPlayerLeaderboard(this.winner, (res) => {
             console.log(res);
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 

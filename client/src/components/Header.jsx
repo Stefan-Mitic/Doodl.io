@@ -18,7 +18,7 @@ class Header extends Component {
         signout(() => {
             history.push("/login");
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
         cookies.set('username', '');
     }

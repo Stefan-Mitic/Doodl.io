@@ -38,7 +38,7 @@ class Home extends Component {
             emitJoin(params);
             history.push({ pathname: "/lobby/" + id, state: { host: true } });
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     };
 
@@ -55,8 +55,8 @@ class Home extends Component {
         joinGame(params, (res) => {
             emitJoin(params);
             history.push({ pathname: "/lobby/" + gameId, state: { host: false } });
-        }, (err) => {
-            alert(err);
+        }, () => {
+            alert("Error: Incorrect Game Id");
         });
     };
 
@@ -69,7 +69,7 @@ class Home extends Component {
             }
             this.setState({ invites: invites });
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 

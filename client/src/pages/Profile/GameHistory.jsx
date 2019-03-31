@@ -35,7 +35,7 @@ class GameHistory extends Component {
             if (res.data && res.data.length > 0)
                 this.setState({ data: games, historyPage: page });
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 

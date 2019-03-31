@@ -47,7 +47,7 @@ class Friends extends Component {
             if (res.data && res.data.length > 0)
                 this.setState({ sentReq: sent, sentPage: page });
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 
@@ -71,7 +71,7 @@ class Friends extends Component {
             if (res.data && res.data.length > 0)
                 this.setState({ recReq: received, recPage: page });
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 
@@ -94,19 +94,18 @@ class Friends extends Component {
             if (res.data && res.data.length > 0)
                 this.setState({ friends: friends, friendsPage: page });
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 
     sendRequest(e) {
         e.preventDefault();
         let recipient = this.friendName.current.value;
-        sendFriendRequest(recipient, (res) => {
-            console.log(res);
+        sendFriendRequest(recipient, () => {
             this.friendName.current.value = '';
             this.getSent();
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 
@@ -114,10 +113,9 @@ class Friends extends Component {
         e.preventDefault();
 
         unfriend(row.name, (res) => {
-            console.log(res);
             this.getFriends();
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 
@@ -125,11 +123,10 @@ class Friends extends Component {
         e.preventDefault();
 
         acceptFriendRequests(row.name, (res) => {
-            console.log(res);
             this.getFriends();
             this.getReceived();
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 
@@ -137,10 +134,9 @@ class Friends extends Component {
         e.preventDefault();
 
         rejectFriendRequests(row.name, (res) => {
-            console.log(res);
             this.getReceived();
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 
