@@ -30,8 +30,8 @@ const auth = require('./middlewares/authentication');
 
 // setup global middlewares
 app.use(cors());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: false }));
 app.use(auth.sessionSettings);
 app.use(auth.setUsername);
 
