@@ -48,7 +48,7 @@ class UpdateInfo extends Component {
             <div>
                 <Profile></Profile>
                 <div className="row">
-                    <input className="offset-sm-4 col-sm-3" ref={this.newName} type="text" maxLength="30" placeholder="enter new username"></input>
+                    <input className="offset-sm-4 col-sm-3" ref={this.newName} type="text" maxLength="30" placeholder="enter new name"></input>
                     <button className="col-sm-2 btn btn-success" onClick={(e) => this.updateName(e)}>Update</button>
                 </div>
                 <div className="row">
