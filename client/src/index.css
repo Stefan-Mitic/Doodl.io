@@ -109,14 +109,14 @@ video {
 }
 
 .streams {
-    width: 150px;
-    height: 150px;
+    width: 190px;
+    height: 190px;
     background-color: rgb(255, 255, 255);
     position: fixed;
 }
 
 #stream_1 {
-    right: 255px;
+    right: 300px;
 }
 
 #stream_2 {
@@ -124,11 +124,11 @@ video {
 }
 
 #stream_3 {
-    right: 255px;
-    top: 190px;
+    right: 300px;
+    top: 275px;
 }
 
 #stream_4 {
     right: 100px;
-    top: 190px;
+    top: 275px;
 }

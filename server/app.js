@@ -126,7 +126,7 @@ io.on('connection', function(socket) {
         }
         socket.join(gameId);
         socket.in(gameId).emit('updateUserList');
-        socket.in(gameId).emit('newMessage', generateMessage(username, `Joined room`));
+        io.in(gameId).emit('newMessage', generateMessage(username, `Joined room`));
         callback();
     });
 
@@ -153,7 +153,7 @@ io.on('connection', function(socket) {
 
     socket.on('mouse', function(gameId, username, data) {
         console.log(`${gameId}: Received from ${username}: mouse: ${data.x}  ${data.y}`);
-        socket.in(gameId).emit('streamMouse', username, data);
+        io.in(gameId).emit('streamMouse', username, data);
     });
 
     socket.on('disconnect', function(gameId) {

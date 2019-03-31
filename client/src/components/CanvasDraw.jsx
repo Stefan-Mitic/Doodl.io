@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 // import {subscribeToAddPeer} from '../api';
 import ReactDOM from 'react-dom';
 import Cookies from 'universal-cookie';
-import { emitMouse, getPlayers, subscribeToMouse } from '../api';
+import { emitMouse, subscribeToMouse } from '../api';
 
 const cookies = new Cookies();
 // https://stackoverflow.com/questions/2368784/draw-on-html5-canvas-using-a-mouse
@@ -38,10 +38,6 @@ class CanvasDraw extends Component {
         ReactDOM.findDOMNode(this).addEventListener('mousedown', this.setPosition);
         ReactDOM.findDOMNode(this).addEventListener('mouseenter', this.setPosition);
 
-        // this.stream = this.canvas.captureStream();
-        // this.my_stream = document.getElementById('stream_1');
-        // this.my_stream.srcObject = this.stream;
-
         // [0]: username [1]: stream
         for (let i = 0; i < this.players.length; i++) {
             this.peer_media[this.players[i].name] = document.getElementById('stream_' + (i + 1));
@@ -53,7 +49,7 @@ class CanvasDraw extends Component {
         let ctx = this.peer_media[username].getContext('2d');
         console.log(`Draw from ${username}: ${data.x} ${data.y}`);
         ctx.fillStyle = '#000000';
-        ctx.fillRect(data.x, data.y, 5, 5);
+        ctx.fillRect(data.x*0.6, data.y*0.3, 5, 5);
     }   
 
     setPosition(e) {
