@@ -10,14 +10,13 @@ const cookies = new Cookies();
 class Friends extends Component {
     constructor(props) {
         super(props);
-        this.state = { friends: [], sentReq: [], recReq: [] };
+        this.state = { friends: [], sentReq: [], recReq: [], friendsPage: 0, sentPage: 0, recPage: 0 };
         this.friendName = React.createRef();
         this.sendRequest = this.sendRequest.bind(this);
         this.getSent = this.getSent.bind(this);
         this.getReceived = this.getReceived.bind(this);
         this.getFriends = this.getFriends.bind(this);
         this.unfriend = this.unfriend.bind(this);
-        this.remove = this.remove.bind(this);
         this.accept = this.accept.bind(this);
         this.reject = this.reject.bind(this);
     }
@@ -28,8 +27,16 @@ class Friends extends Component {
         this.getFriends();
     }
 
-    getSent() {
-        getSentFriendRequests(cookies.get('username'), (res) => {
+    getSent(e, isNext) {
+        if (e) e.preventDefault();
+        let page = this.state.sentPage;
+        if (isNext)
+            page = page + 1;
+        else if (page !== 0) {
+            page = page - 1;
+        }
+
+        getSentFriendRequests(cookies.get('username'), page, (res) => {
             console.log(res);
             const sent = [];
             for (const request of res.data) {
@@ -37,14 +44,23 @@ class Friends extends Component {
                 const newRecord = { name: request.recipient, date: date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear().toString().slice(-2) };
                 sent.push(newRecord);
             }
-            this.setState({ sentReq: sent });
+            if (res.data && res.data.length > 0)
+                this.setState({ sentReq: sent, sentPage: page });
         }, (err) => {
             alert(err);
         });
     }
 
-    getReceived() {
-        getReceivedFriendRequests(cookies.get('username'), (res) => {
+    getReceived(e, isNext) {
+        if (e) e.preventDefault();
+        let page = this.state.recPage;
+        if (isNext)
+            page = page + 1;
+        else if (page !== 0) {
+            page = page - 1;
+        }
+
+        getReceivedFriendRequests(cookies.get('username'), page, (res) => {
             console.log(res);
             const received = [];
             for (const request of res.data) {
@@ -52,21 +68,31 @@ class Friends extends Component {
                 const newRecord = { name: request.requester, date: date.getMonth() + '/' + date.getDate() + '/' + date.getFullYear().toString().slice(-2) };
                 received.push(newRecord);
             }
-            this.setState({ recReq: received });
+            if (res.data && res.data.length > 0)
+                this.setState({ recReq: received, recPage: page });
         }, (err) => {
             alert(err);
         });
     }
 
-    getFriends() {
-        getFriends(cookies.get('username'), (res) => {
+    getFriends(e, isNext) {
+        if (e) e.preventDefault();
+        let page = this.state.friendsPage;
+        if (isNext)
+            page = page + 1;
+        else if (page !== 0) {
+            page = page - 1;
+        }
+
+        getFriends(cookies.get('username'), page, (res) => {
             console.log(res);
             const friends = [];
             for (const friend of res.data) {
                 const newRecord = { name: friend };
                 friends.push(newRecord);
             }
-            this.setState({ friends: friends });
+            if (res.data && res.data.length > 0)
+                this.setState({ friends: friends, friendsPage: page });
         }, (err) => {
             alert(err);
         });
@@ -93,20 +119,6 @@ class Friends extends Component {
         }, (err) => {
             alert(err);
         });
-    }
-
-    remove(e, row) {
-        e.preventDefault();
-
-        // TODO: Add to API
-        // removeFriendRequest(row.name, (res) => {
-        //     console.log(res);
-        // }, (err) => {
-        //     alert(err);
-        // });
-
-        // this.getFriends();
-        // this.getReceived();
     }
 
     accept(e, row) {
@@ -156,12 +168,7 @@ class Friends extends Component {
             }, {
                 Header: 'Date',
                 accessor: 'date'
-            }
-                // , {
-                //     Header: 'Remove',
-                //     Cell: ({ row }) => (<button onClick={(e) => this.remove(e, row)}>Click Me</button>)
-                // }
-            ]
+            }]
         }];
 
         const recCols = [{
@@ -189,36 +196,73 @@ class Friends extends Component {
                 <Profile></Profile>
                 <div className="row">
                     <div className="offset-sm-3 col-sm-6">
-                        <ReactTable className="table center"
-                            data={this.state.friends}
-                            columns={friendCols}
-                            loadingText={''}
-                            showPagination={true}
-                            defaultPageSize={5}
-                        />
+                        <div className="custom-table">
+                            <ReactTable className="table center"
+                                data={this.state.friends}
+                                columns={friendCols}
+                                loadingText={''}
+                                showPagination={false}
+                                pageSize={5}
+                            />
+                            <div className="center">
+                                <button
+                                    onClick={(e) => this.getFriends(e, false)}>
+                                    Prev
+                                </button>
+                                <button
+                                    onClick={(e) => this.getFriends(e, true)}>
+                                    Next
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="row">
                     <div className="offset-sm-1 col-sm-5">
-                        <ReactTable className="table center"
-                            data={this.state.sentReq}
-                            columns={sentCols}
-                            loadingText={''}
-                            showPagination={true}
-                            defaultPageSize={5}
-                        />
+                        <div className="custom-table">
+                            <ReactTable className="table center"
+                                data={this.state.sentReq}
+                                columns={sentCols}
+                                loadingText={''}
+                                showPagination={false}
+                                pageSize={5}
+                            />
+                            <div className="center">
+                                <button
+                                    onClick={(e) => this.getSent(e, false)}>
+                                    Prev
+                                </button>
+                                <button
+                                    onClick={(e) => this.getSent(e, true)}>
+                                    Next
+                                </button>
+                            </div>
+                        </div>
+
                         Add A Friend:
                         <input ref={this.friendName} type="text" maxLength="30" placeholder="player username"></input>
                         <button className="btn btn-success" onClick={(e) => this.sendRequest(e)}>Request</button>
                     </div>
                     <div className="col-sm-5">
-                        <ReactTable className="table center"
-                            data={this.state.recReq}
-                            columns={recCols}
-                            loadingText={''}
-                            showPagination={true}
-                            defaultPageSize={5}
-                        />
+                        <div className="custom-table">
+                            <ReactTable className="table center"
+                                data={this.state.recReq}
+                                columns={recCols}
+                                loadingText={''}
+                                showPagination={false}
+                                pageSize={5}
+                            />
+                            <div className="center">
+                                <button
+                                    onClick={(e) => this.getReceived(e, false)}>
+                                    Prev
+                                </button>
+                                <button
+                                    onClick={(e) => this.getReceived(e, true)}>
+                                    Next
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -279,8 +279,8 @@ export function sendFriendRequest(username, callback, errorcallback) {
         });
 }
 
-export function getSentFriendRequests(username, callback, errorcallback) {
-    axios.get('/api/users/' + username + '/sentrequests/')
+export function getSentFriendRequests(username, page, callback, errorcallback) {
+    axios.get('/api/users/' + username + '/sentrequests/', { params: { page: page } })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -293,8 +293,8 @@ export function getSentFriendRequests(username, callback, errorcallback) {
         });
 }
 
-export function getReceivedFriendRequests(username, callback, errorcallback) {
-    axios.get('/api/users/' + username + '/recievedrequests/')
+export function getReceivedFriendRequests(username, page, callback, errorcallback) {
+    axios.get('/api/users/' + username + '/recievedrequests/', { params: { page: page } })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -335,8 +335,8 @@ export function rejectFriendRequests(requester, callback, errorcallback) {
         });
 }
 
-export function getFriends(username, callback, errorcallback) {
-    axios.get('/api/users/' + username + '/friends/')
+export function getFriends(username, page, callback, errorcallback) {
+    axios.get('/api/users/' + username + '/friends/', { params: { page: page } })
         .then(res => {
             if (callback != null) {
                 callback(res);
@@ -396,31 +396,31 @@ export function sendGameRequest(username, gameId, callback, errorcallback) {
 const socket = openSocket('http://localhost:5000');
 
 export function subscribeToUpdateUserList(updateList) {
-    socket.on('updateUserList', function() {
+    socket.on('updateUserList', function () {
         updateList();
     });
 }
 
 export function subscribeToGameStart(startGame) {
-    socket.on('gameStart', function() {
+    socket.on('gameStart', function () {
         startGame();
     });
 }
 
 export function subscribeToNewMessage() {
-    socket.on('newMessage', function(message) {
+    socket.on('newMessage', function (message) {
         // TODO: Add new message to chat
     });
 }
 
 export function subscribeToUserLeft() {
-    socket.on('userLeft', function(user) {
+    socket.on('userLeft', function (user) {
         // TODO: Remove user from the game
     });
 }
 
 export function subscribeToCounter(updateCounter) {
-    socket.on('counter', function(counter) {
+    socket.on('counter', function (counter) {
         updateCounter(counter);
     });
 }
@@ -446,7 +446,7 @@ export function unsubscribeFromUserLeft() {
 }
 
 export function emitJoin(params) {
-    socket.emit('join', params, function(err) {
+    socket.emit('join', params, function (err) {
         if (err) {
             console.log(err);
         } else {
@@ -481,20 +481,20 @@ let peers = {};
 let peer_media_elements = {};
 
 export function subscribeToAddPeer(local_media_stream, connectToStream) {
-    socket.on('addPeer', function(config) {
+    socket.on('addPeer', function (config) {
         console.log('Signaling server said to add peer:', config);
         let peer_id = config.peer_id;
         let peer_connection = new RTCPeerConnection({
             "iceServers": ICE_SERVERS
         }, {
-            "optional": [{
-                "DtlsSrtpKeyAgreement": true
-            }]
-        });
+                "optional": [{
+                    "DtlsSrtpKeyAgreement": true
+                }]
+            });
 
         peers[peer_id] = peer_connection;
 
-        peer_connection.onicecandidate = function(event) {
+        peer_connection.onicecandidate = function (event) {
             if (event.candidate) {
                 socket.emit('relayICECandidate', {
                     'peer_id': peer_id,
@@ -506,7 +506,7 @@ export function subscribeToAddPeer(local_media_stream, connectToStream) {
             }
         };
 
-        peer_connection.ontrack = function(event) {
+        peer_connection.ontrack = function (event) {
             console.log("onAddStream", event);
             connectToStream(event.streams[0]);
         };
@@ -516,27 +516,27 @@ export function subscribeToAddPeer(local_media_stream, connectToStream) {
         if (config.should_create_offer) {
             // console.log("Creating RTC offer to ", peer_id);
             peer_connection.createOffer(
-                function(local_description) {
+                function (local_description) {
                     // console.log("Local offer description is: ", local_description);
                     peer_connection.setLocalDescription(local_description,
-                        function() {
+                        function () {
                             socket.emit('relaySessionDescription', {
                                 'peer_id': peer_id,
                                 'session_description': local_description
                             });
                             console.log("Offer setLocalDescription succeeded");
                         },
-                        function() {
+                        function () {
                             console.log("Offer setLocalDescription failed!");
                         }
                     );
                 },
-                function(error) {
+                function (error) {
                     console.log("Error sending offer: ", error);
                 });
         }
 
-        socket.on('sessionDescription', function(config) {
+        socket.on('sessionDescription', function (config) {
             console.log('Remote description received: ', config);
             let peer_id = config.peer_id;
             let peer = peers[peer_id];
@@ -545,33 +545,33 @@ export function subscribeToAddPeer(local_media_stream, connectToStream) {
 
             let desc = new RTCSessionDescription(remote_description);
             let stuff = peer.setRemoteDescription(desc,
-                function() {
+                function () {
                     console.log("setRemoteDescription succeeded");
                     if (remote_description.type === "offer") {
                         // console.log("Creating answer");
                         peer.createAnswer(
-                            function(local_description) {
+                            function (local_description) {
                                 // console.log("Answer description is: ", local_description);
                                 peer.setLocalDescription(local_description,
-                                    function() {
+                                    function () {
                                         socket.emit('relaySessionDescription', {
                                             'peer_id': peer_id,
                                             'session_description': local_description
                                         });
                                         console.log("Answer setLocalDescription succeeded");
                                     },
-                                    function() {
+                                    function () {
                                         console.log("Answer setLocalDescription failed!");
                                     }
                                 );
                             },
-                            function(error) {
+                            function (error) {
                                 console.log("Error creating answer: ", error);
                                 console.log(peer);
                             });
                     }
                 },
-                function(error) {
+                function (error) {
                     console.log("setRemoteDescription error: ", error);
                 }
             );
@@ -583,7 +583,7 @@ export function subscribeToAddPeer(local_media_stream, connectToStream) {
 }
 
 export function subscribeToIceCandidate() {
-    socket.on('iceCandidate', function(config) {
+    socket.on('iceCandidate', function (config) {
         let peer = peers[config.peer_id];
         let ice_candidate = config.ice_candidate;
         peer.addIceCandidate(new RTCIceCandidate(ice_candidate));
@@ -591,7 +591,7 @@ export function subscribeToIceCandidate() {
 }
 
 export function subscribeToRemovePeer() {
-    socket.on('removePeer', function(config) {
+    socket.on('removePeer', function (config) {
         console.log('Signaling server said to remove peer:', config);
         let peer_id = config.peer_id;
         if (peer_id in peer_media_elements) {

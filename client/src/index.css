@@ -48,6 +48,10 @@ code {
     background-color: white;
 }
 
+.custom-table {
+    background-color: white;
+}
+
 .player-leaderboard {
     background-color: rgb(58, 58, 58);
     font-size: 30px;

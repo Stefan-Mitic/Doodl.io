@@ -78,7 +78,7 @@ exports.sendRequest = function (req, res) {
 
 };
 
-const FR_PAGE_SIZE = 10;
+const FR_PAGE_SIZE = 5;
 
 // get sent friend requests (TODO: pagination)
 exports.getSentRequests = function (req, res) {
@@ -176,7 +176,7 @@ exports.rejectRequest = function (req, res) {
     });
 };
 
-const FRIENDS_PAGE_SIZE = 10;
+const FRIENDS_PAGE_SIZE = 5;
 
 // get list of friends
 exports.getFriends = function (req, res) {
