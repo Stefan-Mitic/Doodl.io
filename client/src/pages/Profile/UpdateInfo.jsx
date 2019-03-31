@@ -25,7 +25,7 @@ class UpdateInfo extends Component {
             let cookieOptions = { path: '/', httpOnly: false, maxAge: 60 * 60 * 24 * 7 };
             cookies.set('name', newname, cookieOptions);
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     };
 
@@ -39,7 +39,7 @@ class UpdateInfo extends Component {
             this.oldPwd.current.value = '';
             this.newPwd.current.value = '';
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 

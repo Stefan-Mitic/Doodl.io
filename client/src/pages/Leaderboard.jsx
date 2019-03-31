@@ -26,13 +26,12 @@ class Leaderboard extends Component {
                 wins: res.data.wins
             });
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 
     getTopPlayers() {
         getTopPlayers((res) => {
-            console.log(res);
             const players = [];
             let i = 1;
             for (const player of res.data) {
@@ -42,7 +41,7 @@ class Leaderboard extends Component {
             }
             this.setState({ data: players });
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 

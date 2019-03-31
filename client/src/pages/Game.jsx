@@ -42,11 +42,11 @@ class Game extends Component {
                     this.setState({ bgsrc: res.config.url });
                     console.log(this.state.bgsrc);
                 }, (err) => {
-                    alert(err);
+                    console.log(err);
                 });
             }
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 
@@ -77,11 +77,11 @@ class Game extends Component {
                     console.log(res);
                     this.updatePlayerScore(res.data.difference);
                 }, (err) => {
-                    alert(err);
+                    console.log(err);
                 });
             }
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 
@@ -93,12 +93,12 @@ class Game extends Component {
             if (this.state.round === 1)
                 this.gameEnd();
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 
     gameEnd() {
-        history.push({ pathname: "/postgame/" + this.gameId });
+        // history.push({ pathname: "/postgame/" + this.gameId });
     }
 
     handleChange(e) {

@@ -50,7 +50,7 @@ class Lobby extends Component {
             }
             this.setState({ data: players });
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 
@@ -68,7 +68,7 @@ class Lobby extends Component {
                 state: { players: this.state.data }
             });
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 
@@ -88,7 +88,7 @@ class Lobby extends Component {
             console.log(res);
             alert('Game Request sent to: ' + row.name);
         }, (err) => {
-            alert(err);
+            alert('Error: username ' + row.name + ' does not exist');
         });
     }
 
@@ -111,7 +111,7 @@ class Lobby extends Component {
             if (res.data && res.data.length > 0)
                 this.setState({ friends: friends, friendsPage: page });
         }, (err) => {
-            alert(err);
+            console.log(err);
         });
     }
 
