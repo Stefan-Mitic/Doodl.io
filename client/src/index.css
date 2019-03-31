@@ -52,6 +52,20 @@ code {
     background-color: white;
 }
 
+#chat {
+    overflow: scroll;
+    height: 200px;
+}
+
+.chat {
+    padding: 20px;
+    background-color: white;
+}
+
+.chat .chat-box {
+    text-align: right;
+}
+
 .player-leaderboard {
     background-color: rgb(58, 58, 58);
     font-size: 30px;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { subscribeToUpdateUserList, subscribeToGameStart, emitStartGame, getPlayers, startGame, getFriends, sendGameRequest, unsubscribeFromGameStart, unsubscribeFromUpdateUserList, unsubscribeFromUserLeft, emitRoundStart } from '../api';
+import { subscribeToUpdateUserList, subscribeToGameStart, emitStartGame, getPlayers, startGame, getFriends, sendGameRequest, unsubscribeFromGameStart, unsubscribeFromUpdateUserList, unsubscribeFromUserLeft, emitRoundStart, emitMessage, subscribeToNewMessage, unsubscribeFromNewMessage } from '../api';
 import history from '../history';
 import Header from '../components/Header';
 import ReactTable from "react-table";
@@ -13,10 +13,13 @@ class Lobby extends Component {
         super(props);
         this.state = { show: false, data: [], friends: [], friendsPage: 0 };
         this.urlRef = React.createRef();
+        this.msgRef = React.createRef();
         this.getPlayers = this.getPlayers.bind(this);
         this.copyText = this.copyText.bind(this);
         this.sendRequest = this.sendRequest.bind(this);
         this.getFriends = this.getFriends.bind(this);
+        this.getMsgs = this.getMsgs.bind(this);
+        this.sendMsg = this.sendMsg.bind(this);
         this.host = this.props.location.state.host;
         this.gameId = this.props.match.params.id;
         this.startGame = this.startGame.bind(this);
@@ -28,12 +31,14 @@ class Lobby extends Component {
         this.getFriends();
         subscribeToGameStart(this.redirectToGame);
         subscribeToUpdateUserList(this.getPlayers);
+        subscribeToNewMessage(this.getMsgs);
     }
 
     componentWillUnmount() {
         unsubscribeFromGameStart();
         unsubscribeFromUpdateUserList();
         unsubscribeFromUserLeft();
+        unsubscribeFromNewMessage();
     }
 
     getPlayers() {
@@ -110,6 +115,27 @@ class Lobby extends Component {
         });
     }
 
+    getMsgs(msg) {
+        let date = new Date(msg.createdAt);
+        let hours = date.getHours();
+        let mins = date.getMinutes();
+        if (hours < 10) hours = "0" + hours;
+        if (mins < 10) mins = "0" + mins;
+        let time = hours + ":" + mins;
+
+        let chat = document.getElementById('chat');
+        let divMsg = document.createElement('div');
+        let newMsg = "[" + time + "] " + msg.from + ": " + msg.text + "\n";
+        divMsg.append(newMsg);
+        chat.append(divMsg);
+    }
+
+    sendMsg() {
+        let msg = this.msgRef.current.value;
+        emitMessage(this.gameId, cookies.get('username'), msg);
+        this.msgRef.current.value = '';
+    }
+
     render() {
         const playerCols = [{
             Header: 'Players',
@@ -180,6 +206,21 @@ class Lobby extends Component {
                         Cannot start, not host!
                     </div>
                     <button type="button" className="col-sm-2 btn btn-success" disabled={!this.host} onClick={(e) => this.startGame(e)}>Start Game</button>
+                </div>
+                <div className="row">
+                    <div className="offset-sm-2 col-sm-8">
+                        <div>Live Chat</div>
+                        <div className="chat">
+                            <div id="chat">
+                                {/* <div>Username - hello there</div> */}
+                            </div>
+                            <div className="chat-box">
+                                <input ref={this.msgRef} type="text" size="40" placeholder="Enter Message"></input>
+                                <button onClick={this.sendMsg}>Send</button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         );

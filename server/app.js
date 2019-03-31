@@ -156,7 +156,7 @@ io.on('connection', function(socket) {
     socket.on('createMessage', function(params, callback) {
         let message = params.message;
         console.log('createMessage', message);
-        io.to(params.gameId).emit('newMessage', generateMessage(message.from, message.text));
+        io.to(params.gameId).emit('newMessage', generateMessage(params.username, params.message));
     });
 
     socket.on('disconnect', function(gameId) {

@@ -407,9 +407,9 @@ export function subscribeToGameStart(startGame) {
     });
 }
 
-export function subscribeToNewMessage() {
+export function subscribeToNewMessage(getMsgs) {
     socket.on('newMessage', function (message) {
-        // TODO: Add new message to chat
+        getMsgs(message);
     });
 }
 
