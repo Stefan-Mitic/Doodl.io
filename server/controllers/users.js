@@ -66,7 +66,7 @@ exports.signin = function(req, res) {
     let username = req.body.username.toLowerCase();
     let password = req.body.password;
     // retrieve user from the database
-    UserModel.findById(username, { hash: 1, salt: 1 }, function(err, user) {
+    UserModel.findById(username, { name: 1, hash: 1, salt: 1 }, function(err, user) {
         if (err) return res.status(500).end(err);
         if (!user) return res.status(401).end("access denied");
         let hash = crypto.generateHash(password, user.salt);
@@ -74,7 +74,7 @@ exports.signin = function(req, res) {
         // start a session
         req.session.username = user._id;
         res.setHeader('Set-Cookie', auth.setCookie(user._id));
-        return res.json(username);
+        return res.json({ username: username, name: user.name });
     });
 };
 
