@@ -20,6 +20,11 @@ class Home extends Component {
 
     componentDidMount() {
         this.getGameRequests();
+        this.interval = setInterval(() => this.getGameRequests(), 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     createGame(e) {
