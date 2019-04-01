@@ -25,19 +25,27 @@ class Friends extends Component {
         this.getSent();
         this.getReceived();
         this.getFriends();
+        this.interval = setInterval(() => {
+            this.getSent();
+            this.getReceived();
+            this.getFriends();
+        }, 1000);
     }
 
-    getSent(e, isNext) {
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
+    getSent(e, isNext, isPrev) {
         if (e) e.preventDefault();
         let page = this.state.sentPage;
         if (isNext)
             page = page + 1;
-        else if (page !== 0) {
+        else if (isPrev && page !== 0) {
             page = page - 1;
         }
 
         getSentFriendRequests(cookies.get('username'), page, (res) => {
-            console.log(res);
             const sent = [];
             for (const request of res.data) {
                 let date = new Date(request.createdAt);
@@ -46,22 +54,23 @@ class Friends extends Component {
             }
             if (res.data && res.data.length > 0)
                 this.setState({ sentReq: sent, sentPage: page });
+            else if (!isNext && !isPrev)
+                this.setState({ sentReq: sent});
         }, (err) => {
             console.log(err);
         });
     }
 
-    getReceived(e, isNext) {
+    getReceived(e, isNext, isPrev) {
         if (e) e.preventDefault();
         let page = this.state.recPage;
         if (isNext)
             page = page + 1;
-        else if (page !== 0) {
+        else if (isPrev && page !== 0) {
             page = page - 1;
         }
 
         getReceivedFriendRequests(cookies.get('username'), page, (res) => {
-            console.log(res);
             const received = [];
             for (const request of res.data) {
                 let date = new Date(request.createdAt);
@@ -70,22 +79,23 @@ class Friends extends Component {
             }
             if (res.data && res.data.length > 0)
                 this.setState({ recReq: received, recPage: page });
+            else if (!isNext && !isPrev)
+                this.setState({ recReq: received });
         }, (err) => {
             console.log(err);
         });
     }
 
-    getFriends(e, isNext) {
+    getFriends(e, isNext, isPrev) {
         if (e) e.preventDefault();
         let page = this.state.friendsPage;
         if (isNext)
             page = page + 1;
-        else if (page !== 0) {
+        else if (isPrev && page !== 0) {
             page = page - 1;
         }
 
         getFriends(cookies.get('username'), page, (res) => {
-            console.log(res);
             const friends = [];
             for (const friend of res.data) {
                 const newRecord = { name: friend };
@@ -93,6 +103,8 @@ class Friends extends Component {
             }
             if (res.data && res.data.length > 0)
                 this.setState({ friends: friends, friendsPage: page });
+            else if (!isNext && !isPrev)
+                this.setState({ friends: friends});
         }, (err) => {
             console.log(err);
         });
@@ -202,11 +214,11 @@ class Friends extends Component {
                             />
                             <div className="center">
                                 <button
-                                    onClick={(e) => this.getFriends(e, false)}>
+                                    onClick={(e) => this.getFriends(e, false, true)}>
                                     Prev
                                 </button>
                                 <button
-                                    onClick={(e) => this.getFriends(e, true)}>
+                                    onClick={(e) => this.getFriends(e, true, false)}>
                                     Next
                                 </button>
                             </div>
@@ -225,11 +237,11 @@ class Friends extends Component {
                             />
                             <div className="center">
                                 <button
-                                    onClick={(e) => this.getSent(e, false)}>
+                                    onClick={(e) => this.getSent(e, false, true)}>
                                     Prev
                                 </button>
                                 <button
-                                    onClick={(e) => this.getSent(e, true)}>
+                                    onClick={(e) => this.getSent(e, true, false)}>
                                     Next
                                 </button>
                             </div>
@@ -250,11 +262,11 @@ class Friends extends Component {
                             />
                             <div className="center">
                                 <button
-                                    onClick={(e) => this.getReceived(e, false)}>
+                                    onClick={(e) => this.getReceived(e, false, true)}>
                                     Prev
                                 </button>
                                 <button
-                                    onClick={(e) => this.getReceived(e, true)}>
+                                    onClick={(e) => this.getReceived(e, true, false)}>
                                     Next
                                 </button>
                             </div>
