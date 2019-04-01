@@ -102,7 +102,6 @@ class Lobby extends Component {
         }
 
         getFriends(cookies.get('username'), page, (res) => {
-            console.log(res);
             const friends = [];
             for (const friend of res.data) {
                 const newRecord = { name: friend };

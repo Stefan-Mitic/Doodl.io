@@ -48,8 +48,8 @@ const comparison = require('./controllers/comparison');
 app.post('/signin/', validator.checkUsername, users.signin);
 app.post('/signup/', validator.checkUsername, validator.checkPassword, users.signup);
 app.get('/signout/', auth.isAuthenticated, users.signout);
-app.get('/api/users/:username/', users.getUser);
-app.get('/api/users/', users.getUsers);
+app.get('/api/users/:username/', auth.isAuthenticated, users.getUser);
+app.get('/api/users/', auth.isAuthenticated, users.getUsers);
 app.patch('/api/users/name/', auth.isAuthenticated, validator.checkDisplayName, users.updateName);
 app.patch('/api/users/password/', auth.isAuthenticated, users.updatePassword);
 
@@ -63,41 +63,41 @@ app.get('/api/users/:username/recievedrequests/', auth.isAuthenticated, auth.isO
 app.get('/api/users/:username/friends/', auth.isAuthenticated, friends.getFriends);
 
 // leaderboard score routes
-app.get('/api/leaderboard/', scores.getTopPlayers);
+app.get('/api/leaderboard/', auth.isAuthenticated, scores.getTopPlayers);
 app.get('/api/leaderboard/me/', auth.isAuthenticated, scores.getPlayerLeaderboard);
 app.get('/api/leaderboard/history/', auth.isAuthenticated, scores.getPlayerHistory);
-app.patch('/api/leaderboard/:username/', scores.incrementPlayerLeaderboard);
-app.post('/api/leaderboard/:gameId/:username/', scores.addPlayerScore);
-app.get('/api/leaderboard/:gameId/:username/', scores.getScore);
+app.patch('/api/leaderboard/:username/', auth.isAuthenticated, scores.incrementPlayerLeaderboard);
+app.post('/api/leaderboard/:gameId/:username/', auth.isAuthenticated, scores.addPlayerScore);
+app.get('/api/leaderboard/:gameId/:username/', auth.isAuthenticated, scores.getScore);
 
 // game image routes
-app.get('/api/game/images/:id/', gameImages.getImage);
-app.get('/api/game/images/:id/file/', gameImages.getImageFile);
+app.get('/api/game/images/:id/', auth.isAuthenticated, gameImages.getImage);
+app.get('/api/game/images/:id/file/', auth.isAuthenticated, gameImages.getImageFile);
 
 // canvas drawing image routes
-app.post('/api/drawings/', // auth.isAuthenticated,
+app.post('/api/drawings/', auth.isAuthenticated,
     drawings.addDrawing);
 app.get('/api/drawings/:id/', auth.isAuthenticated, validator.checkId, drawings.getDrawing);
 app.get('/api/drawings/:id/file/', auth.isAuthenticated, validator.checkId, drawings.getDrawingFile);
 app.delete('/api/drawings/:id/', auth.isAuthenticated, validator.checkId, drawings.removeDrawing);
 
 // image comparison routes
-app.post('/api/game/images/:id/compare/', comparison.gameCompare);
+app.post('/api/game/images/:id/compare/', auth.isAuthenticated, comparison.gameCompare);
 
 // game routes
-app.post('/api/game/', games.createGame);
-app.post('/api/game/start/', games.startGame);
-app.patch('/api/game/join/', games.addPlayer);
-app.get('/api/game/:id/players/', games.getPlayers);
-app.get('/api/game/:id/', games.getGame);
-app.get('/api/game/:id/nextImage/', games.getNextImage);
-app.patch('/api/game/nextRound/', games.incrementRound);
-app.patch('/api/game/removePlayer/', games.removePlayer);
-app.delete('/api/game/:id/', games.deleteGame);
+app.post('/api/game/', auth.isAuthenticated, games.createGame);
+app.post('/api/game/start/', auth.isAuthenticated, games.startGame);
+app.patch('/api/game/join/', auth.isAuthenticated, games.addPlayer);
+app.get('/api/game/:id/players/', auth.isAuthenticated, games.getPlayers);
+app.get('/api/game/:id/', auth.isAuthenticated, games.getGame);
+app.get('/api/game/:id/nextImage/', auth.isAuthenticated, games.getNextImage);
+app.patch('/api/game/nextRound/', auth.isAuthenticated, games.incrementRound);
+app.patch('/api/game/removePlayer/', auth.isAuthenticated, games.removePlayer);
+app.delete('/api/game/:id/', auth.isAuthenticated, games.deleteGame);
 
 // Game Request routes
-app.get('/api/users/:username/gamerequests/', users.getGameRequests);
-app.post('/api/users/gamerequest/', users.sendGameRequest);
+app.get('/api/users/:username/gamerequests/', auth.isAuthenticated, users.getGameRequests);
+app.post('/api/users/gamerequest/', auth.isAuthenticated, users.sendGameRequest);
 
 // setup server
 const http = require('http');
@@ -147,12 +147,10 @@ io.on('connection', function(socket) {
 
     socket.on('createMessage', function(params, callback) {
         let message = params.message;
-        console.log('createMessage', message);
         io.to(params.gameId).emit('newMessage', generateMessage(params.username, params.message));
     });
 
     socket.on('mouse', function(gameId, username, data) {
-        console.log(`${gameId}: Received from ${username}: mouse: ${data.x}  ${data.y}`);
         io.in(gameId).emit('streamMouse', username, data);
     });
 

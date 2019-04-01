@@ -49,7 +49,6 @@ class CanvasDraw extends Component {
 
     streamDraw(username, data) {
         let ctx = this.peer_media[username].getContext('2d');
-        console.log(`Draw from ${username}: ${data.x} ${data.y}`);
         ctx.fillStyle = '#000000';
         ctx.fillRect(data.x * 0.6, data.y * 0.3, 5, 5);
     }
