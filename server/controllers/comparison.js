@@ -25,6 +25,10 @@ const readImage = function (filepath) {
     });
 };
 
+/**
+ * Exported functions.
+ */
+
 exports.compareImages = function (req, res) {
     let filename1 = req.body.filename1;
     let filename2 = req.body.filename2;

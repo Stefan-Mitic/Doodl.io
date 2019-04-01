@@ -10,10 +10,11 @@ const path = require('path');
 const mongoose = require('mongoose');
 const DrawingModel = mongoose.model('Drawing');
 
-const crypto = require("crypto");
-function generateRandomBytes() {
-    return crypto.randomBytes(20).toString('hex');
-}
+const crypto = require('../middlewares/cryptography');
+
+/**
+ * Exported functions.
+ */
 
 // get drawing by id (TODO: authorization, right now any user can get a drawing)
 exports.getDrawing = function (req, res) {
@@ -44,7 +45,7 @@ exports.addDrawing = function (req, res) {
     let gameId = req.body.gameId;
     let dataURL = req.body.dataURL;
     // generate filename and path
-    let filename = generateRandomBytes();
+    let filename = crypto.generateRandomBytes(20);
     let drawingspath = path.join(__dirname, '../usersubmit/drawings');
     let filepath = path.join(drawingspath, filename);
     // create canvas drawing object to store

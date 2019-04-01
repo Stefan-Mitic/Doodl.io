@@ -10,11 +10,11 @@ const GameModel = mongoose.model('Game');
 const UserModel = mongoose.model('User');
 const ImageModel = mongoose.model('Image');
 const GameRequestModel = mongoose.model('GameRequest');
-const crypto = require("crypto");
+const crypto = require('../middlewares/cryptography');
 //TODO: Delete game, update score
 
 exports.createGame = function(req, res) {
-    let id = crypto.randomBytes(15).toString('hex');
+    let id = crypto.generateRandomBytes(15);
     GameModel.create({
         _id: id,
         players: [req.body.username],

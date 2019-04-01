@@ -7,9 +7,10 @@
 
 const mongoose = require('mongoose');
 const UserModel = mongoose.model('User');
+const GameRequestModel = mongoose.model('GameRequest');
+
 const auth = require('../middlewares/authentication');
 const crypto = require('../middlewares/cryptography');
-const GameRequestModel = mongoose.model('GameRequest');
 
 /**
  * Exported functions.
@@ -30,7 +31,7 @@ const USER_PAGE_SIZE = 10;
 // gets a paginated list of usernames
 exports.getUsers = function(req, res) {
     let page = parseInt(req.params.page) || 0;
-    UserModel.distinct("_id", {})
+    UserModel.find({})
         .sort({ createdAt: -1 })
         .skip(page * USER_PAGE_SIZE)
         .limit(USER_PAGE_SIZE)
@@ -123,11 +124,11 @@ exports.updatePassword = function(req, res) {
     });
 };
 
+// sends a game request to a user
 exports.sendGameRequest = function(req, res) {
     let requester = req.username;
     let gameId = req.body.gameId;
     let recipient = req.query.target;
-
     // check if recipient exists
     UserModel.findById(recipient, function(err, user) {
         if (err) return res.status(500).end(err);
@@ -139,6 +140,7 @@ exports.sendGameRequest = function(req, res) {
     });
 };
 
+// gets a list of all game requests for a user
 exports.getGameRequests = function(req, res) {
     let username = req.params.username;
     GameRequestModel
