@@ -40,7 +40,9 @@ class CanvasDraw extends Component {
 
         // [0]: username [1]: stream
         for (let i = 0; i < this.players.length; i++) {
-            this.peer_media[this.players[i].name] = document.getElementById('stream_' + (i + 1));
+            let stream = document.getElementById('stream_' + (i + 1));
+            this.peer_media[this.players[i].name] = stream;
+            stream.style.visibility = 'visible';
         }
         subscribeToMouse(this.streamDraw);
     }
@@ -49,8 +51,8 @@ class CanvasDraw extends Component {
         let ctx = this.peer_media[username].getContext('2d');
         console.log(`Draw from ${username}: ${data.x} ${data.y}`);
         ctx.fillStyle = '#000000';
-        ctx.fillRect(data.x*0.6, data.y*0.3, 5, 5);
-    }   
+        ctx.fillRect(data.x * 0.6, data.y * 0.3, 5, 5);
+    }
 
     setPosition(e) {
         this.pos.x = e.clientX - this.canvas.offsetLeft;
@@ -72,18 +74,34 @@ class CanvasDraw extends Component {
             this.ctx.lineTo(this.pos.x, this.pos.y);
 
             this.ctx.stroke();
-            emitMouse(this.gameId, this.username, {x: this.pos.x, y: this.pos.y});
+            emitMouse(this.gameId, this.username, { x: this.pos.x, y: this.pos.y });
         }
     }
 
     render() {
         return (
-            <div>
+            <div id="canvasdraw">
                 <canvas id="canvas"></canvas>
+                <div id="stream_label_1">{this.players[0].name}'s screen</div>
                 <canvas className="streams" id="stream_1"></canvas>
-                <canvas className="streams" id="stream_2"></canvas>
-                <canvas className="streams" id="stream_3"></canvas>
-                <canvas className="streams" id="stream_4"></canvas>
+                <div id="stream_label_2">
+                    {this.players.length === 2
+                        ? this.players[1].name + "'s screen"
+                        : null}
+                </div>
+                <canvas className="streams hidden" id="stream_2"></canvas>
+                <div id="stream_label_3">
+                    {this.players.length === 3
+                        ? this.players[2].name + "'s screen"
+                        : null}
+                </div>
+                <canvas className="streams hidden" id="stream_3"></canvas>
+                <div id="stream_label_4">
+                    {this.players.length === 4
+                        ? this.players[3].name + "'s screen"
+                        : null}
+                </div>
+                <canvas className="streams hidden" id="stream_4"></canvas>
             </div>
         );
     }
