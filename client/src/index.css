@@ -24,6 +24,10 @@ code {
     text-align: center;
 }
 
+.hidden {
+    visibility: hidden;
+}
+
 .title {
     background-color: rgb(0, 153, 255);
     border-radius: 5rem;
@@ -115,20 +119,44 @@ video {
     position: fixed;
 }
 
+#stream_label_1 {
+    right: 340px;
+    position: fixed;
+}
+
+#stream_label_2 {
+    right: 140px;
+    position: fixed;
+}
+
+#stream_label_3 {
+    right: 140px;
+    top: 270px;
+    position: fixed;
+}
+
+#stream_label_4 {
+    right: 340px;
+    top: 270px;
+    position: fixed;
+}
+
 #stream_1 {
     right: 300px;
+    top: 60px;
 }
 
 #stream_2 {
     right: 100px;
+    top: 60px;
 }
 
 #stream_3 {
     right: 300px;
-    top: 275px;
+    top: 300px;
 }
 
 #stream_4 {
     right: 100px;
-    top: 275px;
+    top: 300px;
 }
