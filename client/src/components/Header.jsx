@@ -20,7 +20,8 @@ class Header extends Component {
         }, (err) => {
             console.log(err);
         });
-        cookies.set('username', '');
+        cookies.remove('username');
+        cookies.remove('name');
     }
 
     render() {
