@@ -29,7 +29,12 @@ class GameHistory extends Component {
             console.log(res);
             for (const game of res.data) {
                 let date = new Date(game.createdAt);
-                const newRecord = { name: game.player, score: game.score, time: date.getDate() + '/' + date.getDay() + ' - ' + date.getHours() + ':' + date.getMinutes() };
+                const newRecord = {
+                    name: game.player, score: game.score,
+                    time: date.getDate() + '/' + (date.getMonth() < 9 ? "0"
+                        + (date.getMonth() + 1) : (date.getMonth() + 1)) + ' - '
+                        + date.getHours() + ':' + date.getMinutes()
+                };
                 games.push(newRecord);
             }
             if (res.data && res.data.length > 0)
