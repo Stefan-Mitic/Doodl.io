@@ -51,6 +51,9 @@ class Header extends Component {
                         <NavItem>
                             <NavLink exact to="/leaderboard" className="nav-link" activeClassName="active">Leaderboard</NavLink>
                         </NavItem>
+                        <NavItem>
+                            <NavLink exact to="/credits" className="nav-link" activeClassName="active">Credits</NavLink>
+                        </NavItem>
                     </Nav>
                     <Nav className="ml-auto">
                         {
