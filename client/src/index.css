@@ -28,6 +28,14 @@ code {
     visibility: hidden;
 }
 
+.credits {
+    background-color: white;
+    margin-left: 6%;
+    margin-right: 6%;
+    padding: 4%;
+    border-radius: 5rem;
+}
+
 .title {
     background-color: rgb(0, 153, 255);
     border-radius: 5rem;
