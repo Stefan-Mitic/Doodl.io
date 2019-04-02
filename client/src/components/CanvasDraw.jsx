@@ -41,8 +41,8 @@ class CanvasDraw extends Component {
         // [0]: username [1]: stream
         for (let i = 0; i < this.players.length; i++) {
             let stream = document.getElementById('stream_' + (i + 1));
-            this.peer_media[this.players[i].name] = stream;
             stream.style.visibility = 'visible';
+            this.peer_media[this.players[i].name] = stream;
         }
         subscribeToMouse(this.streamDraw);
     }
