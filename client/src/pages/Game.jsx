@@ -73,7 +73,7 @@ class Game extends Component {
             if (drawingId !== -1) {
                 imageCompare(this.imageId, drawingId, (res) => {
                     console.log(res);
-                    this.updatePlayerScore(res.data.score);
+                    this.updatePlayerScore(res.data.difference);
                 }, (err) => {
                     console.log(err);
                 });
