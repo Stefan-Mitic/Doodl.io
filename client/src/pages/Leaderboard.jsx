@@ -21,7 +21,7 @@ class Leaderboard extends Component {
         getPlayerLeaderboard((res) => {
             console.log(res);
             this.setState({
-                rank: res.data.position,
+                rank: res.data.wins !== 0 ? res.data.position : 'N/A',
                 player: res.data.player,
                 wins: res.data.wins
             });
@@ -32,14 +32,15 @@ class Leaderboard extends Component {
 
     getTopPlayers() {
         getTopPlayers((res) => {
+            console.log(res);
             const players = [];
-            let i = 1;
             for (const player of res.data) {
-                const newRecord = { rank: i, name: player._id, wins: player.wins };
+                const newRecord = { name: player._id, wins: player.wins };
                 players.push(newRecord);
-                i++;
             }
-            this.setState({ data: players });
+            this.setState({
+                data: players
+            });
         }, (err) => {
             console.log(err);
         });
@@ -47,8 +48,12 @@ class Leaderboard extends Component {
 
     render() {
         const columns = [{
-            Header: 'Ranking',
-            accessor: 'rank'
+            Header: "Rank",
+            id: "i",
+            filterable: false,
+            Cell: (row) => {
+                return <div>{row.index + 1}</div>;
+            }
         }, {
             Header: 'Player',
             accessor: 'name'

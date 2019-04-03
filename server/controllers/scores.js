@@ -17,7 +17,7 @@ const ScoreModel = mongoose.model('Score');
 // gets top 10 players
 exports.getTopPlayers = function(req, res) {
     UserModel.find({})
-    .sort({ score: -1 })
+    .sort({ wins: -1 })
     .limit(10)
     .exec(function(err, players) {
         if (err) return res.status(500).end(err);
