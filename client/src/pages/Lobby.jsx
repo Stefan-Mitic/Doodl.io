@@ -65,7 +65,10 @@ class Lobby extends Component {
         startGame(this.gameId, 1, (res) => {
             history.push({
                 pathname: "/game/" + this.gameId,
-                state: { players: this.state.data }
+                state: {
+                    players: this.state.data,
+                    host: this.host
+                }
             });
         }, (err) => {
             console.log(err);

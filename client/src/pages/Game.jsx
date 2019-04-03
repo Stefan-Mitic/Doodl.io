@@ -96,7 +96,10 @@ class Game extends Component {
     }
 
     gameEnd() {
-        history.push({ pathname: "/postgame/" + this.gameId });
+        history.push({
+            pathname: "/postgame/" + this.gameId,
+            state: { host: this.props.location.state.host }
+        });
     }
 
     handleChange(e) {

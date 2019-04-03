@@ -12,7 +12,8 @@ class PostGame extends Component {
         this.getWinner = this.getWinner.bind(this);
         this.getPlayerScore = this.getPlayerScore.bind(this);
         this.gameId = this.props.match.params.id;
-        this.state = { data: [], winner: null };
+        this.host = this.props.location.state.host;
+        this.state = { data: [], winner: null, bestScore: -1 };
     }
 
     componentDidMount() {
@@ -30,7 +31,6 @@ class PostGame extends Component {
     }
 
     getPlayerScore(player, players) {
-        let bestScore = -1;
         getPlayerScore(this.gameId, player, (score) => {
             const newRecord = { name: player, score: score.data };
             let results = this.state.data;
@@ -40,15 +40,17 @@ class PostGame extends Component {
                     (a.score > b.score) ? 1 : -1)
             });
 
-            // find winner
-            if (bestScore === -1 || bestScore > score.data) {
-                bestScore = score.data;
-                this.winner = player;
-            }
+            if (this.host) {
+                // find winner
+                if (this.state.bestScore === -1
+                    || this.state.bestScore > score.data) {
+                    this.setState({ winner: player, bestScore: score.data });
+                }
 
-            // if on last player
-            if (players.slice(-1)[0] === player) {
-                this.getWinner();
+                // if on last player
+                if (players.slice(-1)[0] === player) {
+                    this.getWinner();
+                }
             }
         }, (err) => {
             console.log(err);
@@ -56,7 +58,7 @@ class PostGame extends Component {
     }
 
     getWinner() {
-        incrementPlayerLeaderboard(this.winner, (res) => {
+        incrementPlayerLeaderboard(this.state.winner, (res) => {
             console.log(res);
         }, (err) => {
             console.log(err);
