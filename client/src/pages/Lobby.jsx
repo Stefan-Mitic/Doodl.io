@@ -79,7 +79,7 @@ class Lobby extends Component {
         e.preventDefault();
         if (this.host) {
             emitStartGame(this.gameId);
-            emitRoundStart(this.gameId, 30);
+            emitRoundStart(this.gameId, 5);
         }
         this.redirectToGame();
     }
